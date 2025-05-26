@@ -149,5 +149,5 @@ def age_pair(*, nullable: bool = False, **ka) -> tuple[Column, Column]:
 
 __all__ = (
     'IdType', 'id_column', 'entity_base', 'declarative_base', 'token_signer', 'match_column', 'match_constraint',
-    'author_pair'
+    'author_pair', 'age_pair'
 )

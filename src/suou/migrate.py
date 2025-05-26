@@ -59,6 +59,8 @@ class SnowflakeSiqMigrator(SiqMigrator):
     optimization requirements, are based on a different epoch (e.g.
     Jan 1, 2015 for Discord); epoch is wanted as seconds since Unix epoch 
     (i.e. midnight of Jan 1, 1970).
+
+    There should be a 1-on-1 correspondence from snowflakes and SIQs.
     """
     def __init__(self, domain: str, epoch: int, *, 
             ts_stop: int = 22, ts_accuracy: int = 1000,
@@ -73,7 +75,7 @@ class SnowflakeSiqMigrator(SiqMigrator):
         self.serial_mask = serial_mask
 
     @override
-    def to_siq(self, orig_id, target_type: SiqType) -> int:
+    def to_siq(self, orig_id: int, target_type: SiqType) -> int:
         ts_ms = (orig_id >> self.ts_stop) + self.epoch
         ts = int(ts_ms / self.ts_accuracy * (1 << 16))
         shard = mask_shift(orig_id, self.shard_mask)
@@ -96,15 +98,41 @@ class SnowflakeSiqMigrator(SiqMigrator):
         )
         
 
-
-## TODO: UlidSiqMigrator
-
-@not_implemented
 class UlidSiqMigrator(SiqMigrator):
     '''
     Migrate from ULID's to SIQ.
 
-    ULIDs have a timestamp part (expressed in milliseconds) and a randomly generated part.
+    ULIDs are 128-bit identifiers with 48 timestamp bits (expressed in milliseconds) and 80 random bits.
+
+    Structure (simplified):
+    tttttttt tttttttt tttttttt tttttttt tttttttt tttttttt
+    rrrrrrrr rrrrrrrr rrrrrrrr rrrrrrrr rrrrrrrr rrrrrrrr
+    rrrrrrrr rrrrrrrr rrrrrrrr rrrrrrrr
+
+    For obvious reasons, this makes 1-on-1 correspondence impossible. (Yes, the 16 spare bits.)
+
+    It means that, of the 80 random bits, only 24 to 27 bits are preserved:
+    - 6 bits summed to the timestamp.
+    - 8 bits as shard ID.
+    - 10 to 13 bits in the progressive counter.
+    - The rest is *just discarded*.
     '''
 
+    @override
+    def to_siq(self, orig_id, target_type: SiqType) -> int:
+        ts_seq   = mask_shift(orig_id, 0xfc000000000000000000)
+        shard    = mask_shift(orig_id,  0x3fc0000000000000000)
+        seq      = mask_shift(orig_id,    0x3fffc000000000000)
 
+        ts = ((orig_id >> 80) << 16) // 1000 + ts_seq
+        return (
+            (ts << 56)|
+            ((shard % 256) << 48)|
+            ((self.domain_hash % 0xffffffff) << 16)|
+            (((seq & ~((1 << target_type.n_bits) - 1)) | target_type.prepend(0)) % 0xffff)
+        )
+
+
+__all__ = (
+    'SnowflakeSiqMigrator', 'UlidSiqMigrator'
+)

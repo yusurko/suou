@@ -98,7 +98,7 @@ class ConfigParserConfigSource(ConfigSource):
 
 class DictConfigSource(ConfigSource):
     '''
-    Config source from Python mappings
+    Config source from Python mappings. Useful with JSON/TOML config
     '''
     __slots__ = ('_d',)
 
@@ -126,6 +126,12 @@ class ConfigValue:
 
     You can specify further sources, if the parent ConfigOptions class
     supports them.
+
+    Arguments:
+    - public: mark value as public, making it available across the app (e.g. in Jinja2 templates).
+    - prefix: src but for the lazy
+    - preserve_case: if True, src is not CAPITALIZED. Useful for parsing from Python dictionaries or ConfigParser's
+    - required: throw an error if empty or not supplied
     """
     # XXX disabled for https://stackoverflow.com/questions/45864273/slots-conflicts-with-a-class-variable-in-a-generic-class
     #__slots__ = ('_srcs', '_val', '_default', '_cast', '_required', '_preserve_case')
@@ -215,6 +221,8 @@ class ConfigOptions:
     def expose(self, public_name: str, attr_name: str | None = None) -> None:
         '''
         Mark a config value as public.
+
+        Called automatically by ConfigValue.__set_name__().
         '''
         attr_name = attr_name or public_name
         self._pub[public_name] = attr_name
@@ -227,7 +235,7 @@ class ConfigOptions:
 
 
 __all__ = (
-    'MissingConfigError', 'MissingConfigWarning', 'ConfigOptions', 'EnvConfigSource', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue'
+    'MissingConfigError', 'MissingConfigWarning', 'ConfigOptions', 'EnvConfigSource', 'ConfigParserConfigSource', 'DictConfigSource', 'ConfigSource', 'ConfigValue'
 )
-        
+
 

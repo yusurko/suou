@@ -97,6 +97,13 @@ class RegexCharField(CharField):
 
 
 class SiqField(Field):
+    '''
+    Field holding a SIQ.
+
+    Stored as varbinary(16).
+
+    XXX UNTESTED!
+    '''
     field_type = 'varbinary(16)'
 
     def db_value(self, value: int | Siq | bytes) -> bytes:
@@ -111,5 +118,5 @@ class SiqField(Field):
         return Siq.from_bytes(value)
 
 
-__all__ = ('connect_reconnect', 'RegexCharField')
+__all__ = ('connect_reconnect', 'RegexCharField', 'SiqField')
 
