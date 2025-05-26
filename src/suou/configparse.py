@@ -94,8 +94,28 @@ class ConfigParserConfigSource(ConfigSource):
                 yield f'{k1}.{k2}'
     def __len__(self) -> int:
         ## XXX might be incorrect but who cares
-        return len(self._cfp)
+        return sum(len(x) for x in self._cfp)
 
+class DictConfigSource(ConfigSource):
+    '''
+    Config source from Python mappings
+    '''
+    __slots__ = ('_d',)
+
+    _d: dict[str, Any]
+
+    def __init__(self, mapping: dict[str, Any]):
+        self._d = mapping
+    def __getitem__(self, key: str, /) -> str:
+        return self._d[key]
+    def get(self, key: str, fallback: _T = None, /):
+        return self._d.get(key, fallback)
+    def __contains__(self, key: str, /) -> bool:
+        return key in self._d
+    def __iter__(self) -> Iterator[str]:
+        yield from self._d
+    def __len__(self) -> int:
+        return len(self._d)
 
 class ConfigValue:
     """

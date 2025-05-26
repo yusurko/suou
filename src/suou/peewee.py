@@ -21,6 +21,8 @@ from playhouse.shortcuts import ReconnectMixin
 from peewee import CharField, Database, MySQLDatabase, _ConnectionState
 import re
 
+from suou.iding import Siq
+
 from .codecs import StringCase
 
 
@@ -94,7 +96,19 @@ class RegexCharField(CharField):
         return CharField.db_value(self, value)
 
 
-## TODO SiqField
+class SiqField(Field):
+    field_type = 'varbinary(16)'
+
+    def db_value(self, value: int | Siq | bytes) -> bytes:
+        if isinstance(value, int):
+            value = Siq(value)
+        if isinstance(value, Siq):
+            value = value.to_bytes()
+        if not isinstance(value, bytes):
+            raise TypeError
+        return value
+    def python_value(self, value: bytes) -> Siq:
+        return Siq.from_bytes(value)
 
 
 __all__ = ('connect_reconnect', 'RegexCharField')

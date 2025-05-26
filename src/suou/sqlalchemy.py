@@ -18,8 +18,10 @@ from __future__ import annotations
 
 from typing import Callable
 import warnings
-from sqlalchemy import CheckConstraint, ForeignKey, LargeBinary, Column, MetaData, String, text
+from sqlalchemy import CheckConstraint, Date, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, text
 from sqlalchemy.orm import DeclarativeBase, declarative_base as _declarative_base
+
+from suou.itertools import kwargs_prefix
 
 from .signing import UserSigner
 from .codecs import StringCase
@@ -121,11 +123,28 @@ def author_pair(fk_name: str, *, id_type: type = IdType, sig_type: type | None =
     """
     Return an owner ID/signature column pair, for authenticated values.
     """
-    id_ka = {k[3:]: v for k, v in ka.items() if k.startswith('id_')}
-    sig_ka = {k[4:]: v for k, v in ka.items() if k.startswith('sig_')}
+    id_ka = kwargs_prefix(ka, 'id_')
+    sig_ka = kwargs_prefix(ka, 'sig_')
     id_col = Column(id_type, ForeignKey(fk_name), nullable = nullable, **id_ka)
     sig_col = Column(sig_type or LargeBinary(sig_length), nullable = nullable, **sig_ka)
     return (id_col, sig_col)
+
+def age_pair(*, nullable: bool = False, **ka) -> tuple[Column, Column]:
+    """
+    Return a SIS-compliant age representation, i.e. a date and accuracy pair.
+
+    Accuracy is represented by a small integer:
+    0 = exact
+    1 = month and day
+    2 = year and month
+    3 = year
+    4 = estimated year
+    """
+    date_ka = kwargs_prefix(ka, 'date_')
+    acc_ka = kwargs_prefix(ka, 'acc_')
+    date_col = Column(Date, nullable = nullable, **date_ka)
+    acc_col = Column(SmallInteger, nullable = nullable, **acc_ka)
+    return (date_col, acc_col)
 
 
 __all__ = (

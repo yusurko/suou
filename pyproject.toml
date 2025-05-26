@@ -5,7 +5,8 @@ authors = [
 ]
 dynamic = [ "version" ]
 dependencies = [
-    "itsdangerous"
+    "itsdangerous",
+    "toml"
 ]
 requires-python = ">=3.10"
 license = "Apache-2.0"

@@ -21,11 +21,14 @@ from .codecs import StringCase
 from .configparse import MissingConfigError, MissingConfigWarning, ConfigOptions, ConfigParserConfigSource, ConfigSource, ConfigValue, EnvConfigSource
 from .functools import deprecated, not_implemented
 from .classtools import Wanted, Incomplete
+from .itertools import makelist, kwargs_prefix
+from .i18n import I18n, JsonI18n, TomlI18n
 
-__version__ = "0.1.0"
+__version__ = "0.2.0-dev21"
 
 __all__ = (
     'Siq', 'SiqCache', 'SiqType', 'SiqGen', 'StringCase',
     'MissingConfigError', 'MissingConfigWarning', 'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue', 'EnvConfigSource',
-    'deprecated', 'not_implemented', 'Wanted', 'Incomplete'
+    'deprecated', 'not_implemented', 'Wanted', 'Incomplete',
+    'makelist', 'kwargs_prefix', 'I18n', 'JsonI18n', 'TomlI18n'
 )

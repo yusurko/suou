@@ -38,6 +38,7 @@ from threading import Lock
 import time
 import os
 from typing import Iterable, override
+import warnings
 
 from .functools import not_implemented, deprecated
 from .codecs import b32lencode, b64encode, cb32encode
@@ -221,6 +222,12 @@ class SiqCache:
 class Siq(int):
     def to_bytes(self, length: int = 14, byteorder = 'big', *, signed: bool = False) -> bytes:
         return super().to_bytes(length, byteorder, signed=signed)
+    @classmethod
+    def from_bytes(cls, b: bytes, byteorder = 'big', *, signed: bool = False) -> Siq:
+        if len(b) < 14:
+            warnings.warn('trying to deserialize a bytestring shorter than 14 bytes', BytesWarning)
+        return super().from_bytes(b, byteorder, signed=signed)
+
     def to_base64(self, length: int = 15, *, strip: bool = True) -> str:
         return b64encode(self.to_bytes(length), strip=strip)
     def to_cb32(self)-> str:
@@ -276,6 +283,9 @@ class Siq(int):
         return f'@{self:u}{"@" if domain else ""}{domain}'
     def to_matrix(self, /, domain: str):
         return f'@{self:u}:{domain}'
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}({super().__repr__()})'
 
 
 __all__ = (
