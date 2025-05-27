@@ -1,5 +1,8 @@
+# Changelog
 
+## 0.2.1
 
+- Add `codecs.jsonencode`
 
 ## 0.2.0
 

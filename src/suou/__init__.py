@@ -17,7 +17,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
 from .iding import Siq, SiqCache, SiqType, SiqGen
-from .codecs import StringCase, cb32encode, cb32decode
+from .codecs import StringCase, cb32encode, cb32decode, jsonencode
 from .bits import count_ones, mask_shift
 from .configparse import MissingConfigError, MissingConfigWarning, ConfigOptions, ConfigParserConfigSource, ConfigSource, DictConfigSource, ConfigValue, EnvConfigSource
 from .functools import deprecated, not_implemented
@@ -25,11 +25,11 @@ from .classtools import Wanted, Incomplete
 from .itertools import makelist, kwargs_prefix
 from .i18n import I18n, JsonI18n, TomlI18n
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 __all__ = (
     'Siq', 'SiqCache', 'SiqType', 'SiqGen', 'StringCase',
     'MissingConfigError', 'MissingConfigWarning', 'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue', 'EnvConfigSource', 'DictConfigSource',
-    'deprecated', 'not_implemented', 'Wanted', 'Incomplete',
+    'deprecated', 'not_implemented', 'Wanted', 'Incomplete', 'jsonencode'
     'makelist', 'kwargs_prefix', 'I18n', 'JsonI18n', 'TomlI18n', 'cb32encode', 'cb32decode', 'count_ones', 'mask_shift'
 )

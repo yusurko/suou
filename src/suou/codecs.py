@@ -15,8 +15,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
 import base64
+import datetime
 import enum
+import json
 import re
+from typing import Any, Callable
 
 from suou.functools import not_implemented
 
@@ -74,6 +77,22 @@ def b64decode(val: bytes | str) -> bytes:
         val = val.encode('ascii')
     return base64.urlsafe_b64decode(val.replace(b'/', b'_').replace(b'+', b'-') + b'=' * ((4 - len(val) % 4) % 4))
 
+def _json_default(func = None) -> Callable[Any, str | list | dict]:
+    def default_converter(obj: Any) -> str | list | dict:
+        if isinstance(obj, (datetime.datetime, datetime.date)):
+            return obj.isoformat()
+        elif callable(func):
+            return func(obj)
+        else:
+            raise TypeError
+    return default_converter
+
+def jsonencode(obj: dict, *, skipkeys: bool = True, separators: tuple[str, str] = (',', ':'), default: Callable | None = None, **kwargs) -> str:
+    '''
+    JSON encoder with stricter and smarter defaults.
+    '''
+    return json.dumps(obj, skipkeys=skipkeys, separators=separators, default=_json_default(default), **kwargs)
+
 class StringCase(enum.Enum):
     """
     Enum values used by regex validators and storage converters.
@@ -108,6 +127,6 @@ class StringCase(enum.Enum):
         
 
 __all__ = (
-    'cb32encode', 'cb32decode', 'b32lencode', 'b32ldecode', 'b64encode', 'b64decode',
+    'cb32encode', 'cb32decode', 'b32lencode', 'b32ldecode', 'b64encode', 'b64decode', 'jsonencode'
     'StringCase'
 )
