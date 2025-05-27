@@ -30,6 +30,6 @@ __version__ = "0.2.1"
 __all__ = (
     'Siq', 'SiqCache', 'SiqType', 'SiqGen', 'StringCase',
     'MissingConfigError', 'MissingConfigWarning', 'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue', 'EnvConfigSource', 'DictConfigSource',
-    'deprecated', 'not_implemented', 'Wanted', 'Incomplete', 'jsonencode'
+    'deprecated', 'not_implemented', 'Wanted', 'Incomplete', 'jsonencode',
     'makelist', 'kwargs_prefix', 'I18n', 'JsonI18n', 'TomlI18n', 'cb32encode', 'cb32decode', 'count_ones', 'mask_shift'
 )
