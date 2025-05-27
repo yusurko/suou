@@ -81,7 +81,7 @@ def match_column(length: int, regex: str, /, case: StringCase = StringCase.AS_IS
     if case != StringCase.AS_IS: # TODO
         warnings.warn('case arg is currently not working', FutureWarning)
     return Incomplete(Column, String(length), Wanted(lambda x, n: match_constraint(n, regex, #dialect=x.metadata.engine.dialect.name,
-            constraint_name=constraint_name or f'{x.__tablename__}_{n}_valid'), *args, **kwargs))
+            constraint_name=constraint_name or f'{x.__tablename__}_{n}_valid')), *args, **kwargs)
 
 
 def declarative_base(domain_name: str, master_secret: bytes, metadata: dict | None = None, **kwargs):
@@ -109,15 +109,22 @@ def token_signer(id_attr: Column | str, secret_attr: Column | str) -> Incomplete
     Requires a master secret (taken from Base.metadata), a user id (visible in the token)
     and a user secret.
     """
-    if isinstance(id_attr, Column):
-        id_val = Wanted(id_attr.key)
+    if isinstance(id_attr, Incomplete):
+        raise TypeError('attempt to pass an uninstanced column. Pass the column name as a string instead.')
+    elif isinstance(id_attr, Column):
+        id_val = id_attr
     elif isinstance(id_attr, str):
         id_val = Wanted(id_attr)
     if isinstance(secret_attr, Column):
-        secret_val = Wanted(secret_attr.key)
+        secret_val = secret_attr
     elif isinstance(secret_attr, str):
         secret_val = Wanted(secret_attr)
-    return Incomplete(UserSigner, Wanted(lambda x, n: x.metadata.info['secret_key']), id_val, secret_val)
+    def token_signer_factory(owner: DeclarativeBase, name: str):
+        def my_signer(self):
+            return UserSigner(owner.metadata.info['secret_key'], id_val.__get__(self, owner), secret_val.__get__(self, owner))
+        my_signer.__name__ = name
+        return my_signer
+    return Incomplete(Wanted(token_signer_factory))
 
 def author_pair(fk_name: str, *, id_type: type = IdType, sig_type: type | None = None, nullable: bool = False, sig_length: int | None = 2048, **ka) -> tuple[Column, Column]:
     """

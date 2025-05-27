@@ -40,8 +40,13 @@ class Wanted(Generic[_T]):
             return name
         elif isinstance(self._target, str):
             return getattr(owner, self._target)
+        elif callable(self._target):
+            try:
+                return self._target(owner, name)
+            except TypeError:
+                return self._target(owner)
         else:
-            return self._target(owner, name)
+            raise TypeError(f'Wanted() requires a str, callable, or None, got {self._target.__class__.__name__!r}')
 
 class Incomplete(Generic[_T]):
     """
@@ -56,10 +61,15 @@ class Incomplete(Generic[_T]):
     _obj = Callable[Any, _T]
     _args: Iterable
     _kwargs: dict
-    def __init__(self, obj: Callable[Any, _T], *args, **kwargs):
-        self._obj = obj
-        self._args = args
-        self._kwargs = kwargs
+    def __init__(self, obj: Callable[Any, _T] | Wanted, *args, **kwargs):
+        if isinstance(obj, Wanted):
+            self._obj = lambda x: x
+            self._args = (obj, )
+            self._kwargs = {}
+        else:
+            self._obj = obj
+            self._args = args
+            self._kwargs = kwargs
     def __set_name__(self, owner, name: str):
         args = []
         for arg in self._args:
@@ -69,7 +79,7 @@ class Incomplete(Generic[_T]):
                 args.append(arg)
         kwargs = dict()
         for ak, av in self._kwargs.items():
-            if isinstance(arg, Wanted):
+            if isinstance(av, Wanted):
                 kwargs[ak] = av(owner, name)
             else:
                 kwargs[ak] = av

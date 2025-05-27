@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.3
+
+- Bug fixes in `classtools` and `sqlalchemy`
+
 ## 0.2.1
 
 - Add `codecs.jsonencode`

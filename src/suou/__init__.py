@@ -25,7 +25,7 @@ from .classtools import Wanted, Incomplete
 from .itertools import makelist, kwargs_prefix
 from .i18n import I18n, JsonI18n, TomlI18n
 
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 
 __all__ = (
     'Siq', 'SiqCache', 'SiqType', 'SiqGen', 'StringCase',
