@@ -14,7 +14,8 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
-from flask import Flask, g, request
+from typing import Any
+from flask import Flask, current_app, g, request
 from .i18n import I18n
 from .configparse import ConfigOptions
 
@@ -57,6 +58,14 @@ def add_i18n(app: Flask, i18n: I18n, var_name: str = 'T', *,
 
     return app
 
-__all__ = ('add_context_from_config', 'add_i18n')
+def get_flask_conf(key: str, default = None, *, app: Flask | None = None) -> Any:
+    '''
+    Get a Flask configuration value
+    '''
+    if not app:
+        app = current_app
+    return app.config.get(key, default)
+
+__all__ = ('add_context_from_config', 'add_i18n', 'get_flask_conf')
 
 

@@ -14,6 +14,8 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '''
 
+import math
+
 def mask_shift(n: int, mask: int) -> int:
     '''
     Select the bits from n chosen by mask, least significant first.
@@ -45,4 +47,53 @@ def count_ones(n: int) -> int:
         n >>= 1
     return ones
 
-__all__ = ('count_ones', 'mask_shift')
+def split_bits(buf: bytes, nbits: int) -> list[int]:
+    '''
+    Split a bytestring into chunks of equal size, and interpret each chunk as an unsigned integer.
+
+    XXX DOES NOT WORK DO NOT USE!!!!!!!!
+    '''
+    mem = memoryview(buf)
+    chunk_size = nbits // math.gcd(nbits, 8)
+    est_len = math.ceil(len(buf) * 8 / nbits)
+    mask_n = chunk_size * 8 // nbits
+    numbers = []
+
+    off = 0
+    while off < len(buf):
+        chunk = mem[off:off+chunk_size].tobytes()
+        if len(chunk) < chunk_size:
+            chunk = chunk + b'\0' * (chunk_size - len(chunk))
+        num = int.from_bytes(chunk, 'big')
+        for j in range(mask_n):
+            numbers.append(mask_shift(num, ((1 << nbits) - 1) << ((mask_n - 1 - j) * nbits) ))
+        off += chunk_size
+    assert sum(numbers[est_len:]) == 0, str(f'{chunk_size=} {len(numbers)=} {est_len=} {numbers[est_len:]=}')
+    return numbers[:est_len]
+
+
+def join_bits(l: list[int], nbits: int) -> bytes:
+    """
+    Concatenate a list of integers into a bytestring.
+    """
+    chunk_size = nbits // math.gcd(nbits, 8)
+    chunk = 0
+    mask_n = chunk_size * 8 // nbits
+    ou = b''
+    
+    chunk, j = 0, mask_n - 1
+    for num in l:
+        chunk |= num << nbits * j
+        if j <= 0:
+            ou += chunk.to_bytes(chunk_size, 'big')
+            chunk, j = 0, mask_n - 1
+        else:
+            j -= 1
+    else:
+        if chunk != 0:
+            ou += chunk.to_bytes(chunk_size, 'big')
+    return ou
+
+
+
+__all__ = ('count_ones', 'mask_shift', 'split_bits', 'join_bits')

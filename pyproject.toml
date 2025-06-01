@@ -35,6 +35,9 @@ flask = [
     "Flask>=2.0.0",
     "Flask-RestX"
 ]
+flask_sqlalchemy = [
+    "Flask-SqlAlchemy"
+]
 peewee = [
     "peewee>=3.0.0, <4.0"
 ]

@@ -73,7 +73,7 @@ def connect_reconnect(db):
     
     return db
 
-## END async helperss
+## END async helpers for Peewee
 
 class RegexCharField(CharField):
     '''

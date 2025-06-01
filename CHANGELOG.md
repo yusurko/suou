@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0
+
+- Add auth loaders i.e. `sqlalchemy.require_auth_base()`, `flask_sqlalchemy`
+- Improve JSON handling in `flask_restx`
+- Add base2048 (i.e. BIP-39) codec
+- Add `split_bits()` and `join_bits()`
+
 ## 0.2.3
 
 - Bug fixes in `classtools` and `sqlalchemy`

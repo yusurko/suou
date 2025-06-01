@@ -14,12 +14,44 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
-from typing import Mapping
+from typing import Any, Mapping
+import warnings
+from flask import current_app, make_response
 from flask_restx import Api as _Api
+
+from .codecs import jsonencode
+
+
+def output_json(data, code, headers=None):
+    """Makes a Flask response with a JSON encoded body.
+    
+    The difference with flask_restx.representations handler of the 
+    same name is suou.codecs.jsonencode() being used in place of plain json.dumps().
+    
+    Opinionated: some RESTX_JSON settings are ignored.
+    """
+
+    try:
+        settings: dict = current_app.config.get("RESTX_JSON", {}).copy()
+        settings.pop('indent', 0)
+        settings.pop('separators', 0)
+    except TypeError:
+        warnings.warn('illegal value for RESTX_JSON', UserWarning)
+        settings = {}
+
+    # always end the json dumps with a new line
+    # see https://github.com/mitsuhiko/flask/pull/1262
+    dumped = jsonencode(data, **settings) + "\n"
+
+    resp = make_response(dumped, code)
+    resp.headers.extend(headers or {})
+    return resp
 
 class Api(_Api):
     """
-    Fix Api() class by remapping .message to .error
+    Improved flask_restx.Api() with better defaults.
+
+    Notably, all JSON is whitespace-free and .message is remapped to .error
     """
     def handle_error(self, e):
         res = super().handle_error(e)
@@ -27,5 +59,9 @@ class Api(_Api):
             res['error'] = res['message']
             del res['message']
         return res
+    def __init__(self, *a, **ka):
+        super().__init__(*a, **ka)
+        self.representations['application/json'] = output_json
+
 
 __all__ = ('Api',)

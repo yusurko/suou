@@ -16,32 +16,38 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from __future__ import annotations
 
-from typing import Callable
+from abc import ABCMeta, abstractmethod
+from functools import wraps
+from typing import Any, Callable, Iterable, Never, TypeVar
 import warnings
-from sqlalchemy import CheckConstraint, Date, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, text
-from sqlalchemy.orm import DeclarativeBase, declarative_base as _declarative_base
+from sqlalchemy import CheckConstraint, Date, Dialect, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, select, text
+from sqlalchemy.orm import DeclarativeBase, Session, declarative_base as _declarative_base
 
-from suou.itertools import kwargs_prefix
-
-from .signing import UserSigner
+from .itertools import kwargs_prefix, makelist
+from .signing import HasSigner, UserSigner
 from .codecs import StringCase
 from .functools import deprecated
 from .iding import SiqType, SiqCache
 from .classtools import Incomplete, Wanted
+
+_T = TypeVar('_T')
 
 # SIQs are 14 bytes long. Storage is padded for alignment
 # Not to be confused with SiqType.
 IdType = LargeBinary(16)
 
 
-def sql_escape(s: str, /, dialect: str) -> str:
+def sql_escape(s: str, /, dialect: Dialect) -> str:
     """
     Escape a value for SQL embedding, using SQLAlchemy's literal processors.
     Requires a dialect argument.
+
+    XXX this function is not mature yet, do not use
     """
     if isinstance(s, str):
         return String().literal_processor(dialect=dialect)(s)
     raise TypeError('invalid data type')
+
 
 def id_column(typ: SiqType, *, primary_key: bool = True):
     """
@@ -109,9 +115,7 @@ def token_signer(id_attr: Column | str, secret_attr: Column | str) -> Incomplete
     Requires a master secret (taken from Base.metadata), a user id (visible in the token)
     and a user secret.
     """
-    if isinstance(id_attr, Incomplete):
-        raise TypeError('attempt to pass an uninstanced column. Pass the column name as a string instead.')
-    elif isinstance(id_attr, Column):
+    if isinstance(id_attr, Column):
         id_val = id_attr
     elif isinstance(id_attr, str):
         id_val = Wanted(id_attr)
@@ -126,6 +130,7 @@ def token_signer(id_attr: Column | str, secret_attr: Column | str) -> Incomplete
         return my_signer
     return Incomplete(Wanted(token_signer_factory))
 
+
 def author_pair(fk_name: str, *, id_type: type = IdType, sig_type: type | None = None, nullable: bool = False, sig_length: int | None = 2048, **ka) -> tuple[Column, Column]:
     """
     Return an owner ID/signature column pair, for authenticated values.
@@ -135,6 +140,7 @@ def author_pair(fk_name: str, *, id_type: type = IdType, sig_type: type | None =
     id_col = Column(id_type, ForeignKey(fk_name), nullable = nullable, **id_ka)
     sig_col = Column(sig_type or LargeBinary(sig_length), nullable = nullable, **sig_ka)
     return (id_col, sig_col)
+
 
 def age_pair(*, nullable: bool = False, **ka) -> tuple[Column, Column]:
     """
@@ -154,7 +160,93 @@ def age_pair(*, nullable: bool = False, **ka) -> tuple[Column, Column]:
     return (date_col, acc_col)
 
 
+def want_column(cls: type[DeclarativeBase], col: Column[_T] | str) -> Column[_T]:
+    """
+    Return a table's column given its name.
+
+    XXX does it belong outside any scopes?
+    """
+    if isinstance(col, Incomplete):
+        raise TypeError('attempt to pass an uninstanced column. Pass the column name as a string instead.')
+    elif isinstance(col, Column):
+        return col
+    elif isinstance(col, str):
+        return getattr(cls, col)
+    else:
+        raise TypeError
+
+
+class AuthSrc(metaclass=ABCMeta):
+    '''
+    AuthSrc object required for require_auth_base().
+
+    This is an abstract class and is NOT usable directly.
+    '''
+    def required_exc(self) -> Never:
+        raise ValueError('required field missing')
+    def invalid_exc(self, msg: str = 'validation failed') -> Never:
+        raise ValueError(msg)
+    @abstractmethod
+    def get_session(self) -> Session:
+        pass
+    def get_user(self, getter: Callable):
+        return getter(self.get_token())
+    @abstractmethod
+    def get_token(self):
+        pass
+
+
+def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, value_src: Callable[[Callable[[], _T]], Any], session_src: Callable[[], Session],
+        column: str | Column[_T] = 'id', dest: str = 'user', required: bool = False, validators: Callable | Iterable[Callable] | None = None,
+        invalid_exc: Callable | None = None, required_exc: Callable | None = None):
+    '''
+    Inject the current user into a view, given the Authorization: Bearer header.
+
+    For portability reasons, this is a partial, two-component function.
+
+    The value_src() callable takes a callable as its only and required argument, and the supplied
+    callable, when called, returns the value of the column.
+
+    The session_src() callable takes no argument, and returns a Session object.
+
+    XXX maybe a class is better than a thousand callables?
+    '''
+    col = want_column(cls, column)
+    validators = makelist(validators)
+
+    def get_user(token) -> DeclarativeBase:
+        if token is None:
+            return None
+        tok_parts = UserSigner.split_token(token)
+        user: HasSigner = session_src().execute(select(cls).where(col == tok_parts[0])).scalar()
+        try:
+            signer: UserSigner = user.signer()
+            signer.unsign(token)
+            return user
+        except Exception:
+            return None
+
+    def _default_invalid(msg: str):
+        raise ValueError(msg)
+        
+    invalid_exc = invalid_exc or _default_invalid
+    required_exc = required_exc or (lambda: _default_invalid())
+
+    def decorator(func: Callable):
+        @wraps(func)
+        def wrapper(*a, **ka):
+            ka[dest] = value_src(get_user)
+            if not ka[dest] and required:
+                required_exc()
+            for valid in validators:
+                if not valid(ka[dest]):
+                    invalid_exc(getattr(valid, 'message', 'validation failed').format(user=ka[dest]))
+            return func(*a, **ka)
+        return wrapper
+    return decorator
+
+
 __all__ = (
     'IdType', 'id_column', 'entity_base', 'declarative_base', 'token_signer', 'match_column', 'match_constraint',
-    'author_pair', 'age_pair'
+    'author_pair', 'age_pair', 'require_auth_base', 'want_column'
 )
