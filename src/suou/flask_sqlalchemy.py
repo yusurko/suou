@@ -21,6 +21,7 @@ from flask import abort, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Session
 
+from .codecs import want_bytes
 from .sqlalchemy import require_auth_base
 
 class FlaskAuthSrc(AuthSrc):
@@ -35,7 +36,9 @@ class FlaskAuthSrc(AuthSrc):
         return self.db.session
     def get_token(self):
         return request.authorization.token
-
+    def get_signature(self) -> bytes:
+        sig = request.headers.get('authorization-signature', None)
+        return want_bytes(sig) if sig else None
     def invalid_exc(self, msg: str = 'validation failed') -> Never:
         abort(400, msg)
     def required_exc(self):

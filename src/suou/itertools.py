@@ -14,8 +14,9 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '''
 
-from typing import Any, Iterable
+from typing import Any, Iterable, TypeVar
 
+_T = TypeVar('_T')
 
 def makelist(l: Any) -> list:
     '''
@@ -30,6 +31,25 @@ def makelist(l: Any) -> list:
     else:
         return [l]
 
+def ltuple(seq: Iterable[_T], size: int, /, pad = None) -> tuple:
+    """
+    Truncate an iterable into a fixed size tuple, if necessary padding it.
+    """
+    seq = tuple(seq)[:size]
+    if len(seq) < size:
+        seq = seq + (pad,) * (size - len(seq))
+    return seq
+
+def rtuple(seq: Iterable[_T], size: int, /, pad = None) -> tuple:
+    """
+    Same as rtuple() but the padding and truncation is made right to left.
+    """
+    seq = tuple(seq)[-size:]
+    if len(seq) < size:
+        seq = (pad,) * (size - len(seq)) + seq
+    return seq
+
+
 def kwargs_prefix(it: dict[str, Any], prefix: str) -> dict[str, Any]:
     '''
     Subset of keyword arguments. Useful for callable wrapping.
@@ -38,4 +58,4 @@ def kwargs_prefix(it: dict[str, Any], prefix: str) -> dict[str, Any]:
 
 
 
-__all__ = ('makelist', 'kwargs_prefix')
+__all__ = ('makelist', 'kwargs_prefix', 'ltuple', 'rtuple')

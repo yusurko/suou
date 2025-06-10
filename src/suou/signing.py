@@ -16,10 +16,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from abc import ABC
 from base64 import b64decode
-from typing import Any, Callable
+from typing import Any, Callable, Sequence
 from itsdangerous import TimestampSigner
 
-from .codecs import want_str
+from suou.itertools import rtuple
+
+from .functools import not_implemented
+from .codecs import jsondecode, jsonencode, want_bytes, want_str
 from .iding import Siq
 
 class UserSigner(TimestampSigner):
@@ -36,6 +39,20 @@ class UserSigner(TimestampSigner):
     def split_token(cls, /, token: str | bytes) :
         a, b, c = want_str(token).rsplit('.', 2)
         return b64decode(a), b, b64decode(c)
+    def sign_object(self, obj: dict, /, *, encoder=jsonencode, **kwargs):
+        """
+        Return a signed JSON payload of an object.
+
+        MUST be passed as a dict: ser/deser it's not the signer's job.
+        """
+        return self.sign(encoder(obj), **kwargs)
+    def unsign_object(self, payload: str | bytes, /, *, decoder=jsondecode, **kwargs):
+        """
+        Unsign and parse a JSON object signed payload. Returns a dict.
+        """
+        return decoder(self.unsign(payload, **kwargs))
+    def split_signed(self, payload: str | bytes) -> Sequence[bytes]:
+        return rtuple(want_bytes(payload).rsplit(b'.', 2), 3, b'')
 
 
 class HasSigner(ABC):

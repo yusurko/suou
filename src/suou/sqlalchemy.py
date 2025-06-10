@@ -194,22 +194,18 @@ class AuthSrc(metaclass=ABCMeta):
     @abstractmethod
     def get_token(self):
         pass
+    @abstractmethod
+    def get_signature(self):
+        pass
 
 
-def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, value_src: Callable[[Callable[[], _T]], Any], session_src: Callable[[], Session],
-        column: str | Column[_T] = 'id', dest: str = 'user', required: bool = False, validators: Callable | Iterable[Callable] | None = None,
+def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, column: str | Column[_T] = 'id', dest: str = 'user',
+        required: bool = False, signed: bool = False, sig_dest: str = 'signature', validators: Callable | Iterable[Callable] | None = None,
         invalid_exc: Callable | None = None, required_exc: Callable | None = None):
     '''
     Inject the current user into a view, given the Authorization: Bearer header.
 
-    For portability reasons, this is a partial, two-component function.
-
-    The value_src() callable takes a callable as its only and required argument, and the supplied
-    callable, when called, returns the value of the column.
-
-    The session_src() callable takes no argument, and returns a Session object.
-
-    XXX maybe a class is better than a thousand callables?
+    For portability reasons, this is a partial, two-component function, requiring a AuthSrc() object.
     '''
     col = want_column(cls, column)
     validators = makelist(validators)
@@ -218,7 +214,7 @@ def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, value_src: Ca
         if token is None:
             return None
         tok_parts = UserSigner.split_token(token)
-        user: HasSigner = session_src().execute(select(cls).where(col == tok_parts[0])).scalar()
+        user: HasSigner = src.get_session().execute(select(cls).where(col == tok_parts[0])).scalar()
         try:
             signer: UserSigner = user.signer()
             signer.unsign(token)
@@ -235,9 +231,11 @@ def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, value_src: Ca
     def decorator(func: Callable):
         @wraps(func)
         def wrapper(*a, **ka):
-            ka[dest] = value_src(get_user)
+            ka[dest] = get_user(src.get_token())
             if not ka[dest] and required:
                 required_exc()
+            if signed:
+                ka[sig_dest] = src.get_signature()
             for valid in validators:
                 if not valid(ka[dest]):
                     invalid_exc(getattr(valid, 'message', 'validation failed').format(user=ka[dest]))
