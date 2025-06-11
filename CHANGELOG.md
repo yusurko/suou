@@ -2,10 +2,13 @@
 
 ## 0.3.0
 
-- Add auth loaders i.e. `sqlalchemy.require_auth_base()`, `flask_sqlalchemy`
+- Add SQLAlchemy auth loaders i.e. `sqlalchemy.require_auth_base()`, `flask_sqlalchemy`.
+  What auth loaders do is loading user token and signature into app
+- Implement `UserSigner()`
 - Improve JSON handling in `flask_restx`
-- Add base2048 (i.e. BIP-39) codec
-- Add `split_bits()` and `join_bits()`
+- Add base2048 (i.e. [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki)) codec
+- Add `split_bits()`, `join_bits()`, `ltuple()`, `rtuple()`
+- Add `markdown` extensions
 
 ## 0.2.3
 

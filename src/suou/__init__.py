@@ -25,7 +25,7 @@ from .classtools import Wanted, Incomplete
 from .itertools import makelist, kwargs_prefix, ltuple, rtuple
 from .i18n import I18n, JsonI18n, TomlI18n
 
-__version__ = "0.3.0-dev21"
+__version__ = "0.3.0-dev22"
 
 __all__ = (
     'Siq', 'SiqCache', 'SiqType', 'SiqGen', 'StringCase',

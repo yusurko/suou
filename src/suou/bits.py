@@ -50,8 +50,6 @@ def count_ones(n: int) -> int:
 def split_bits(buf: bytes, nbits: int) -> list[int]:
     '''
     Split a bytestring into chunks of equal size, and interpret each chunk as an unsigned integer.
-
-    XXX DOES NOT WORK DO NOT USE!!!!!!!!
     '''
     mem = memoryview(buf)
     chunk_size = nbits // math.gcd(nbits, 8)

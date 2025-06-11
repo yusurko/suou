@@ -44,7 +44,9 @@ flask_sqlalchemy = [
 peewee = [
     "peewee>=3.0.0, <4.0"
 ]
-
+markdown = [
+    "markdown>=3.0.0"
+]
 
 [tool.setuptools.dynamic]
 version = { attr = "suou.__version__" }
