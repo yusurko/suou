@@ -20,13 +20,14 @@ from abc import ABCMeta, abstractmethod
 from functools import wraps
 from typing import Any, Callable, Iterable, Never, TypeVar
 import warnings
-from sqlalchemy import CheckConstraint, Date, Dialect, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, select, text
+from sqlalchemy import BigInteger, CheckConstraint, Date, Dialect, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, create_engine, select, text
 from sqlalchemy.orm import DeclarativeBase, Session, declarative_base as _declarative_base
 
+from .snowflake import SnowflakeGen
 from .itertools import kwargs_prefix, makelist
 from .signing import HasSigner, UserSigner
 from .codecs import StringCase
-from .functools import deprecated
+from .functools import deprecated, not_implemented
 from .iding import SiqType, SiqCache
 from .classtools import Incomplete, Wanted
 
@@ -36,7 +37,7 @@ _T = TypeVar('_T')
 # Not to be confused with SiqType.
 IdType = LargeBinary(16)
 
-
+@not_implemented
 def sql_escape(s: str, /, dialect: Dialect) -> str:
     """
     Escape a value for SQL embedding, using SQLAlchemy's literal processors.
@@ -49,7 +50,18 @@ def sql_escape(s: str, /, dialect: Dialect) -> str:
     raise TypeError('invalid data type')
 
 
-def id_column(typ: SiqType, *, primary_key: bool = True):
+def create_session(url: str) -> Session:
+    """
+    Create a session on the fly, given a database URL. Useful for
+    contextless environments, such as Python REPL.
+
+    Heads up: a function with the same name exists in core sqlalchemy, but behaves 
+    completely differently!!
+    """
+    engine = create_engine(url)
+    return Session(bind = engine)
+
+def id_column(typ: SiqType, *, primary_key: bool = True, **kwargs):
     """
     Marks a column which contains a SIQ.
     """
@@ -60,9 +72,27 @@ def id_column(typ: SiqType, *, primary_key: bool = True):
             return idgen.generate().to_bytes()
         return new_id
     if primary_key:
-        return Incomplete(Column, IdType, primary_key = True, default = Wanted(new_id_factory))
+        return Incomplete(Column, IdType, primary_key = True, default = Wanted(new_id_factory), **kwargs)
     else:
-        return Incomplete(Column, IdType, unique = True, nullable = False, default = Wanted(new_id_factory))
+        return Incomplete(Column, IdType, unique = True, nullable = False, default = Wanted(new_id_factory), **kwargs)
+
+def snowflake_column(*, primary_key: bool = True, **kwargs):
+    """
+    Same as id_column() but with snowflakes.
+
+    XXX this is meant ONLY as means of transition; for new stuff, use id_column() and SIQ.
+    """
+    def new_id_factory(owner: DeclarativeBase) -> Callable:
+        epoch = owner.metadata.info['snowflake_epoch']
+        # more arguments will be passed on (?)
+        idgen = SnowflakeGen(epoch)
+        def new_id() -> bytes:
+            return idgen.generate()
+        return new_id
+    if primary_key:
+        return Incomplete(Column, BigInteger, primary_key = True, default = Wanted(new_id_factory), **kwargs)
+    else:
+        return Incomplete(Column, BigInteger, unique = True, nullable = False, default = Wanted(new_id_factory), **kwargs)
 
 
 def match_constraint(col_name: str, regex: str, /, dialect: str = 'default', constraint_name: str | None = None) -> CheckConstraint:
@@ -99,9 +129,12 @@ def declarative_base(domain_name: str, master_secret: bytes, metadata: dict | No
         metadata = dict()
     if 'info' not in metadata:
         metadata['info'] = dict()
+    # snowflake metadata
+    snowflake_kwargs = kwargs_prefix(kwargs, 'snowflake_', remove=True)
     metadata['info'].update(
         domain_name = domain_name,
-        secret_key = master_secret
+        secret_key = master_secret,
+        **{f'snowflake_{k}': v for k, v in snowflake_kwargs}
     )
     Base = _declarative_base(metadata=MetaData(**metadata), **kwargs)
     return Base

@@ -162,7 +162,7 @@ def cb32decode(val: bytes | str) -> str:
     '''
     Decode bytes from Crockford Base32.
     '''
-    return base64.b32decode(want_bytes(val).upper().translate(CROCKFORD_TO_B32) + b'=' * ((5 - len(val) % 5) % 5))
+    return base64.b32decode(want_bytes(val).upper().translate(CROCKFORD_TO_B32) + b'=' * ((8 - len(val) % 8) % 8))
 
 def b32lencode(val: bytes) -> str:
     '''
@@ -174,7 +174,7 @@ def b32ldecode(val: bytes | str) -> bytes:
     '''
     Decode a lowercase base32 encoded byte sequence. Padding is managed automatically.
     '''
-    return base64.b32decode(want_bytes(val).upper() + b'=' * ((5 - len(val) % 5) % 5))
+    return base64.b32decode(want_bytes(val).upper() + b'=' * ((8 - len(val) % 8) % 8))
 
 def b64encode(val: bytes, *, strip: bool = True) -> str:
     '''
@@ -229,6 +229,35 @@ def jsonencode(obj: dict, *, skipkeys: bool = True, separators: tuple[str, str] 
 
 jsondecode = deprecated('just use json.loads()')(json.loads)
 
+def ssv_list(s: str, *, sep_chars = ',;') -> list[str]:
+    """
+    Parse values from a Space Separated Values (SSV) string.
+
+    By default, values are split on spaces, commas (,) and semicolons (;), configurable
+    with sepchars= argument.
+
+    Double quotes (") can be used to allow spaces, commas etc. in values. Doubled double
+    quotes ("") are parsed as literal double quotes.
+
+    Useful for environment variables: pass it to ConfigValue() as the cast= argument.
+    """
+    sep_re = r'\s+|\s*[' + re.escape(sep_chars) + r']\s*'
+    parts = s.split('"')
+    parts[::2] = [re.split(sep_re, x) for x in parts[::2]]
+    l: list[str] = parts[0].copy()
+    for i in range(1, len(parts), 2):
+        p0, *pt = parts[i+1]
+        # two "strings" sandwiching each other case
+        if i < len(parts)-2 and parts[i] and parts[i+2] and not p0 and not pt:
+            p0 = '"'
+        l[-1] += ('"' if parts[i] == '' else parts[i]) + p0
+        l.extend(pt)
+    if l and l[0] == '':
+        l.pop(0)
+    if l and l[-1] == '':
+        l.pop()
+    return l
+
 class StringCase(enum.Enum):
     """
     Enum values used by regex validators and storage converters.
@@ -237,7 +266,7 @@ class StringCase(enum.Enum):
     LOWER = case insensitive, force lowercase
     UPPER = case insensitive, force uppercase
     IGNORE = case insensitive, leave as is, use lowercase in comparison
-    IGNORE_UPPER = same as above, but use uppercase il comparison
+    IGNORE_UPPER = same as above, but use uppercase in comparison
     """
     AS_IS = 0
     LOWER = FORCE_LOWER = 1
@@ -264,5 +293,5 @@ class StringCase(enum.Enum):
 
 __all__ = (
     'cb32encode', 'cb32decode', 'b32lencode', 'b32ldecode', 'b64encode', 'b64decode', 'jsonencode'
-    'StringCase', 'want_bytes', 'want_str', 'jsondecode'
+    'StringCase', 'want_bytes', 'want_str', 'jsondecode', 'ssv_list'
 )

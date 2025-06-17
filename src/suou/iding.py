@@ -40,7 +40,7 @@ import os
 from typing import Iterable, override
 import warnings
 
-from .functools import not_implemented, deprecated
+from .functools import deprecated
 from .codecs import b32lencode, b64encode, cb32encode
 
 
@@ -220,6 +220,9 @@ class SiqCache:
         return self._cache.pop(0)
 
 class Siq(int):
+    """
+    Representation of a SIQ as an integer.
+    """
     def to_bytes(self, length: int = 14, byteorder = 'big', *, signed: bool = False) -> bytes:
         return super().to_bytes(length, byteorder, signed=signed)
     @classmethod
@@ -230,17 +233,22 @@ class Siq(int):
 
     def to_base64(self, length: int = 15, *, strip: bool = True) -> str:
         return b64encode(self.to_bytes(length), strip=strip)
-    def to_cb32(self)-> str:
+    def to_cb32(self) -> str:
         return cb32encode(self.to_bytes(15, 'big'))
     to_crockford = to_cb32
     def to_hex(self) -> str:
         return f'{self:x}'
     def to_oct(self) -> str:
         return f'{self:o}'
-    @deprecated('use str() instead')
-    def to_dec(self) -> str:
-        return f'{self}'
-
+    def to_b32l(self) -> str:
+        """
+        This is NOT the URI serializer!
+        """
+        return b32lencode(self.to_bytes(15, 'big'))
+    def __str__(self) -> str:
+        return int.__str__(self)
+    to_dec = deprecated('use str() instead')(__str__)
+    
     @override
     def __format__(self, opt: str, /) -> str:
         try:
@@ -256,7 +264,9 @@ class Siq(int):
             case '0c':
                 return '0' + self.to_cb32()
             case 'd' | '':
-                return int.__str__(self)
+                return int.__repr__(self)
+            case 'l':
+                return self.to_b32l()
             case 'o' | 'x':
                 return int.__format__(self, opt)
             case 'u':
@@ -287,6 +297,15 @@ class Siq(int):
     def __repr__(self):
         return f'{self.__class__.__name__}({super().__repr__()})'
 
+    # convenience methods
+    def timestamp(self):
+        return (self >> 56) / (1 << 16)
+
+    def shard_id(self):
+        return (self >> 48) % 256
+
+    def domain_name(self):
+        return (self >> 16) % 0xffffffff
 
 __all__ = (
     'Siq', 'SiqCache', 'SiqType', 'SiqGen'

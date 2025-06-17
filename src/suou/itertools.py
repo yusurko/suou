@@ -50,11 +50,25 @@ def rtuple(seq: Iterable[_T], size: int, /, pad = None) -> tuple:
     return seq
 
 
-def kwargs_prefix(it: dict[str, Any], prefix: str) -> dict[str, Any]:
+def kwargs_prefix(it: dict[str, Any], prefix: str, *, remove = True, keep_prefix = False) -> dict[str, Any]:
     '''
     Subset of keyword arguments. Useful for callable wrapping.
+
+    By default, it removes arguments from original kwargs as well. You can prevent by
+    setting remove=False.
+
+    By default, specified prefix is removed from each key of the returned
+    dictionary; keep_prefix=True keeps the prefix on keys.
     '''
-    return {k.removeprefix(prefix): v for k, v in it.items() if k.startswith(prefix)}
+    keys = [k for k in it.keys() if k.startswith(prefix)]
+
+    ka = dict()
+    for k in keys:
+        ka[k if keep_prefix else k.removeprefix(prefix)] = it[k]
+    if remove:
+        for k in keys:
+            it.pop(k)
+    return ka
 
 
 
