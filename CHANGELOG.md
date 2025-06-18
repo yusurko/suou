@@ -3,6 +3,7 @@
 ## 0.3.3
 
 - Fixed leftovers in `snowflake` module from unchecked code copying — i.e. `SnowflakeGen.generate_one()` used to require an unused typ= parameter
+- Fixed a bug in `id_column()` that made it fail to provide a working generator — again, this won't be backported
 
 ## 0.3.2
 

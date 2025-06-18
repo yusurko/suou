@@ -206,7 +206,9 @@ class SiqCache:
         return self.generator.last_gen_ts
     def cur_timestamp(self):
         return self.generator.cur_timestamp()
-    def __init__(self, generator: SiqGen, typ: SiqType, size: int = 64, max_age: int = 1024):
+    def __init__(self, generator: SiqGen | str, typ: SiqType, size: int = 64, max_age: int = 1024):
+        if isinstance(generator, str):
+            generator = SiqGen(generator)
         self.generator = generator
         self.typ = typ
         self.size = size

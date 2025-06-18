@@ -28,7 +28,7 @@ from .itertools import kwargs_prefix, makelist
 from .signing import HasSigner, UserSigner
 from .codecs import StringCase
 from .functools import deprecated, not_implemented
-from .iding import SiqType, SiqCache
+from .iding import Siq, SiqGen, SiqType, SiqCache
 from .classtools import Incomplete, Wanted
 
 _T = TypeVar('_T')
@@ -67,9 +67,9 @@ def id_column(typ: SiqType, *, primary_key: bool = True, **kwargs):
     """
     def new_id_factory(owner: DeclarativeBase) -> Callable:
         domain_name = owner.metadata.info['domain_name']
-        idgen = SiqCache(domain_name, typ)
+        idgen = SiqCache(SiqGen(domain_name), typ)
         def new_id() -> bytes:
-            return idgen.generate().to_bytes()
+            return Siq(idgen.generate()).to_bytes()
         return new_id
     if primary_key:
         return Incomplete(Column, IdType, primary_key = True, default = Wanted(new_id_factory), **kwargs)
