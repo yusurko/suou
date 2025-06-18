@@ -18,10 +18,10 @@ from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
 from functools import wraps
-from typing import Any, Callable, Iterable, Never, TypeVar
+from typing import Callable, Iterable, Never, TypeVar
 import warnings
 from sqlalchemy import BigInteger, CheckConstraint, Date, Dialect, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, create_engine, select, text
-from sqlalchemy.orm import DeclarativeBase, Session, declarative_base as _declarative_base
+from sqlalchemy.orm import DeclarativeBase, Session, declarative_base as _declarative_base, relationship
 
 from .snowflake import SnowflakeGen
 from .itertools import kwargs_prefix, makelist
@@ -130,11 +130,11 @@ def declarative_base(domain_name: str, master_secret: bytes, metadata: dict | No
     if 'info' not in metadata:
         metadata['info'] = dict()
     # snowflake metadata
-    snowflake_kwargs = kwargs_prefix(kwargs, 'snowflake_', remove=True)
+    snowflake_kwargs = kwargs_prefix(kwargs, 'snowflake_', remove=True, keep_prefix=True)
     metadata['info'].update(
         domain_name = domain_name,
         secret_key = master_secret,
-        **{f'snowflake_{k}': v for k, v in snowflake_kwargs}
+        **snowflake_kwargs
     )
     Base = _declarative_base(metadata=MetaData(**metadata), **kwargs)
     return Base
@@ -192,6 +192,26 @@ def age_pair(*, nullable: bool = False, **ka) -> tuple[Column, Column]:
     acc_col = Column(SmallInteger, nullable = nullable, **acc_ka)
     return (date_col, acc_col)
 
+
+def parent_children(keyword: str, /, **kwargs):
+    """
+    Self-referential one-to-many relationship pair.
+    Parent comes first, children come later.
+
+    keyword is used in back_populates column names: convention over
+    configuration. Naming it otherwise will BREAK your models.
+    
+    Additional keyword arguments can be sourced with parent_ and child_ argument prefixes,
+    obviously.
+    """
+
+    parent_kwargs = kwargs_prefix(kwargs, 'parent_')
+    child_kwargs = kwargs_prefix(kwargs, 'child_')
+
+    parent = Incomplete(relationship, Wanted(lambda o, n: o.__name__), back_populates=f'child_{keyword}s', **parent_kwargs)
+    child = Incomplete(relationship, Wanted(lambda o, n: o.__name__), back_populates=f'parent_{keyword}', **child_kwargs)
+
+    return parent, child
 
 def want_column(cls: type[DeclarativeBase], col: Column[_T] | str) -> Column[_T]:
     """

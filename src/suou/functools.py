@@ -22,7 +22,7 @@ try:
     from warnings import deprecated
 except ImportError:
     # Python <=3.12 does not implement warnings.deprecated
-    def deprecated(message: str, /, *, category=DeprecationWarning):
+    def deprecated(message: str, /, *, category=DeprecationWarning, stacklevel:int=1):
         """
         Backport of PEP 702 for Python <=3.12.
         The stack_level stuff is not reimplemented on purpose because
@@ -32,7 +32,7 @@ except ImportError:
             @wraps(func)
             def wrapper(*a, **ka):
                 if category is not None:
-                    warnings.warn(message, category)
+                    warnings.warn(message, category, stacklevel=stacklevel)
                 return func(*a, **ka)
             func.__deprecated__ = True
             wrapper.__deprecated__ = True

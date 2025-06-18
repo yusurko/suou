@@ -121,29 +121,31 @@ class Snowflake(int):
     
     def to_bytes(self, length: int = 14, byteorder = "big", *, signed: bool = False) -> bytes:
         return super().to_bytes(length, byteorder, signed=signed)
-    @classmethod
-    def from_bytes(cls, b: bytes, byteorder = 'big', *, signed: bool = False) -> Snowflake:
-        if len(b) != 8:
-            warnings.warn('Snowflakes are exactly 8 bytes long', BytesWarning)
-        return super().from_bytes(b, byteorder, signed=signed)
-    
     def to_base64(self, length: int = 9, *, strip: bool = True) -> str:
         return b64encode(self.to_bytes(length), strip=strip)
     def to_cb32(self)-> str:
-        return cb32encode(self.to_bytes(9, 'big'))
+        return cb32encode(self.to_bytes(8, 'big'))
     to_crockford = to_cb32
     def to_hex(self) -> str:
         return f'{self:x}'
     def to_oct(self) -> str:
         return f'{self:o}'
     def to_b32l(self) -> str:
+        """PSA Snowflake Base32 representations are padded to 10 bytes!"""
         return b32lencode(self.to_bytes(10, 'big')).lstrip('a')
+
+    @classmethod
+    def from_bytes(cls, b: bytes, byteorder = 'big', *, signed: bool = False) -> Snowflake:
+        if len(b) not in (8, 10):
+            warnings.warn('Snowflakes are exactly 8 bytes long', BytesWarning)
+        return super().from_bytes(b, byteorder, signed=signed)
+
     @classmethod
     def from_b32l(cls, val: str) -> Snowflake:
         if val.startswith('_'):
             ## support for negative Snowflakes
             return -cls.from_b32l(val.lstrip('_'))
-        return Snowflake.from_bytes(b32ldecode(val.ljust(16, 'a'))[-8:])
+        return Snowflake.from_bytes(b32ldecode(val.rjust(16, 'a')))
 
     @override
     def __format__(self, opt: str, /) -> str:

@@ -14,7 +14,8 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '''
 
-from typing import Any, Iterable, TypeVar
+from typing import Any, Iterable, MutableMapping, TypeVar
+import warnings
 
 _T = TypeVar('_T')
 
@@ -70,6 +71,18 @@ def kwargs_prefix(it: dict[str, Any], prefix: str, *, remove = True, keep_prefix
             it.pop(k)
     return ka
 
+def additem(obj: MutableMapping, /, name: str = None):
+    """
+    Syntax sugar for adding a function to a mapping, immediately.
+    """
+    def decorator(func):
+        key = name or func.__name__
+        if key in obj:
+            warnings.warn(f'mapping does already have item {key!r}')
+        obj[key] = func
+        return func
+    return decorator
 
 
-__all__ = ('makelist', 'kwargs_prefix', 'ltuple', 'rtuple')
+__all__ = ('makelist', 'kwargs_prefix', 'ltuple', 'rtuple', 'additem')
+
