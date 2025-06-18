@@ -131,7 +131,9 @@ class Snowflake(int):
     def to_oct(self) -> str:
         return f'{self:o}'
     def to_b32l(self) -> str:
-        """PSA Snowflake Base32 representations are padded to 10 bytes!"""
+        # PSA Snowflake Base32 representations are padded to 10 bytes!
+        if self < 0:
+            return '_' + Snowflake.to_b32l(-self)
         return b32lencode(self.to_bytes(10, 'big')).lstrip('a')
 
     @classmethod
