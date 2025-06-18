@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1
+
+- Fixed bugs in Snowflake generation and serialization of negative values
+
 ## 0.3.0
 
 - Fixed `cb32encode()` and `b32lencode()` doing wrong padding — **UNSOLVED in 0.2.x** which is out of support, effective immediately

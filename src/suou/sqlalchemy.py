@@ -86,8 +86,8 @@ def snowflake_column(*, primary_key: bool = True, **kwargs):
         epoch = owner.metadata.info['snowflake_epoch']
         # more arguments will be passed on (?)
         idgen = SnowflakeGen(epoch)
-        def new_id() -> bytes:
-            return idgen.generate()
+        def new_id() -> int:
+            return idgen.generate_one()
         return new_id
     if primary_key:
         return Incomplete(Column, BigInteger, primary_key = True, default = Wanted(new_id_factory), **kwargs)
