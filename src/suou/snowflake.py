@@ -108,10 +108,10 @@ class SnowflakeGen:
                 n -= 1
                 self.counter += 1
             yield siq
-    def generate_one(self, /, typ: SiqType) -> int:
-        return next(self.generate(typ, 1))
-    def generate_list(self, /, typ: SiqType, n: int = 1) -> list[int]:
-        return list(self.generate(typ, n))
+    def generate_one(self, /) -> int:
+        return next(self.generate(1))
+    def generate_list(self, /, n: int = 1) -> list[int]:
+        return list(self.generate(n))
 
 
 class Snowflake(int):
