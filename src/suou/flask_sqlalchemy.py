@@ -22,7 +22,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Session
 
 from .codecs import want_bytes
-from .sqlalchemy import require_auth_base
+from .sqlalchemy import AuthSrc, require_auth_base
 
 class FlaskAuthSrc(AuthSrc):
     '''
