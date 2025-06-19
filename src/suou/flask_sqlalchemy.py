@@ -35,7 +35,8 @@ class FlaskAuthSrc(AuthSrc):
     def get_session(self) -> Session:
         return self.db.session
     def get_token(self):
-        return request.authorization.token
+        if request.authorization:
+            return request.authorization.token
     def get_signature(self) -> bytes:
         sig = request.headers.get('authorization-signature', None)
         return want_bytes(sig) if sig else None
@@ -50,6 +51,9 @@ def require_auth(cls: type[DeclarativeBase], db: SQLAlchemy) -> Callable[Any, Ca
 
     This looks for a token in the Authorization header, validates it, loads the
     appropriate object, and injects it as the user= parameter.
+
+    NOTE: the actual decorator to be used on routes is **auth_required()**,
+    NOT require_auth() which is the **constructor** for it.
 
     cls is a SQLAlchemy table.
     db is a flask_sqlalchemy.SQLAlchemy() binding.

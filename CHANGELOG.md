@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.4
+
+- Bug fixes in `.flask_sqlalchemy`
+
 ## 0.3.3
 
 - Fixed leftovers in `snowflake` module from unchecked code copying — i.e. `SnowflakeGen.generate_one()` used to require an unused typ= parameter
