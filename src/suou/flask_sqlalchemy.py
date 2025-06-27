@@ -43,9 +43,9 @@ class FlaskAuthSrc(AuthSrc):
     def invalid_exc(self, msg: str = 'validation failed') -> Never:
         abort(400, msg)
     def required_exc(self):
-        abort(401)
+        abort(401, 'Login required')
 
-def require_auth(cls: type[DeclarativeBase], db: SQLAlchemy) -> Callable[Any, Callable]:
+def require_auth(cls: type[DeclarativeBase], db: SQLAlchemy) -> Callable:
     """
     Make an auth_required() decorator for Flask views.
 
@@ -67,7 +67,12 @@ def require_auth(cls: type[DeclarativeBase], db: SQLAlchemy) -> Callable[Any, Ca
     def super_secret_stuff(user):
         pass
     """
-    return partial(require_auth_base, cls=cls, src=FlaskAuthSrc(db))
+    def auth_required(**kwargs):
+        return require_auth_base(cls=cls, src=FlaskAuthSrc(db), **kwargs)
+
+    auth_required.__doc__ = require_auth_base.__doc__
+
+    return auth_required
 
 
 __all__ = ('require_auth', )

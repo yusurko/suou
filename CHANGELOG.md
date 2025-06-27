@@ -2,7 +2,7 @@
 
 ## 0.3.4
 
-- Bug fixes in `.flask_sqlalchemy`
+- Bug fixes in `.flask_sqlalchemy` and `.sqlalchemy` — `require_auth()` is unusable before this point!
 
 ## 0.3.3
 

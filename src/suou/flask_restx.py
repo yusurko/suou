@@ -54,7 +54,10 @@ class Api(_Api):
     Notably, all JSON is whitespace-free and .message is remapped to .error
     """
     def handle_error(self, e):
+        ### XXX apparently this handle_error does not get called AT ALL.
+        print(e)
         res = super().handle_error(e)
+        print(res)
         if isinstance(res, Mapping) and 'message' in res:
             res['error'] = res['message']
             del res['message']

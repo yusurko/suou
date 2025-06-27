@@ -27,7 +27,7 @@ from .itertools import makelist, kwargs_prefix, ltuple, rtuple, additem
 from .i18n import I18n, JsonI18n, TomlI18n
 from .snowflake import Snowflake, SnowflakeGen
 
-__version__ = "0.3.4-dev24"
+__version__ = "0.3.4.rc1"
 
 __all__ = (
     'Siq', 'SiqCache', 'SiqType', 'SiqGen', 'StringCase',
