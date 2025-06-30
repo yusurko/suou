@@ -20,7 +20,7 @@ from ast import TypeVar
 from collections.abc import Mapping
 from configparser import ConfigParser as _ConfigParser
 import os
-from typing import Any, Callable, Iterable, Iterator
+from typing import Any, Callable, Iterator
 from collections import OrderedDict
 
 from .functools import deprecated_alias
@@ -78,6 +78,8 @@ class ConfigParserConfigSource(ConfigSource):
     _cfp: _ConfigParser
 
     def __init__(self, cfp: _ConfigParser):
+        if not isinstance(cfp, _ConfigParser):
+           raise TypeError(f'a ConfigParser object is required (got {cfp.__class__.__name__!r})')
         self._cfp = cfp
     def __getitem__(self, key: str, /) -> str:
         k1, _, k2 = key.partition('.')
@@ -174,10 +176,12 @@ class ConfigValue:
             owner.expose(self._pub_name, name)
     def __get__(self, obj: ConfigOptions, owner=False):
         if self._val is MISSING:
+            v = MISSING
             for srckey, src in obj._srcs.items():
-                v = src.get(self._srcs[srckey], MISSING)
-            if self._required and not v:
-                    raise MissingConfigError(f'required config {self._src} not set!')
+                if srckey in self._srcs:
+                    v = src.get(self._srcs[srckey], v)
+            if self._required and (not v or v is MISSING):
+                raise MissingConfigError(f'required config {self._srcs['default']} not set!')
             if v is MISSING:
                 v = self._default
             if callable(self._cast):
