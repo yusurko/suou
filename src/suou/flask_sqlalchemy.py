@@ -66,6 +66,8 @@ def require_auth(cls: type[DeclarativeBase], db: SQLAlchemy) -> Callable:
     @auth_required(validators=[lambda x: x.is_administrator])
     def super_secret_stuff(user):
         pass
+        
+    NOTE: require_auth() DOES NOT work with flask_restx.
     """
     def auth_required(**kwargs):
         return require_auth_base(cls=cls, src=FlaskAuthSrc(db), **kwargs)

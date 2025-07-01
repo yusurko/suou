@@ -2,7 +2,7 @@
 
 ## 0.3.4
 
-- Bug fixes in `.flask_sqlalchemy` and `.sqlalchemy` — `require_auth()` is unusable before this point!
+- Bug fixes in `.flask_restx` regarding error handling
 - Fixed a bug in `.configparse` dealing with unset values from multiple sources
 
 ## 0.3.3

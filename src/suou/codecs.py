@@ -227,7 +227,7 @@ def jsonencode(obj: dict, *, skipkeys: bool = True, separators: tuple[str, str] 
     '''
     return json.dumps(obj, skipkeys=skipkeys, separators=separators, default=_json_default(default), **kwargs)
 
-jsondecode = deprecated('just use json.loads()')(json.loads)
+jsondecode: Callable[Any, dict] = deprecated('just use json.loads()')(json.loads)
 
 def ssv_list(s: str, *, sep_chars = ',;') -> list[str]:
     """
