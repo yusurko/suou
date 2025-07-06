@@ -16,10 +16,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from typing import Any, Mapping
 import warnings
-from flask import current_app, make_response
+from flask import Response, current_app, make_response
 from flask_restx import Api as _Api
 
-from .codecs import jsonencode
+from .codecs import jsondecode, jsonencode, want_bytes, want_str
 
 
 def output_json(data, code, headers=None):
@@ -54,10 +54,21 @@ class Api(_Api):
     Notably, all JSON is whitespace-free and .message is remapped to .error
     """
     def handle_error(self, e):
+        ### XXX in order for errors to get handled the correct way, import 
+        ### suou.flask_restx.Api() NOT flask_restx.Api() !!!!
         res = super().handle_error(e)
         if isinstance(res, Mapping) and 'message' in res:
             res['error'] = res['message']
             del res['message']
+        elif isinstance(res, Response):
+            try:
+                body = want_str(res.response[0])
+                bodj = jsondecode(body)
+                if 'message' in bodj:
+                    bodj['error'] = bodj.pop('message')
+                res.response = [want_bytes(jsonencode(bodj))]
+            except (IndexError, KeyError):
+                pass
         return res
     def __init__(self, *a, **ka):
         super().__init__(*a, **ka)

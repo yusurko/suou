@@ -14,9 +14,16 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
-from typing import Any, Callable, Generic, Iterable, TypeVar
+from __future__ import annotations
+
+from abc import ABCMeta, abstractmethod
+from typing import Any, Callable, Generic, Iterable, Mapping, TypeVar
+
+from suou.codecs import StringCase
 
 _T = TypeVar('_T')
+
+MISSING = object()
 
 class Wanted(Generic[_T]):
     """
@@ -98,6 +105,78 @@ class Incomplete(Generic[_T]):
                 clsdict[k] = v.instance()
         return clsdict
 
-__all__ = (
-    'Wanted', 'Incomplete'
-)
+
+class ValueSource(Mapping):
+    """
+    Abstract value source.
+    """
+    pass
+
+
+class ValueProperty(Generic[_T]):
+    _name: str | None
+    _srcs: dict[str, str]
+    _val: Any | MISSING
+    _default: Any | None
+    _cast: Callable | None
+    _required: bool
+    _pub_name: str | bool = False
+    _not_found = LookupError
+
+    def __init__(self, /, src: str | None = None, *,
+            default = None, cast: Callable | None = None,
+            required: bool = False, public: str | bool = False,
+            **kwargs
+        ):
+        self._srcs = dict()
+        if src:
+            self._srcs['default'] = src
+        self._default = default
+        self._cast = cast
+        self._required = required
+        self._pub_name = public
+        self._val = MISSING
+        for k, v in kwargs.items():
+            if k.endswith('_src'):
+                self._srcs[k[:-4]] = v
+            else:
+                raise TypeError(f'unknown keyword argument {k!r}')
+        
+    def __set_name__(self, owner, name: str, *, src_name: str | None = None):
+        self._name = name
+        self._srcs.setdefault('default', src_name or name)
+        nsrcs = dict()
+        for k, v in self._srcs.items():
+            if v.endswith('?'):
+                nsrcs[k] = v.rstrip('?') + (src_name or name)
+        self._srcs.update(nsrcs)
+        if self._pub_name is True:
+            self._pub_name = name
+    def __get__(self, obj: Any, owner = None):
+        if self._val is MISSING:
+            v = MISSING
+            for srckey, src in self._srcs.items():
+                if (getter := self._getter(obj, srckey)):
+                    v = getter.get(src, v)
+            if self._required and (not v or v is MISSING):
+                raise self._not_found(f'required config {self._srcs['default']} not set!')
+            if v is MISSING:
+                v = self._default
+            if callable(self._cast):
+                v = self._cast(v) if v is not None else self._cast()
+            self._val = v
+        return self._val
+
+    @abstractmethod
+    def _getter(self, obj: Any, name: str = 'default') -> ValueSource:
+        pass
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def source(self, /):
+        return self._srcs['default']
+    
+

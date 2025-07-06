@@ -22,7 +22,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Session
 
 from .codecs import want_bytes
-from .sqlalchemy import require_auth_base
+from .sqlalchemy import AuthSrc, require_auth_base
 
 class FlaskAuthSrc(AuthSrc):
     '''
@@ -35,14 +35,15 @@ class FlaskAuthSrc(AuthSrc):
     def get_session(self) -> Session:
         return self.db.session
     def get_token(self):
-        return request.authorization.token
+        if request.authorization:
+            return request.authorization.token
     def get_signature(self) -> bytes:
         sig = request.headers.get('authorization-signature', None)
         return want_bytes(sig) if sig else None
     def invalid_exc(self, msg: str = 'validation failed') -> Never:
         abort(400, msg)
     def required_exc(self):
-        abort(401)
+        abort(401, 'Login required')
 
 def require_auth(cls: type[DeclarativeBase], db: SQLAlchemy) -> Callable[Any, Callable]:
     """
@@ -50,6 +51,9 @@ def require_auth(cls: type[DeclarativeBase], db: SQLAlchemy) -> Callable[Any, Ca
 
     This looks for a token in the Authorization header, validates it, loads the
     appropriate object, and injects it as the user= parameter.
+
+    NOTE: the actual decorator to be used on routes is **auth_required()**,
+    NOT require_auth() which is the **constructor** for it.
 
     cls is a SQLAlchemy table.
     db is a flask_sqlalchemy.SQLAlchemy() binding.
@@ -62,8 +66,15 @@ def require_auth(cls: type[DeclarativeBase], db: SQLAlchemy) -> Callable[Any, Ca
     @auth_required(validators=[lambda x: x.is_administrator])
     def super_secret_stuff(user):
         pass
+
+    NOTE: require_auth() DOES NOT work with flask_restx.
     """
-    return partial(require_auth_base, cls=cls, src=FlaskAuthSrc(db))
+    def auth_required(**kwargs):
+        return require_auth_base(cls=cls, src=FlaskAuthSrc(db), **kwargs)
+
+    auth_required.__doc__ = require_auth_base.__doc__
+
+    return auth_required
 
 
 __all__ = ('require_auth', )

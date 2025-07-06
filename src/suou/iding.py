@@ -41,7 +41,7 @@ from typing import Iterable, override
 import warnings
 
 from .functools import deprecated
-from .codecs import b32lencode, b64encode, cb32encode
+from .codecs import b32lencode, b64encode, cb32decode, cb32encode, want_str
 
 
 class SiqType(enum.Enum):
@@ -225,6 +225,7 @@ class Siq(int):
     """
     Representation of a SIQ as an integer.
     """
+
     def to_bytes(self, length: int = 14, byteorder = 'big', *, signed: bool = False) -> bytes:
         return super().to_bytes(length, byteorder, signed=signed)
     @classmethod
@@ -236,7 +237,7 @@ class Siq(int):
     def to_base64(self, length: int = 15, *, strip: bool = True) -> str:
         return b64encode(self.to_bytes(length), strip=strip)
     def to_cb32(self) -> str:
-        return cb32encode(self.to_bytes(15, 'big'))
+        return cb32encode(self.to_bytes(15, 'big')).lstrip('0')
     to_crockford = to_cb32
     def to_hex(self) -> str:
         return f'{self:x}'
@@ -290,6 +291,10 @@ class Siq(int):
         if binascii.crc32(b) != cs:
             raise ValueError('checksum mismatch')
         return cls(int.from_bytes(b, 'big'))
+
+    @classmethod
+    def from_cb32(cls, val: str | bytes):
+        return cls.from_bytes(cb32decode(want_str(val).zfill(24)))
 
     def to_mastodon(self, /, domain: str | None = None):
         return f'@{self:u}{"@" if domain else ""}{domain}'

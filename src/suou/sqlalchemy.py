@@ -253,8 +253,7 @@ class AuthSrc(metaclass=ABCMeta):
 
 
 def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, column: str | Column[_T] = 'id', dest: str = 'user',
-        required: bool = False, signed: bool = False, sig_dest: str = 'signature', validators: Callable | Iterable[Callable] | None = None,
-        invalid_exc: Callable | None = None, required_exc: Callable | None = None):
+        required: bool = False, signed: bool = False, sig_dest: str = 'signature', validators: Callable | Iterable[Callable] | None = None):
     '''
     Inject the current user into a view, given the Authorization: Bearer header.
 
@@ -275,11 +274,11 @@ def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, column: str |
         except Exception:
             return None
 
-    def _default_invalid(msg: str):
+    def _default_invalid(msg: str = 'Validation failed'):
         raise ValueError(msg)
         
-    invalid_exc = invalid_exc or _default_invalid
-    required_exc = required_exc or (lambda: _default_invalid())
+    invalid_exc = src.invalid_exc or _default_invalid
+    required_exc = src.required_exc or (lambda: _default_invalid('Login required'))
 
     def decorator(func: Callable):
         @wraps(func)

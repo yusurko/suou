@@ -10,7 +10,8 @@ readme = "README.md"
 
 dependencies = [
     "itsdangerous",
-    "toml"
+    "toml",
+    "pydantic"
 ]
 # - further devdependencies below - #
 
@@ -36,10 +37,12 @@ sqlalchemy = [
 ]
 flask = [
     "Flask>=2.0.0",
-    "Flask-RestX"
+    "Flask-RestX",
+    "Quart",
+    "Quart-Schema"
 ]
 flask_sqlalchemy = [
-    "Flask-SqlAlchemy"
+    "Flask-SqlAlchemy",
 ]
 peewee = [
     "peewee>=3.0.0, <4.0"

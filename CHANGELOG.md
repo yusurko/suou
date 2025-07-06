@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0
+
++ Added `ValueProperty`, abstract superclass for `ConfigProperty`.
+
+## 0.3.4
+
+- Bug fixes in `.flask_restx` regarding error handling
+- Fixed a bug in `.configparse` dealing with unset values from multiple sources
+
 ## 0.3.3
 
 - Fixed leftovers in `snowflake` module from unchecked code copying — i.e. `SnowflakeGen.generate_one()` used to require an unused typ= parameter

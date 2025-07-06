@@ -1,6 +1,11 @@
 """
 Utilities for parsing config variables.
 
+BREAKING older, non-generalized version, kept for backwards compability
+in case 0.4+ version happens to break.
+
+WILL BE removed in 0.5.0.
+
 ---
 
 Copyright (c) 2025 Sakuragasaki46.
@@ -15,31 +20,32 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
 from __future__ import annotations
-
 from ast import TypeVar
 from collections.abc import Mapping
 from configparser import ConfigParser as _ConfigParser
 import os
-from typing import Any, Callable, Iterator, override
+from typing import Any, Callable, Iterator
 from collections import OrderedDict
+import warnings
 
-from .classtools import ValueSource, ValueProperty
 from .functools import deprecated
 from .exceptions import MissingConfigError, MissingConfigWarning
 
+warnings.warn('This module will be removed in 0.5.0 and is kept only in case new implementation breaks!\n'\
+    'Do not use unless you know what you are doing.', DeprecationWarning)
 
-
+MISSING = object()
 _T = TypeVar('T')
 
 
-
-class ConfigSource(ValueSource):
+@deprecated('use configparse')
+class ConfigSource(Mapping):
     '''
-    Abstract config value source.
+    Abstract config source.
     '''
     __slots__ = ()
 
-
+@deprecated('use configparse')
 class EnvConfigSource(ConfigSource):
     '''
     Config source from os.environ aka .env
@@ -55,7 +61,7 @@ class EnvConfigSource(ConfigSource):
     def __len__(self) -> int:
         return len(os.environ)
 
-
+@deprecated('use configparse')
 class ConfigParserConfigSource(ConfigSource):
     '''
     Config source from ConfigParser
@@ -84,6 +90,7 @@ class ConfigParserConfigSource(ConfigSource):
         ## XXX might be incorrect but who cares
         return sum(len(x) for x in self._cfp)
 
+@deprecated('use configparse')
 class DictConfigSource(ConfigSource):
     '''
     Config source from Python mappings. Useful with JSON/TOML config
@@ -105,7 +112,8 @@ class DictConfigSource(ConfigSource):
     def __len__(self) -> int:
         return len(self._d)
 
-class ConfigValue(ValueProperty):
+@deprecated('use configparse')
+class ConfigValue:
     """
     A single config property.
 
@@ -121,45 +129,65 @@ class ConfigValue(ValueProperty):
     - preserve_case: if True, src is not CAPITALIZED. Useful for parsing from Python dictionaries or ConfigParser's
     - required: throw an error if empty or not supplied
     """
-    
-    _preserve_case: bool = False
-    _prefix: str | None = None
-    _not_found = MissingConfigError
+    # XXX disabled per https://stackoverflow.com/questions/45864273/slots-conflicts-with-a-class-variable-in-a-generic-class
+    #__slots__ = ('_srcs', '_val', '_default', '_cast', '_required', '_preserve_case')
 
+    _srcs: dict[str, str] | None
+    _preserve_case: bool = False
+    _val: Any | MISSING = MISSING
+    _default: Any | None
+    _cast: Callable | None
+    _required: bool
+    _pub_name: str | bool = False
     def __init__(self, /,
             src: str | None = None, *, default = None, cast: Callable | None = None,
             required: bool = False, preserve_case: bool = False, prefix: str | None = None, 
             public: str | bool = False, **kwargs):
+        self._srcs = dict()
         self._preserve_case = preserve_case
-        if src and not preserve_case:
-            src = src.upper()
-        if not src and prefix:
-            self._prefix = prefix
-            if not preserve_case:
-                src = f'{prefix.upper()}?'
+        if src:
+            self._srcs['default'] = src if preserve_case else src.upper()
+        elif prefix:
+            self._srcs['default'] = f'{prefix if preserve_case else prefix.upper}?'
+        self._default = default
+        self._cast = cast
+        self._required = required
+        self._pub_name = public
+        for k, v in kwargs.items():
+            if k.endswith('_src'):
+                self._srcs[k[:-4]] = v
             else:
-                src = f'{prefix}?'
-
-        super().__init__(src, default=default, cast=cast, 
-            required=required, public=public, **kwargs
-        )
-        
+                raise TypeError(f'unknown keyword argument {k!r}')
     def __set_name__(self, owner, name: str):
-        src_name = name if self._preserve_case else name.upper()
-
-        super().__set_name__(owner, name, src_name=src_name)
-
+        if 'default' not in self._srcs:
+            self._srcs['default'] = name if self._preserve_case else name.upper() 
+        elif self._srcs['default'].endswith('?'):
+            self._srcs['default'] = self._srcs['default'].rstrip('?') + (name if self._preserve_case else name.upper() )
+        
+        if self._pub_name is True:
+            self._pub_name = name
         if self._pub_name and isinstance(owner, ConfigOptions):
             owner.expose(self._pub_name, name)
-        
+    def __get__(self, obj: ConfigOptions, owner=False):
+        if self._val is MISSING:
+            v = MISSING
+            for srckey, src in obj._srcs.items():
+                if srckey in self._srcs:
+                    v = src.get(self._srcs[srckey], v)
+            if self._required and (not v or v is MISSING):
+                raise MissingConfigError(f'required config {self._srcs['default']} not set!')
+            if v is MISSING:
+                v = self._default
+            if callable(self._cast):
+                v = self._cast(v) if v is not None else self._cast()
+            self._val = v
+        return self._val
 
-    @override
-    def _getter(self, obj: ConfigOptions, name: str = 'default') -> ConfigSource:
-        if not isinstance(obj._srcs, Mapping):
-            raise RuntimeError('attempt to get config value with no source configured')
-        return obj._srcs.get(name)
+    @property
+    def source(self, /):
+        return self._srcs['default']
 
-
+@deprecated('use configparse')
 class ConfigOptions:
     """
     Base class for loading config values.
@@ -186,7 +214,7 @@ class ConfigOptions:
         if first:
             self._srcs.move_to_end(key, False)
 
-    add_config_source = deprecated('use add_source() instead')(add_source)
+    add_config_source = deprecated_alias(add_source)
 
     def expose(self, public_name: str, attr_name: str | None = None) -> None:
         '''
