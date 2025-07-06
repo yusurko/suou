@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0
+
+👀
+
+## 0.3.5
+
+- Fixed cb32 handling. Now leading zeros in SIQ's are stripped, and `.from_cb32()` was implemented.
+
 ## 0.3.4
 
 - Bug fixes in `.flask_restx` regarding error handling

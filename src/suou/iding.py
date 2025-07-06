@@ -41,7 +41,7 @@ from typing import Iterable, override
 import warnings
 
 from .functools import deprecated
-from .codecs import b32lencode, b64encode, cb32encode
+from .codecs import b32lencode, b64encode, cb32decode, cb32encode, want_str
 
 
 class SiqType(enum.Enum):
@@ -235,9 +235,14 @@ class Siq(int):
 
     def to_base64(self, length: int = 15, *, strip: bool = True) -> str:
         return b64encode(self.to_bytes(length), strip=strip)
+    
     def to_cb32(self) -> str:
-        return cb32encode(self.to_bytes(15, 'big'))
+        return cb32encode(self.to_bytes(15, 'big')).lstrip('0')
     to_crockford = to_cb32
+    @classmethod
+    def from_cb32(cls, val: str | bytes):
+        return cls.from_bytes(cb32decode(want_str(val).zfill(24)))
+
     def to_hex(self) -> str:
         return f'{self:x}'
     def to_oct(self) -> str:

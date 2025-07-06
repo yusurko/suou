@@ -278,7 +278,7 @@ def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, column: str |
         raise ValueError(msg)
         
     invalid_exc = src.invalid_exc or _default_invalid
-    required_exc = src.required_exc or (lambda: _default_invalid())
+    required_exc = src.required_exc or (lambda: _default_invalid('Login required'))
 
     def decorator(func: Callable):
         @wraps(func)
