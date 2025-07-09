@@ -170,10 +170,11 @@ class ValueProperty(Generic[_T]):
                         if srckey != 'default':
                             logger.info(f'value {self._name} found in {srckey} source')
                         break
-            if self._required and (not v or v is MISSING):
-                raise self._not_found(f'required config {self._srcs['default']} not set!')
-            if v is MISSING:
-                v = self._default
+            if not _not_missing(v):
+                if self._required:
+                    raise self._not_found(f'required config {self._srcs['default']} not set!')
+                else:
+                    v = self._default
             if callable(self._cast):
                 v = self._cast(v) if v is not None else self._cast()
             self._val = v

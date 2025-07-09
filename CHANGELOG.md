@@ -4,6 +4,14 @@
 
 + Added `ValueProperty`, abstract superclass for `ConfigProperty`.
 
+## 0.3.6
+
+- Fixed `ConfigValue` behavior with multiple sources. It used to iterate through all the sources, possibly overwriting; now, iteration stops at first non-missing value.
+
+## 0.3.5
+
+- Fixed cb32 handling. Now leading zeros in SIQ's are stripped, and `.from_cb32()` was implemented.
+
 ## 0.3.4
 
 - Bug fixes in `.flask_restx` regarding error handling
