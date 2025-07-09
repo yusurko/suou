@@ -29,6 +29,9 @@ from .functools import deprecated_alias
 MISSING = object()
 _T = TypeVar('T')
 
+def _not_missing(v) -> bool:
+    return v and v is not MISSING
+
 
 class MissingConfigError(LookupError):
     """
@@ -180,10 +183,13 @@ class ConfigValue:
             for srckey, src in obj._srcs.items():
                 if srckey in self._srcs:
                     v = src.get(self._srcs[srckey], v)
-            if self._required and (not v or v is MISSING):
-                raise MissingConfigError(f'required config {self._srcs['default']} not set!')
-            if v is MISSING:
-                v = self._default
+                    if _not_missing(v):
+                        break
+            if not _not_missing(v):
+                if self._required:
+                    raise MissingConfigError(f'required config {self._srcs['default']} not set!')
+                else:
+                    v = self._default
             if callable(self._cast):
                 v = self._cast(v) if v is not None else self._cast()
             self._val = v
