@@ -18,12 +18,18 @@ from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
 from typing import Any, Callable, Generic, Iterable, Mapping, TypeVar
+import logging
 
 from suou.codecs import StringCase
 
 _T = TypeVar('_T')
 
+logger = logging.getLogger(__name__)
+
 MISSING = object()
+
+def _not_missing(v) -> bool:
+    return v and v is not MISSING
 
 class Wanted(Generic[_T]):
     """
@@ -106,6 +112,8 @@ class Incomplete(Generic[_T]):
         return clsdict
 
 
+## Base classes for declarative argument / option parsers below
+
 class ValueSource(Mapping):
     """
     Abstract value source.
@@ -158,6 +166,10 @@ class ValueProperty(Generic[_T]):
             for srckey, src in self._srcs.items():
                 if (getter := self._getter(obj, srckey)):
                     v = getter.get(src, v)
+                    if _not_missing(v):
+                        if srckey != 'default':
+                            logger.info(f'value {self._name} found in {srckey} source')
+                        break
             if self._required and (not v or v is MISSING):
                 raise self._not_found(f'required config {self._srcs['default']} not set!')
             if v is MISSING:
