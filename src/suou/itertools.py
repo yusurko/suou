@@ -14,20 +14,28 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '''
 
+from functools import wraps
 from typing import Any, Iterable, MutableMapping, TypeVar
 import warnings
 
+from suou.classtools import MISSING
+
 _T = TypeVar('_T')
 
-def makelist(l: Any) -> list:
+def makelist(l: Any, *, wrap: bool = True) -> list:
     '''
     Make a list out of an iterable or a single value.
+
+    NEW 0.4.0: Now supports a callable: can be used to decorate generators and turn them into lists.
+    Pass wrap=False to return instead the unwrapped function in a list.
     '''
+    if callable(l) and wrap:
+        return wraps(l)(lambda *a, **k: makelist(l(*a, **k), wrap=False))
     if isinstance(l, (str, bytes, bytearray)):
         return [l]
     elif isinstance(l, Iterable):
         return list(l)
-    elif l in (None, NotImplemented, Ellipsis):
+    elif l in (None, NotImplemented, Ellipsis, MISSING):
         return []
     else:
         return [l]
@@ -83,6 +91,18 @@ def additem(obj: MutableMapping, /, name: str = None):
         return func
     return decorator
 
+def addattr(obj: Any, /, name: str = None):
+    """
+    Same as additem() but setting as attribute instead.
+    """
+    def decorator(func):
+        key = name or func.__name__
+        if hasattr(obj, key):
+            warnings.warn(f'object does already have attribute {key!r}')
+        setattr(obj, key, func)
+        return func
+    return decorator
 
-__all__ = ('makelist', 'kwargs_prefix', 'ltuple', 'rtuple', 'additem')
+
+__all__ = ('makelist', 'kwargs_prefix', 'ltuple', 'rtuple', 'additem', 'addattr')
 
