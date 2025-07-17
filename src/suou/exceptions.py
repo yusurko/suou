@@ -14,7 +14,7 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
-
+from .functools import deprecated
 
 class MissingConfigError(LookupError):
     """
@@ -31,3 +31,14 @@ class MissingConfigWarning(MissingConfigError, Warning):
     A required config property is missing, and the application is assuming a default value.
     """
     pass
+
+
+class LexError(SyntaxError):
+    """
+    Illegal character or sequence found in the token stream.
+    """
+
+class InconsistencyError(RuntimeError):
+    """
+    This program is in a state which it's not supposed to be in.
+    """

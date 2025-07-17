@@ -27,13 +27,16 @@ from .itertools import makelist, kwargs_prefix, ltuple, rtuple, additem
 from .i18n import I18n, JsonI18n, TomlI18n
 from .snowflake import Snowflake, SnowflakeGen
 
-__version__ = "0.4.0-dev27"
+__version__ = "0.4.0-dev28"
 
 __all__ = (
-    'Siq', 'SiqCache', 'SiqType', 'SiqGen', 'StringCase',
-    'MissingConfigError', 'MissingConfigWarning', 'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue', 'EnvConfigSource', 'DictConfigSource',
-    'deprecated', 'not_implemented', 'Wanted', 'Incomplete', 'jsonencode', 'ltuple', 'rtuple',
-    'makelist', 'kwargs_prefix', 'I18n', 'JsonI18n', 'TomlI18n', 'cb32encode', 'cb32decode', 'count_ones', 'mask_shift',
-    'want_bytes', 'want_str', 'version', 'b2048encode', 'split_bits', 'join_bits', 'b2048decode',
-    'Snowflake', 'SnowflakeGen', 'ssv_list', 'additem', 'b32lencode', 'b32ldecode', 'b64encode', 'b64decode'
+    'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
+    'DictConfigSource', 'EnvConfigSource', 'I18n', 'Incomplete', 'JsonI18n',
+    'MissingConfigError', 'MissingConfigWarning', 'Siq', 'SiqCache', 'SiqGen', 
+    'SiqType', 'Snowflake', 'SnowflakeGen', 'StringCase', 'TomlI18n', 'Wanted',
+    'additem', 'b2048decode', 'b2048encode', 'b32ldecode', 'b32lencode',
+    'b64encode', 'b64decode', 'cb32encode', 'cb32decode', 'count_ones',
+    'deprecated', 'join_bits', 'jsonencode', 'kwargs_prefix', 'ltuple',
+    'makelist', 'mask_shift', 'not_implemented', 'rtuple', 'split_bits',
+    'ssv_list', 'want_bytes', 'want_str' 
 )
