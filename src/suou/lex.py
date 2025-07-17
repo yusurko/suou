@@ -52,6 +52,7 @@ def symbol_table(*args: Iterable[tuple | TokenSym], whitespace: str | None = Non
         yield TokenSym('[' + re.escape(whitespace) + ']+', '', discard=True)
 
 
+symbol_table: Callable[..., list]
 
 def ilex(text: str, table: Iterable[TokenSym], *, whitespace = False):
     """
@@ -80,5 +81,6 @@ def ilex(text: str, table: Iterable[TokenSym], *, whitespace = False):
             raise InconsistencyError
         i = mo.end(0)
 
-lex = makelist(ilex)
+lex: Callable[..., list] = makelist(ilex)
 
+__all__ = ('symbol_table', 'lex', 'ilex')

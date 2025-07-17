@@ -76,5 +76,5 @@ def require_auth(cls: type[DeclarativeBase], db: SQLAlchemy) -> Callable[Any, Ca
 
     return auth_required
 
-
+# Optional dependency: do not import into __init__.py
 __all__ = ('require_auth', )

@@ -5,6 +5,7 @@
 + Added `ValueProperty`, abstract superclass for `ConfigProperty`
 + \[BREAKING] Changed the behavior of `makelist()`: now it's also a decorator, converting its return type to a list (revertable with `wrap=False`)
 + New module `lex` with functions `symbol_table()` and `lex()` — make tokenization more affordable
++ Add `dorks` module and `flask.harden()`
 + Added `addattr()`
 
 ## 0.3.6

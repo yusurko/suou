@@ -74,5 +74,5 @@ class Api(_Api):
         super().__init__(*a, **ka)
         self.representations['application/json'] = output_json
 
-
+# Optional dependency: do not import into __init__.py
 __all__ = ('Api',)

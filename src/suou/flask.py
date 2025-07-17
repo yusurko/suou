@@ -15,9 +15,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
 from typing import Any
-from flask import Flask, current_app, g, request
+from flask import Flask, abort, current_app, g, request
 from .i18n import I18n
 from .configparse import ConfigOptions
+from .dorks import SENSITIVE_ENDPOINTS
 
 
 def add_context_from_config(app: Flask, config: ConfigOptions) -> Flask:
@@ -66,6 +67,21 @@ def get_flask_conf(key: str, default = None, *, app: Flask | None = None) -> Any
         app = current_app
     return app.config.get(key, default)
 
-__all__ = ('add_context_from_config', 'add_i18n', 'get_flask_conf')
+## XXX UNTESTED!
+def harden(app: Flask):
+    """
+    Make common "dork" endpoints unavailable
+    """
+    i = 1
+    for ep in SENSITIVE_ENDPOINTS:
+        @app.route(f'{ep}<path:rest>', name=f'unavailable_{i}')
+        def unavailable(rest):
+            abort(403)
+        i += 1
+    
+    return app
+
+# Optional dependency: do not import into __init__.py
+__all__ = ('add_context_from_config', 'add_i18n', 'get_flask_conf', 'harden')
 
 

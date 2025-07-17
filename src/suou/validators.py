@@ -1,5 +1,5 @@
 """
-Utilities for marshmallow, a schema-agnostic serializer/deserializer.
+Miscellaneous validator closures.
 
 ---
 

@@ -295,7 +295,7 @@ def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, column: str |
         return wrapper
     return decorator
 
-
+# Optional dependency: do not import into __init__.py
 __all__ = (
     'IdType', 'id_column', 'entity_base', 'declarative_base', 'token_signer', 'match_column', 'match_constraint',
     'author_pair', 'age_pair', 'require_auth_base', 'want_column'

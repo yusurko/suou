@@ -15,14 +15,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '''
 
 from functools import wraps
-from typing import Any, Iterable, MutableMapping, TypeVar
+from typing import Any, Callable, Iterable, MutableMapping, TypeVar
 import warnings
 
 from suou.classtools import MISSING
 
 _T = TypeVar('_T')
 
-def makelist(l: Any, *, wrap: bool = True) -> list:
+def makelist(l: Any, *, wrap: bool = True) -> list | Callable[Any, list]:
     '''
     Make a list out of an iterable or a single value.
 

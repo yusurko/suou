@@ -26,6 +26,7 @@ from .classtools import Wanted, Incomplete
 from .itertools import makelist, kwargs_prefix, ltuple, rtuple, additem
 from .i18n import I18n, JsonI18n, TomlI18n
 from .snowflake import Snowflake, SnowflakeGen
+from .lex import symbol_table, lex, ilex
 
 __version__ = "0.4.0-dev28"
 
@@ -36,7 +37,7 @@ __all__ = (
     'SiqType', 'Snowflake', 'SnowflakeGen', 'StringCase', 'TomlI18n', 'Wanted',
     'additem', 'b2048decode', 'b2048encode', 'b32ldecode', 'b32lencode',
     'b64encode', 'b64decode', 'cb32encode', 'cb32decode', 'count_ones',
-    'deprecated', 'join_bits', 'jsonencode', 'kwargs_prefix', 'ltuple',
+    'deprecated', 'ilex', 'join_bits', 'jsonencode', 'kwargs_prefix', 'lex', 'ltuple',
     'makelist', 'mask_shift', 'not_implemented', 'rtuple', 'split_bits',
-    'ssv_list', 'want_bytes', 'want_str' 
+    'ssv_list', 'symbol_table', 'want_bytes', 'want_str' 
 )

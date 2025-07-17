@@ -117,6 +117,6 @@ class SiqField(Field):
     def python_value(self, value: bytes) -> Siq:
         return Siq.from_bytes(value)
 
-
+# Optional dependency: do not import into __init__.py
 __all__ = ('connect_reconnect', 'RegexCharField', 'SiqField')
 
