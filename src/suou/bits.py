@@ -1,5 +1,5 @@
 '''
-Utilities for working with bits
+Utilities for working with bits & handy arithmetics
 
 ---
 
@@ -93,5 +93,19 @@ def join_bits(l: list[int], nbits: int) -> bytes:
     return ou
 
 
+## arithmetics because yes
 
-__all__ = ('count_ones', 'mask_shift', 'split_bits', 'join_bits')
+def mod_floor(x: int, y: int) -> int:
+    """
+    Greatest integer smaller than x and divisible by y
+    """
+    return x - x % y
+
+def mod_ceil(x: int, y: int) -> int:
+    """
+    Smallest integer greater than x and divisible by y
+    """
+    return x + (y - x % y) % y
+
+
+__all__ = ('count_ones', 'mask_shift', 'split_bits', 'join_bits', 'mod_floor', 'mod_ceil')

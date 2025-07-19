@@ -7,7 +7,13 @@
 + New module `lex` with functions `symbol_table()` and `lex()` — make tokenization more affordable
 + Add `dorks` module and `flask.harden()`
 + Add `sqlalchemy.bool_column()`: make making flags painless
-+ Added `addattr()`, `PrefixIdentifier()`
++ Introduce `rb64encode()` and `rb64decode()` to deal with issues about Base64 and padding
++ Added `addattr()`, `PrefixIdentifier()`, `mod_floor()`, `mod_ceil()`
++ First version to have unit tests!
+
+## 0.3.7
+
+- Fixed a bug in `b64decode()` padding handling which made the function inconsistent and non injective. Now, leading `'A'` is NEVER stripped.
 
 ## 0.3.6
 

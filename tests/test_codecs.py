@@ -2,7 +2,7 @@
 
 import binascii
 import unittest
-from suou.codecs import b64encode, b64decode
+from suou.codecs import b64encode, b64decode, want_urlsafe
 
 B1 = b'N\xf0\xb4\xc3\x85\n\xf9\xb6\x9a\x0f\x82\xa6\x99G\x07#'
 B2 = b'\xbcXiF,@|{\xbe\xe3\x0cz\xa8\xcbQ\x82'
@@ -47,4 +47,8 @@ class TestCodecs(unittest.TestCase):
 
         self.assertRaises(binascii.Error, b64decode, 'C')
 
-        
+    def test_want_urlsafe(self):
+        self.assertEqual('__init__', want_urlsafe('//init_/'))
+        self.assertEqual('Disney-', want_urlsafe('Disney+'))
+        self.assertEqual('spaziocosenza', want_urlsafe('spazio cosenza'))
+        self.assertEqual('=======', want_urlsafe('======='))

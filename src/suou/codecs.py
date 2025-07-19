@@ -22,7 +22,7 @@ import math
 import re
 from typing import Any, Callable
 
-from .bits import split_bits, join_bits
+from .bits import mod_ceil, split_bits, join_bits
 from .functools import deprecated
 
 # yes, I know ItsDangerous implements that as well, but remember
@@ -49,6 +49,25 @@ def want_str(s: str | bytes, encoding: str = "utf-8", errors: str = "strict") ->
         s = s.decode(encoding, errors)
     return s
 
+
+BASE64_TO_URLSAFE = str.maketrans('+/', '-_', ' ')
+
+def want_urlsafe(s: str | bytes) -> str:
+    """
+    Force a Base64 string into its urlsafe representation.
+
+    Behavior is unchecked and undefined with anything else than Base64 strings.
+
+    Used by b64encode() and b64decode().
+    """
+    return want_str(s).translate(BASE64_TO_URLSAFE)
+
+def want_urlsafe_bytes(s: str | bytes) -> bytes:
+    """
+    Shorthand for want_bytes(want_urlsafe(s)).
+    """
+    return want_bytes(want_urlsafe(s))
+
 B32_TO_CROCKFORD = str.maketrans(
     'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',
     '0123456789ABCDEFGHJKMNPQRSTVWXYZ',
@@ -58,6 +77,7 @@ CROCKFORD_TO_B32 = str.maketrans(
     '0123456789ABCDEFGHJKMNPQRSTVWXYZ',
     'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',
     '=')
+
 
 BIP39_WORD_LIST = """
 abandon ability able about above absent absorb abstract absurd abuse access accident account accuse achieve acid acoustic acquire across act action
@@ -178,16 +198,31 @@ def b32ldecode(val: bytes | str) -> bytes:
 
 def b64encode(val: bytes, *, strip: bool = True) -> str:
     '''
-    Wrapper around base64.urlsafe_b64encode() which also strips trailing '=' and leading 'A'.
+    Wrapper around base64.urlsafe_b64encode() which also strips trailing '='.
     '''
     b = want_str(base64.urlsafe_b64encode(val))
-    return b.lstrip('A').rstrip('=') if strip else b
+    return b.rstrip('=') if strip else b
 
 def b64decode(val: bytes | str) -> bytes:
     '''
     Wrapper around base64.urlsafe_b64decode() which deals with padding.
     '''
-    return base64.urlsafe_b64decode(want_bytes(val).replace(b'/', b'_').replace(b'+', b'-') + b'=' * ((4 - len(val) % 4) % 4))
+    val = want_urlsafe(val)
+    return base64.urlsafe_b64decode(val.ljust(mod_ceil(len(val), 4), '='))
+
+def rb64encode(val: bytes, *, strip: bool = True) -> str:
+    '''
+    Call base64.urlsafe_b64encode() with null bytes i.e. '\\0' padding to the start. Leading 'A' are stripped from result.
+    '''
+    b = want_str(base64.urlsafe_b64encode(val.rjust(mod_ceil(len(val), 3), '\0')))
+    return b.lstrip('A') if strip else b
+
+def rb64decode(val: bytes | str) -> bytes:
+    '''
+    Wrapper around base64.urlsafe_b64decode() which deals with padding.
+    '''
+    val = want_urlsafe(val)
+    return base64.urlsafe_b64decode(val.rjust(mod_ceil(len(val), 4), 'A'))
 
 def b2048encode(val: bytes) -> str:
     '''

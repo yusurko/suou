@@ -18,6 +18,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 
 from typing import Callable, Iterable
+from pydantic import validate_call
 
 from .itertools import makelist
 
@@ -34,11 +35,16 @@ class PrefixIdentifier:
                 raise ValueError('invalid prefix')
         self._prefix = prefix 
     
+    @validate_call()
     def __getattr__(self, key: str):
         return f'{self._prefix}{key}'
 
+    @validate_call()
     def __getitem__(self, key: str) -> str:
         return f'{self._prefix}{key}'
+
+    def __str__(self):
+        return f'{self._prefix}'
 
 __all__ = ('PrefixIdentifier',)
 

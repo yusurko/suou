@@ -18,8 +18,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from .iding import Siq, SiqCache, SiqType, SiqGen
 from .codecs import (StringCase, cb32encode, cb32decode, b32lencode, b32ldecode, b64encode, b64decode, b2048encode, b2048decode,
-    jsonencode, want_bytes, want_str, ssv_list)
-from .bits import count_ones, mask_shift, split_bits, join_bits
+    jsonencode, want_bytes, want_str, ssv_list, want_urlsafe)
+from .bits import count_ones, mask_shift, split_bits, join_bits, mod_ceil, mod_floor
 from .configparse import MissingConfigError, MissingConfigWarning, ConfigOptions, ConfigParserConfigSource, ConfigSource, DictConfigSource, ConfigValue, EnvConfigSource
 from .functools import deprecated, not_implemented
 from .classtools import Wanted, Incomplete
@@ -37,7 +37,8 @@ __all__ = (
     'SiqType', 'Snowflake', 'SnowflakeGen', 'StringCase', 'TomlI18n', 'Wanted',
     'additem', 'b2048decode', 'b2048encode', 'b32ldecode', 'b32lencode',
     'b64encode', 'b64decode', 'cb32encode', 'cb32decode', 'count_ones',
-    'deprecated', 'ilex', 'join_bits', 'jsonencode', 'kwargs_prefix', 'lex', 'ltuple',
-    'makelist', 'mask_shift', 'not_implemented', 'rtuple', 'split_bits',
-    'ssv_list', 'symbol_table', 'want_bytes', 'want_str' 
+    'deprecated', 'ilex', 'join_bits', 'jsonencode', 'kwargs_prefix', 'lex',
+    'ltuple', 'makelist', 'mask_shift', 'mod_ceil', 'mod_floor',
+    'not_implemented', 'rtuple', 'split_bits', 'ssv_list', 'symbol_table',
+    'want_bytes', 'want_str', 'want_urlsafe'
 )
