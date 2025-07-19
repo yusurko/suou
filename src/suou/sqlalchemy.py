@@ -20,7 +20,7 @@ from abc import ABCMeta, abstractmethod
 from functools import wraps
 from typing import Callable, Iterable, Never, TypeVar
 import warnings
-from sqlalchemy import BigInteger, CheckConstraint, Date, Dialect, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, create_engine, select, text
+from sqlalchemy import BigInteger, Boolean, CheckConstraint, Date, Dialect, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, create_engine, select, text
 from sqlalchemy.orm import DeclarativeBase, Session, declarative_base as _declarative_base, relationship
 
 from .snowflake import SnowflakeGen
@@ -120,7 +120,17 @@ def match_column(length: int, regex: str, /, case: StringCase = StringCase.AS_IS
             constraint_name=constraint_name or f'{x.__tablename__}_{n}_valid')), *args, **kwargs)
 
 
-def declarative_base(domain_name: str, master_secret: bytes, metadata: dict | None = None, **kwargs):
+def bool_column(value: bool = False, nullable: bool = False, **kwargs):
+    """
+    Column for a single boolean value.
+
+    NEW in 0.4.0
+    """
+    def_val = text('true') if value else text('false')
+    return Column(Boolean, server_default=def_val, nullable=nullable, **kwargs)
+
+
+def declarative_base(domain_name: str, master_secret: bytes, metadata: dict | None = None, **kwargs) -> DeclarativeBase:
     """
     Drop-in replacement for sqlalchemy.orm.declarative_base()
     taking in account requirements for SIQ generation (i.e. domain name).

@@ -37,9 +37,7 @@ sqlalchemy = [
 ]
 flask = [
     "Flask>=2.0.0",
-    "Flask-RestX",
-    "Quart",
-    "Quart-Schema"
+    "Flask-RestX"
 ]
 flask_sqlalchemy = [
     "Flask-SqlAlchemy",
@@ -50,6 +48,21 @@ peewee = [
 markdown = [
     "markdown>=3.0.0"
 ]
+quart = [
+    "Flask>=2.0.0",
+    "Quart",
+    "Quart-Schema",
+    "uvloop; os_name=='posix'"
+]
+
+full = [
+    "sakuragasaki46-suou[sqlalchemy]",
+    "sakuragasaki46-suou[flask]",
+    "sakuragasaki46-suou[quart]",
+    "sakuragasaki46-suou[peewee]",
+    "sakuragasaki46-suou[markdown]"
+]
+
 
 [tool.setuptools.dynamic]
 version = { attr = "suou.__version__" }
