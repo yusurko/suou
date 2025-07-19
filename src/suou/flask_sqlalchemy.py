@@ -40,12 +40,12 @@ class FlaskAuthSrc(AuthSrc):
     def get_signature(self) -> bytes:
         sig = request.headers.get('authorization-signature', None)
         return want_bytes(sig) if sig else None
-    def invalid_exc(self, msg: str = 'Validation failed') -> Never:
+    def invalid_exc(self, msg: str = 'validation failed') -> Never:
         abort(400, msg)
     def required_exc(self):
         abort(401, 'Login required')
 
-def require_auth(cls: type[DeclarativeBase], db: SQLAlchemy) -> Callable:
+def require_auth(cls: type[DeclarativeBase], db: SQLAlchemy) -> Callable[Any, Callable]:
     """
     Make an auth_required() decorator for Flask views.
 

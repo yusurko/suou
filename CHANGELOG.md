@@ -4,6 +4,10 @@
 
 👀
 
+## 0.3.7
+
+- Fixed a bug in `b64decode()` padding handling which made the function inconsistent and non injective. Now, leading `'A'` is NEVER stripped.
+
 ## 0.3.6
 
 - Fixed `ConfigValue` behavior with multiple sources. It used to iterate through all the sources, possibly overwriting; now, iteration stops at first non-missing value.

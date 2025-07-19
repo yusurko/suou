@@ -178,10 +178,10 @@ def b32ldecode(val: bytes | str) -> bytes:
 
 def b64encode(val: bytes, *, strip: bool = True) -> str:
     '''
-    Wrapper around base64.urlsafe_b64encode() which also strips trailing '=' and leading 'A'.
+    Wrapper around base64.urlsafe_b64encode() which also strips trailing '='.
     '''
     b = want_str(base64.urlsafe_b64encode(val))
-    return b.lstrip('A').rstrip('=') if strip else b
+    return b.rstrip('=') if strip else b
 
 def b64decode(val: bytes | str) -> bytes:
     '''

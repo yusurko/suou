@@ -23,7 +23,7 @@ import os
 from typing import Any, Callable, Iterator
 from collections import OrderedDict
 
-from .functools import deprecated_alias
+from .functools import deprecated
 
 
 MISSING = object()
@@ -226,7 +226,7 @@ class ConfigOptions:
         if first:
             self._srcs.move_to_end(key, False)
 
-    add_config_source = deprecated_alias(add_source)
+    add_config_source = deprecated('use add_source() instead')(add_source)
 
     def expose(self, public_name: str, attr_name: str | None = None) -> None:
         '''
