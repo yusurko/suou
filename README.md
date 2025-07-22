@@ -1,8 +1,12 @@
 # SIS Unified Object Underarmor
 
-Good morning, my brother! Welcome the SUOU (SIS Unified Object Underarmor), a library for the management of the storage of objects into a database.
+Good morning, my brother! Welcome the SUOU (SIS Unified Object Underarmor), an utility library for developing API's, database schemas and stuff in Python.
 
-It provides utilities such as [SIQ](https://yusur.moe/protocols/siq.html), signing and generation of access tokens (on top of [ItsDangerous](https://github.com/pallets/itsdangerous)) and various utilities, including helpers for use in Flask and SQLAlchemy.
+It provides utilities such as:
+* [SIQ](https://yusur.moe/protocols/siq.html)
+* signing and generation of access tokens, on top of [ItsDangerous](https://github.com/pallets/itsdangerous)
+* helpers for use in Flask and SQLAlchemy
+* ...
 
 **It is not an ORM** nor a replacement of it; it works along existing ORMs (currently only SQLAlchemy is supported lol).
 

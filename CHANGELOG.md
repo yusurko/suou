@@ -2,14 +2,19 @@
 
 ## 0.4.0
 
-+ Added `ValueProperty`, abstract superclass for `ConfigProperty`
-+ \[BREAKING] Changed the behavior of `makelist()`: now it's also a decorator, converting its return type to a list (revertable with `wrap=False`)
-+ New module `lex` with functions `symbol_table()` and `lex()` — make tokenization more affordable
-+ Add `dorks` module and `flask.harden()`
++ `pydantic` is now a hard dependency
++ `ConfigProperty` has now been generalized: check out `classtools.ValueProperty`
++ **BREAKING**: Changed the behavior of `makelist()`: **different behavior when used with callables**.
+    * When applied as a decorator on callable, it converts its return type to a list.
+    * Pass `wrap=False` to treat callables as simple objects, restoring the 0.3 behavior.
++ New module `lex` to make tokenization more affordable — with functions `symbol_table()` and `lex()`
++ Add `dorks` module and `flask.harden()`. `dorks` contains common endpoints which may be target by hackers
 + Add `sqlalchemy.bool_column()`: make making flags painless
 + Introduce `rb64encode()` and `rb64decode()` to deal with issues about Base64 and padding
+    * `b64encode()` and `b64decode()` pad to the right
+    * `rb64encode()` and `rb64decode()` pad to the left, then strip leading `'A'` in output 
 + Added `addattr()`, `PrefixIdentifier()`, `mod_floor()`, `mod_ceil()`
-+ First version to have unit tests!
++ First version to have unit tests! (Coverage is not yet complete)
 
 ## 0.3.7
 

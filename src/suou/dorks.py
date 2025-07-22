@@ -24,5 +24,19 @@ SENSITIVE_ENDPOINTS = """
 /package.json
 /package-lock.json
 /composer.
+/docker-compose.
+/config/
+/config.
+/secrets.
+/credentials.
+/.idea/
+/.vscode/
+/storage/
+/logs/
+/.DS_Store
+/backup
+/.backup
+/db.sql
+/database.sql
 """.split()
 

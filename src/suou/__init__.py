@@ -27,13 +27,14 @@ from .itertools import makelist, kwargs_prefix, ltuple, rtuple, additem
 from .i18n import I18n, JsonI18n, TomlI18n
 from .snowflake import Snowflake, SnowflakeGen
 from .lex import symbol_table, lex, ilex
+from .strtools import PrefixIdentifier
 
-__version__ = "0.4.0-dev28"
+__version__ = "0.4.0"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
     'DictConfigSource', 'EnvConfigSource', 'I18n', 'Incomplete', 'JsonI18n',
-    'MissingConfigError', 'MissingConfigWarning', 'Siq', 'SiqCache', 'SiqGen', 
+    'MissingConfigError', 'MissingConfigWarning', 'PrefixIdentifier', 'Siq', 'SiqCache', 'SiqGen', 
     'SiqType', 'Snowflake', 'SnowflakeGen', 'StringCase', 'TomlI18n', 'Wanted',
     'additem', 'b2048decode', 'b2048encode', 'b32ldecode', 'b32lencode',
     'b64encode', 'b64decode', 'cb32encode', 'cb32decode', 'count_ones',

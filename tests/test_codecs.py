@@ -17,10 +17,6 @@ class TestCodecs(unittest.TestCase):
     def tearDown(self) -> None:
         ...
 
-    #def runTest(self):
-    #    self.test_b64encode()
-    #    self.test_b64decode()
-
     def test_b64encode(self):
         self.assertEqual(b64encode(B1), 'TvC0w4UK-baaD4KmmUcHIw')
         self.assertEqual(b64encode(B2), 'vFhpRixAfHu-4wx6qMtRgg')
