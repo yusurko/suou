@@ -21,7 +21,7 @@ from .codecs import (StringCase, cb32encode, cb32decode, b32lencode, b32ldecode,
     jsonencode, want_bytes, want_str, ssv_list, want_urlsafe)
 from .bits import count_ones, mask_shift, split_bits, join_bits, mod_ceil, mod_floor
 from .configparse import MissingConfigError, MissingConfigWarning, ConfigOptions, ConfigParserConfigSource, ConfigSource, DictConfigSource, ConfigValue, EnvConfigSource
-from .functools import deprecated, not_implemented
+from .functools import deprecated, not_implemented, timed_cache
 from .classtools import Wanted, Incomplete
 from .itertools import makelist, kwargs_prefix, ltuple, rtuple, additem
 from .i18n import I18n, JsonI18n, TomlI18n
@@ -29,7 +29,7 @@ from .snowflake import Snowflake, SnowflakeGen
 from .lex import symbol_table, lex, ilex
 from .strtools import PrefixIdentifier
 
-__version__ = "0.4.0"
+__version__ = "0.5.0-dev29"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
@@ -41,5 +41,5 @@ __all__ = (
     'deprecated', 'ilex', 'join_bits', 'jsonencode', 'kwargs_prefix', 'lex',
     'ltuple', 'makelist', 'mask_shift', 'mod_ceil', 'mod_floor',
     'not_implemented', 'rtuple', 'split_bits', 'ssv_list', 'symbol_table',
-    'want_bytes', 'want_str', 'want_urlsafe'
+    'timed_cache', 'want_bytes', 'want_str', 'want_urlsafe'
 )

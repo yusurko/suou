@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0
+
++ Add `timed_cache()`
++ Move obsolete stuff to `obsolete` package
+
 ## 0.4.0
 
 + `pydantic` is now a hard dependency

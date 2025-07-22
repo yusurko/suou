@@ -14,15 +14,17 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
+import math
+import time
 from typing import Callable
 import warnings
-from functools import wraps
+from functools import wraps, lru_cache
 
 try:
     from warnings import deprecated
 except ImportError:
     # Python <=3.12 does not implement warnings.deprecated
-    def deprecated(message: str, /, *, category=DeprecationWarning, stacklevel:int=1):
+    def deprecated(message: str, /, *, category=DeprecationWarning, stacklevel: int = 1):
         """
         Backport of PEP 702 for Python <=3.12.
         The stack_level stuff is not reimplemented on purpose because
@@ -64,6 +66,28 @@ def not_implemented(msg: Callable | str | None = None):
         return decorator(msg)
     return decorator
 
+
+def timed_cache(ttl: int, maxsize: int = 128, typed: bool = False) -> Callable[[Callable], Callable]:
+    """
+    LRU cache which expires after the TTL in seconds passed as argument.
+    """
+    def decorator(func):
+        start_time = None
+
+        @lru_cache(maxsize, typed)
+        def inner_wrapper(ttl_period: int, *a, **k):
+            return func(*a, **k)
+
+        @wraps(func)
+        def wrapper(*a, **k):
+            nonlocal start_time
+            if not start_time:
+                start_time = int(time.time())
+            return inner_wrapper(math.floor((time.time() - start_time) // ttl), *a, **k)
+        return wrapper
+    return decorator
+
+
 __all__ = (
-    'deprecated', 'not_implemented'
+    'deprecated', 'not_implemented', 'timed_cache'
 )

@@ -28,8 +28,8 @@ from typing import Any, Callable, Iterator
 from collections import OrderedDict
 import warnings
 
-from .functools import deprecated
-from .exceptions import MissingConfigError, MissingConfigWarning
+from ..functools import deprecated
+from ..exceptions import MissingConfigError, MissingConfigWarning
 
 warnings.warn('This module will be removed in 0.5.0 and is kept only in case new implementation breaks!\n'\
     'Do not use unless you know what you are doing.', DeprecationWarning)

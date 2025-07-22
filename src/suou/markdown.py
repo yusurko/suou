@@ -43,9 +43,9 @@ class SpoilerExtension(markdown.extensions.Extension):
     """
     Add spoiler tags to text, using >!Reddit syntax!<.
 
-    XXX remember to call SpoilerExtension.patch_blockquote_processor()
-    to clear conflicts with the blockquote processor and allow
-    spoiler tags to start at beginning of line.
+    If blockquotes interfer with rendered markup, you might want to call
+    SpoilerExtension.patch_blockquote_processor() to clear conflicts with
+    the blockquote processor and allow spoiler tags to start at beginning of line.
     """
     def extendMarkdown(self, md: markdown.Markdown, md_globals=None):
         md.inlinePatterns.register(SimpleTagInlineProcessor(r'()>!(.*?)!<', 'span class="spoiler"'), 'spoiler', 14)

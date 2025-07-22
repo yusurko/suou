@@ -35,6 +35,7 @@ class TestCodecs(unittest.TestCase):
         self.assertEqual(b64decode('6RgpyyfClq7ehg'), B3)
         self.assertEqual(b64decode('ByO8WGlGLEB8e77jDHqoyw'), B4)
         self.assertEqual(b64decode('__init__'), B5)
+        self.assertEqual(b64decode('//init//'), B5)
         self.assertEqual(b64decode('TvC0ww'), B1[:4])
         self.assertEqual(b64decode('AE7wtMM'), b'\0' + B1[:4])
         self.assertEqual(b64decode('AAAAAABO8LTD'), b'\0\0\0\0\0' + B1[:4])
