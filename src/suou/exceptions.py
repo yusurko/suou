@@ -41,6 +41,11 @@ class InconsistencyError(RuntimeError):
     This program is in a state which it's not supposed to be in.
     """
 
+class NotFoundError(LookupError):
+    """
+    The requested item was not found.
+    """
+
 __all__ = (
-    'MissingConfigError', 'MissingConfigWarning', 'LexError', 'InconsistencyError'
+    'MissingConfigError', 'MissingConfigWarning', 'LexError', 'InconsistencyError', 'NotFoundError'
 )

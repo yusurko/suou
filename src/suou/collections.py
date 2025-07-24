@@ -18,12 +18,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from __future__ import annotations
 import time
-from typing import TypeVar
+from typing import Iterator, TypeVar
 
 
 _KT = TypeVar('_KT')
+_VT = TypeVar('_VT')
 
-class TimedDict(dict):
+class TimedDict(dict[_KT, _VT]):
+    """
+    Dictionary where keys expire after the defined time to live, expressed in seconds.
+    """
     _expires: dict[_KT, int]
     _ttl: int
 
@@ -32,7 +36,7 @@ class TimedDict(dict):
         self._ttl = ttl
         self._expires = dict()
 
-    def check_ex(self, key):
+    def check_ex(self, key: _KT):
         if super().__contains__(key):
             ex = self._expires[key]
             now = int(time.time())
@@ -42,28 +46,28 @@ class TimedDict(dict):
         elif key in self._expires:
             del self._expires[key]
 
-    def __getitem__(self, key: _KT, /):
+    def __getitem__(self, key: _KT, /) -> _VT:
         self.check_ex(key)
         return super().__getitem__(key)
 
-    def get(self, key, default=None, /):
+    def get(self, key: _KT, default: _VT | None = None, /) -> _VT | None:
         self.check_ex(key)
         return super().get(key)
 
-    def __setitem__(self, key: _KT, value, /) -> None:
+    def __setitem__(self, key: _KT, value: _VT, /) -> None:
         self._expires = int(time.time() + self._ttl)
         super().__setitem__(key, value)
     
-    def setdefault(self, key, default, /):
+    def setdefault(self, key: _KT, default: _VT, /) -> _VT:
         self.check_ex(key)
         self._expires = int(time.time() + self._ttl)
         return super().setdefault(key, default)
 
-    def __delitem__(self, key, /):
+    def __delitem__(self, key: _KT, /) -> None:
         del self._expires[key]
         super().__delitem__(key)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[_KT]:
         for k in super():
             self.check_ex(k)
         return super().__iter__()

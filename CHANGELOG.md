@@ -4,7 +4,8 @@
 
 + `sqlalchemy`: add `unbound_fk()`, `bound_fk()`
 + Add `timed_cache()`, `TimedDict()`
-+ Move obsolete stuff to `obsolete` package
++ Move obsolete stuff to `obsolete` package (includes configparse 0.3 as of now)
++ Add more exceptions: `NotFoundError()`
 
 ## 0.4.0
 
