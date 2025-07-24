@@ -21,6 +21,7 @@ from .codecs import (StringCase, cb32encode, cb32decode, b32lencode, b32ldecode,
     jsonencode, want_bytes, want_str, ssv_list, want_urlsafe)
 from .bits import count_ones, mask_shift, split_bits, join_bits, mod_ceil, mod_floor
 from .configparse import MissingConfigError, MissingConfigWarning, ConfigOptions, ConfigParserConfigSource, ConfigSource, DictConfigSource, ConfigValue, EnvConfigSource
+from .collections import TimedDict
 from .functools import deprecated, not_implemented, timed_cache
 from .classtools import Wanted, Incomplete
 from .itertools import makelist, kwargs_prefix, ltuple, rtuple, additem
@@ -35,7 +36,7 @@ __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
     'DictConfigSource', 'EnvConfigSource', 'I18n', 'Incomplete', 'JsonI18n',
     'MissingConfigError', 'MissingConfigWarning', 'PrefixIdentifier', 'Siq', 'SiqCache', 'SiqGen', 
-    'SiqType', 'Snowflake', 'SnowflakeGen', 'StringCase', 'TomlI18n', 'Wanted',
+    'SiqType', 'Snowflake', 'SnowflakeGen', 'StringCase', 'TimedDict', 'TomlI18n', 'Wanted',
     'additem', 'b2048decode', 'b2048encode', 'b32ldecode', 'b32lencode',
     'b64encode', 'b64decode', 'cb32encode', 'cb32decode', 'count_ones',
     'deprecated', 'ilex', 'join_bits', 'jsonencode', 'kwargs_prefix', 'lex',

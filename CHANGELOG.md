@@ -2,7 +2,8 @@
 
 ## 0.5.0
 
-+ Add `timed_cache()`
++ `sqlalchemy`: add `unbound_fk()`, `bound_fk()`
++ Add `timed_cache()`, `TimedDict()`
 + Move obsolete stuff to `obsolete` package
 
 ## 0.4.0

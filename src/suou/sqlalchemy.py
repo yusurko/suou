@@ -21,7 +21,8 @@ from functools import wraps
 from typing import Callable, Iterable, Never, TypeVar
 import warnings
 from sqlalchemy import BigInteger, Boolean, CheckConstraint, Date, Dialect, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, create_engine, select, text
-from sqlalchemy.orm import DeclarativeBase, Session, declarative_base as _declarative_base, relationship
+from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, Session, declarative_base as _declarative_base, relationship
+from sqlalchemy.types import TypeEngine
 
 from .snowflake import SnowflakeGen
 from .itertools import kwargs_prefix, makelist
@@ -223,6 +224,44 @@ def parent_children(keyword: str, /, **kwargs):
 
     return parent, child
 
+
+def unbound_fk(target: str | Column | InstrumentedAttribute, typ: TypeEngine | None = None, **kwargs):
+    """
+    Shorthand for creating a "unbound" foreign key column from a column name, the referenced column.
+
+    "Unbound" foreign keys are nullable and set to null when referenced object is deleted.
+
+    If target is a string, make sure to pass the column type at typ= (default: IdType aka varbinary(16))!
+    """
+    if isinstance(target, (Column, InstrumentedAttribute)):
+        target_name = f'{target.table.name}.{target.name}'
+        typ = target.type
+    elif isinstance(target, str):
+        target_name = target
+        if typ is None:
+            typ = IdType
+
+    return Column(typ, ForeignKey(target_name, ondelete='SET NULL'), nullable=True, **kwargs)
+
+def bound_fk(target: str | Column | InstrumentedAttribute, typ: TypeEngine | None = None, **kwargs):
+    """
+    Shorthand for creating a "bound" foreign key column from a column name, the referenced column.
+
+    "Bound" foreign keys are not nullable and cascade when referenced object is deleted. It means,
+    parent deleted -> all children deleted.
+
+    If target is a string, make sure to pass the column type at typ= (default: IdType aka varbinary(16))!
+    """
+    if isinstance(target, (Column, InstrumentedAttribute)):
+        target_name = f'{target.table.name}.{target.name}'
+        typ = target.type
+    elif isinstance(target, str):
+        target_name = target
+        if typ is None:
+            typ = IdType
+
+    return Column(typ, ForeignKey(target_name, ondelete='CASCADE'), nullable=False, **kwargs)
+
 def want_column(cls: type[DeclarativeBase], col: Column[_T] | str) -> Column[_T]:
     """
     Return a table's column given its name.
@@ -238,6 +277,7 @@ def want_column(cls: type[DeclarativeBase], col: Column[_T] | str) -> Column[_T]
     else:
         raise TypeError
 
+## Utilities for use in web apps below
 
 class AuthSrc(metaclass=ABCMeta):
     '''
@@ -308,5 +348,5 @@ def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, column: str |
 # Optional dependency: do not import into __init__.py
 __all__ = (
     'IdType', 'id_column', 'entity_base', 'declarative_base', 'token_signer', 'match_column', 'match_constraint',
-    'author_pair', 'age_pair', 'require_auth_base', 'want_column'
+    'author_pair', 'age_pair', 'require_auth_base', 'bound_fk', 'unbound_fk', 'want_column'
 )
