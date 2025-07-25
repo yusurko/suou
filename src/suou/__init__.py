@@ -18,13 +18,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from .iding import Siq, SiqCache, SiqType, SiqGen
 from .codecs import (StringCase, cb32encode, cb32decode, b32lencode, b32ldecode, b64encode, b64decode, b2048encode, b2048decode,
-    jsonencode, want_bytes, want_str, ssv_list, want_urlsafe)
+    jsonencode, want_bytes, want_str, ssv_list, want_urlsafe, want_urlsafe_bytes)
 from .bits import count_ones, mask_shift, split_bits, join_bits, mod_ceil, mod_floor
+from .calendar import want_datetime, want_isodate, want_timestamp, age_and_days
 from .configparse import MissingConfigError, MissingConfigWarning, ConfigOptions, ConfigParserConfigSource, ConfigSource, DictConfigSource, ConfigValue, EnvConfigSource
 from .collections import TimedDict
 from .functools import deprecated, not_implemented, timed_cache
 from .classtools import Wanted, Incomplete
-from .itertools import makelist, kwargs_prefix, ltuple, rtuple, additem
+from .itertools import makelist, kwargs_prefix, ltuple, rtuple, additem, addattr
 from .i18n import I18n, JsonI18n, TomlI18n
 from .snowflake import Snowflake, SnowflakeGen
 from .lex import symbol_table, lex, ilex
@@ -37,10 +38,11 @@ __all__ = (
     'DictConfigSource', 'EnvConfigSource', 'I18n', 'Incomplete', 'JsonI18n',
     'MissingConfigError', 'MissingConfigWarning', 'PrefixIdentifier', 'Siq', 'SiqCache', 'SiqGen', 
     'SiqType', 'Snowflake', 'SnowflakeGen', 'StringCase', 'TimedDict', 'TomlI18n', 'Wanted',
-    'additem', 'b2048decode', 'b2048encode', 'b32ldecode', 'b32lencode',
-    'b64encode', 'b64decode', 'cb32encode', 'cb32decode', 'count_ones',
-    'deprecated', 'ilex', 'join_bits', 'jsonencode', 'kwargs_prefix', 'lex',
-    'ltuple', 'makelist', 'mask_shift', 'mod_ceil', 'mod_floor',
-    'not_implemented', 'rtuple', 'split_bits', 'ssv_list', 'symbol_table',
-    'timed_cache', 'want_bytes', 'want_str', 'want_urlsafe'
+    'addattr', 'additem', 'age_and_days', 'b2048decode', 'b2048encode',
+    'b32ldecode', 'b32lencode', 'b64encode', 'b64decode', 'cb32encode',
+    'cb32decode', 'count_ones', 'deprecated', 'ilex', 'join_bits',
+    'jsonencode', 'kwargs_prefix', 'lex', 'ltuple', 'makelist', 'mask_shift',
+    'mod_ceil', 'mod_floor', 'not_implemented', 'rtuple', 'split_bits',
+    'ssv_list', 'symbol_table', 'timed_cache', 'want_bytes', 'want_datetime',
+    'want_isodate', 'want_str', 'want_timestamp', 'want_urlsafe', 'want_urlsafe_bytes'
 )

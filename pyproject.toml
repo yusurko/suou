@@ -11,7 +11,8 @@ readme = "README.md"
 dependencies = [
     "itsdangerous",
     "toml",
-    "pydantic"
+    "pydantic",
+    "uvloop; os_name=='posix'"
 ]
 # - further devdependencies below - #
 
@@ -43,16 +44,17 @@ flask_sqlalchemy = [
     "Flask-SqlAlchemy",
 ]
 peewee = [
-    "peewee>=3.0.0, <4.0"
+    "peewee>=3.0.0"
 ]
 markdown = [
     "markdown>=3.0.0"
 ]
 quart = [
-    "Flask>=2.0.0",
     "Quart",
-    "Quart-Schema",
-    "uvloop; os_name=='posix'"
+    "Quart-Schema"
+]
+quart_sqlalchemy = [
+    "Quart_SQLALchemy>=3.0.0, <4.0"
 ]
 
 full = [
@@ -60,7 +62,10 @@ full = [
     "sakuragasaki46-suou[flask]",
     "sakuragasaki46-suou[quart]",
     "sakuragasaki46-suou[peewee]",
-    "sakuragasaki46-suou[markdown]"
+    "sakuragasaki46-suou[markdown]",
+    "sakuragasaki46-suou[flask-sqlalchemy]"
+    # disabled: quart-sqlalchemy causes issues with anyone else. WON'T BE IMPLEMENTED
+    #"sakuragasaki46-suou[quart-sqlalchemy]"
 ]
 
 

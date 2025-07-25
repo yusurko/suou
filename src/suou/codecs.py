@@ -57,6 +57,7 @@ def want_urlsafe(s: str | bytes) -> str:
     Force a Base64 string into its urlsafe representation.
 
     Behavior is unchecked and undefined with anything else than Base64 strings.
+    In particular, this is NOT an URL encoder.
 
     Used by b64encode() and b64decode().
     """
@@ -328,5 +329,5 @@ class StringCase(enum.Enum):
 
 __all__ = (
     'cb32encode', 'cb32decode', 'b32lencode', 'b32ldecode', 'b64encode', 'b64decode', 'jsonencode'
-    'StringCase', 'want_bytes', 'want_str', 'jsondecode', 'ssv_list'
+    'StringCase', 'want_bytes', 'want_str', 'jsondecode', 'ssv_list', 'want_urlsafe', 'want_urlsafe_bytes'
 )
