@@ -70,6 +70,8 @@ def not_implemented(msg: Callable | str | None = None):
 def timed_cache(ttl: int, maxsize: int = 128, typed: bool = False) -> Callable[[Callable], Callable]:
     """
     LRU cache which expires after the TTL in seconds passed as argument.
+    
+    NEW 0.5.0
     """
     def decorator(func):
         start_time = None
@@ -87,7 +89,21 @@ def timed_cache(ttl: int, maxsize: int = 128, typed: bool = False) -> Callable[[
         return wrapper
     return decorator
 
+def none_pass(func: Callable, *args, **kwargs):
+    """
+    Wrap callable so that gets called only on not None values.
+
+    Shorthand for func(x) if x is not None else None
+
+    NEW 0.5.0
+    """
+    @wraps(func)
+    def wrapper(x):
+        if x is None:
+            return x
+        return func(x, *args, **kwargs)
+    return wrapper
 
 __all__ = (
-    'deprecated', 'not_implemented', 'timed_cache'
+    'deprecated', 'not_implemented', 'timed_cache', 'none_pass'
 )

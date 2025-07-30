@@ -34,7 +34,7 @@ Repository = "https://github.com/sakuragasaki46/suou"
 [project.optional-dependencies]
 # the below are all dev dependencies (and probably already installed)
 sqlalchemy = [
-    "SQLAlchemy>=2.0.0"
+    "SQLAlchemy>=2.0.0[asyncio]"
 ]
 flask = [
     "Flask>=2.0.0",

@@ -27,6 +27,8 @@ _VT = TypeVar('_VT')
 class TimedDict(dict[_KT, _VT]):
     """
     Dictionary where keys expire after the defined time to live, expressed in seconds.
+
+    NEW 0.5.0
     """
     _expires: dict[_KT, int]
     _ttl: int

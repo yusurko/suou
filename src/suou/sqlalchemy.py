@@ -232,6 +232,8 @@ def unbound_fk(target: str | Column | InstrumentedAttribute, typ: TypeEngine | N
     "Unbound" foreign keys are nullable and set to null when referenced object is deleted.
 
     If target is a string, make sure to pass the column type at typ= (default: IdType aka varbinary(16))!
+    
+    NEW 0.5.0
     """
     if isinstance(target, (Column, InstrumentedAttribute)):
         target_name = f'{target.table.name}.{target.name}'
@@ -251,6 +253,8 @@ def bound_fk(target: str | Column | InstrumentedAttribute, typ: TypeEngine | Non
     parent deleted -> all children deleted.
 
     If target is a string, make sure to pass the column type at typ= (default: IdType aka varbinary(16))!
+    
+    NEW 0.5.0
     """
     if isinstance(target, (Column, InstrumentedAttribute)):
         target_name = f'{target.table.name}.{target.name}'
@@ -284,6 +288,8 @@ class AuthSrc(metaclass=ABCMeta):
     AuthSrc object required for require_auth_base().
 
     This is an abstract class and is NOT usable directly.
+
+    This is not part of the public API
     '''
     def required_exc(self) -> Never:
         raise ValueError('required field missing')

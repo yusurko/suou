@@ -23,7 +23,7 @@ from .bits import count_ones, mask_shift, split_bits, join_bits, mod_ceil, mod_f
 from .calendar import want_datetime, want_isodate, want_timestamp, age_and_days
 from .configparse import MissingConfigError, MissingConfigWarning, ConfigOptions, ConfigParserConfigSource, ConfigSource, DictConfigSource, ConfigValue, EnvConfigSource
 from .collections import TimedDict
-from .functools import deprecated, not_implemented, timed_cache
+from .functools import deprecated, not_implemented, timed_cache, none_pass
 from .classtools import Wanted, Incomplete
 from .itertools import makelist, kwargs_prefix, ltuple, rtuple, additem, addattr
 from .i18n import I18n, JsonI18n, TomlI18n
@@ -31,6 +31,7 @@ from .snowflake import Snowflake, SnowflakeGen
 from .lex import symbol_table, lex, ilex
 from .strtools import PrefixIdentifier
 from .validators import matches
+from .redact import redact_url_password
 
 __version__ = "0.5.0-dev30"
 
@@ -44,7 +45,8 @@ __all__ = (
     'b32ldecode', 'b32lencode', 'b64encode', 'b64decode', 'cb32encode',
     'cb32decode', 'count_ones', 'deprecated', 'ilex', 'join_bits',
     'jsonencode', 'kwargs_prefix', 'lex', 'ltuple', 'makelist', 'mask_shift',
-    'matches', 'mod_ceil', 'mod_floor', 'not_implemented', 'rtuple', 'split_bits',
-    'ssv_list', 'symbol_table', 'timed_cache', 'want_bytes', 'want_datetime',
-    'want_isodate', 'want_str', 'want_timestamp', 'want_urlsafe', 'want_urlsafe_bytes'
+    'matches', 'mod_ceil', 'mod_floor', 'none_pass', 'not_implemented',
+    'redact_url_password', 'rtuple', 'split_bits', 'ssv_list', 'symbol_table',
+    'timed_cache', 'want_bytes', 'want_datetime', 'want_isodate', 'want_str',
+    'want_timestamp', 'want_urlsafe', 'want_urlsafe_bytes'
 )
