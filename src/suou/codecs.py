@@ -294,6 +294,16 @@ def ssv_list(s: str, *, sep_chars = ',;') -> list[str]:
         l.pop()
     return l
 
+def twocolon_list(s: str | None) -> list[str]:
+    """
+    Parse a string on a single line as multiple lines, each line separated by double colon (::).
+
+    Returns a list.
+    """
+    if not s:
+        return []
+    return [x.strip() for x in s.split('::')]
+
 class StringCase(enum.Enum):
     """
     Enum values used by regex validators and storage converters.
@@ -329,5 +339,5 @@ class StringCase(enum.Enum):
 
 __all__ = (
     'cb32encode', 'cb32decode', 'b32lencode', 'b32ldecode', 'b64encode', 'b64decode', 'jsonencode'
-    'StringCase', 'want_bytes', 'want_str', 'jsondecode', 'ssv_list', 'want_urlsafe', 'want_urlsafe_bytes'
+    'StringCase', 'want_bytes', 'want_str', 'jsondecode', 'ssv_list', 'twocolon_list', 'want_urlsafe', 'want_urlsafe_bytes'
 )

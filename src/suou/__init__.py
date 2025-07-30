@@ -18,7 +18,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from .iding import Siq, SiqCache, SiqType, SiqGen
 from .codecs import (StringCase, cb32encode, cb32decode, b32lencode, b32ldecode, b64encode, b64decode, b2048encode, b2048decode,
-    jsonencode, want_bytes, want_str, ssv_list, want_urlsafe, want_urlsafe_bytes)
+    jsonencode, twocolon_list, want_bytes, want_str, ssv_list, want_urlsafe, want_urlsafe_bytes)
 from .bits import count_ones, mask_shift, split_bits, join_bits, mod_ceil, mod_floor
 from .calendar import want_datetime, want_isodate, want_timestamp, age_and_days
 from .configparse import MissingConfigError, MissingConfigWarning, ConfigOptions, ConfigParserConfigSource, ConfigSource, DictConfigSource, ConfigValue, EnvConfigSource
@@ -47,6 +47,6 @@ __all__ = (
     'jsonencode', 'kwargs_prefix', 'lex', 'ltuple', 'makelist', 'mask_shift',
     'matches', 'mod_ceil', 'mod_floor', 'none_pass', 'not_implemented',
     'redact_url_password', 'rtuple', 'split_bits', 'ssv_list', 'symbol_table',
-    'timed_cache', 'want_bytes', 'want_datetime', 'want_isodate', 'want_str',
-    'want_timestamp', 'want_urlsafe', 'want_urlsafe_bytes'
+    'timed_cache', 'twocolon_list', 'want_bytes', 'want_datetime', 'want_isodate',
+    'want_str', 'want_timestamp', 'want_urlsafe', 'want_urlsafe_bytes'
 )
