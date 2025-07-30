@@ -16,21 +16,24 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 import math
 import time
-from typing import Callable
+from typing import Callable, TypeVar
 import warnings
 from functools import wraps, lru_cache
+
+_T = TypeVar('_T')
+_U = TypeVar('_U')
 
 try:
     from warnings import deprecated
 except ImportError:
     # Python <=3.12 does not implement warnings.deprecated
-    def deprecated(message: str, /, *, category=DeprecationWarning, stacklevel: int = 1):
+    def deprecated(message: str, /, *, category=DeprecationWarning, stacklevel: int = 1) -> Callable[[Callable[_T, _U]], Callable[_T, _U]]:
         """
         Backport of PEP 702 for Python <=3.12.
         The stack_level stuff is not reimplemented on purpose because
         too obscure for the average programmer.
         """
-        def decorator(func: Callable) -> Callable:
+        def decorator(func: Callable[_T, _U]) -> Callable[_T, _U]:
             @wraps(func)
             def wrapper(*a, **ka):
                 if category is not None:
@@ -89,7 +92,7 @@ def timed_cache(ttl: int, maxsize: int = 128, typed: bool = False) -> Callable[[
         return wrapper
     return decorator
 
-def none_pass(func: Callable, *args, **kwargs):
+def none_pass(func: Callable, *args, **kwargs) -> Callable:
     """
     Wrap callable so that gets called only on not None values.
 
