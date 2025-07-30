@@ -30,19 +30,21 @@ from .i18n import I18n, JsonI18n, TomlI18n
 from .snowflake import Snowflake, SnowflakeGen
 from .lex import symbol_table, lex, ilex
 from .strtools import PrefixIdentifier
+from .validators import matches
 
-__version__ = "0.5.0-dev29"
+__version__ = "0.5.0-dev30"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
     'DictConfigSource', 'EnvConfigSource', 'I18n', 'Incomplete', 'JsonI18n',
-    'MissingConfigError', 'MissingConfigWarning', 'PrefixIdentifier', 'Siq', 'SiqCache', 'SiqGen', 
-    'SiqType', 'Snowflake', 'SnowflakeGen', 'StringCase', 'TimedDict', 'TomlI18n', 'Wanted',
+    'MissingConfigError', 'MissingConfigWarning', 'PrefixIdentifier',
+    'Siq', 'SiqCache', 'SiqGen', 'SiqType', 'Snowflake', 'SnowflakeGen',
+    'StringCase', 'TimedDict', 'TomlI18n', 'Wanted',
     'addattr', 'additem', 'age_and_days', 'b2048decode', 'b2048encode',
     'b32ldecode', 'b32lencode', 'b64encode', 'b64decode', 'cb32encode',
     'cb32decode', 'count_ones', 'deprecated', 'ilex', 'join_bits',
     'jsonencode', 'kwargs_prefix', 'lex', 'ltuple', 'makelist', 'mask_shift',
-    'mod_ceil', 'mod_floor', 'not_implemented', 'rtuple', 'split_bits',
+    'matches', 'mod_ceil', 'mod_floor', 'not_implemented', 'rtuple', 'split_bits',
     'ssv_list', 'symbol_table', 'timed_cache', 'want_bytes', 'want_datetime',
     'want_isodate', 'want_str', 'want_timestamp', 'want_urlsafe', 'want_urlsafe_bytes'
 )

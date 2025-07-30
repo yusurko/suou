@@ -3,8 +3,8 @@
 ## 0.5.0
 
 + `sqlalchemy`: add `unbound_fk()`, `bound_fk()`
-+ Add `timed_cache()`, `TimedDict()`, `age_and_days()`
-+ Add date conversion utilities
++ Add `timed_cache()`, `TimedDict()`
++ Add module `calendar` with `want_*` date type conversion utilities and `age_and_days()`
 + Move obsolete stuff to `obsolete` package (includes configparse 0.3 as of now)
 + Add more exceptions: `NotFoundError()`
 

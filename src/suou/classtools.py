@@ -16,11 +16,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from __future__ import annotations
 
-from abc import ABCMeta, abstractmethod
+from abc import abstractmethod
 from typing import Any, Callable, Generic, Iterable, Mapping, TypeVar
 import logging
-
-from suou.codecs import StringCase
 
 _T = TypeVar('_T')
 
@@ -69,8 +67,6 @@ class Incomplete(Generic[_T]):
     Missing arguments must be passed in the appropriate positions
     (positional or keyword) as a Wanted() object.
     """
-    # XXX disabled for https://stackoverflow.com/questions/45864273/slots-conflicts-with-a-class-variable-in-a-generic-class
-    #__slots__ = ('_obj', '_args', '_kwargs')
     _obj = Callable[Any, _T]
     _args: Iterable
     _kwargs: dict
@@ -192,4 +188,6 @@ class ValueProperty(Generic[_T]):
     def source(self, /):
         return self._srcs['default']
     
+
+__all__ = ('Wanted', 'Incomplete', 'ValueSource', 'ValueProperty')
 

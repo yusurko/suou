@@ -1,5 +1,5 @@
 """
-Web app hardening and PT utilities.
+Utilities for Quart, asynchronous successor of Flask
 
 ---
 
@@ -14,30 +14,4 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
-SENSITIVE_ENDPOINTS = """
-/.git
-/.gitignore
-/node_modules
-/wp-admin
-/wp-login.php
-/.ht
-/package.json
-/package-lock.json
-/composer.
-/docker-compose.
-/config/
-/config.
-/secrets.
-/credentials.
-/.idea/
-/.vscode/
-/storage/
-/logs/
-/.DS_Store
-/backup
-/.backup
-/db.sql
-/database.sql
-/.vite
-""".split()
-
+# TODO everything
