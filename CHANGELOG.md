@@ -8,7 +8,7 @@
 + Add module `calendar` with `want_*` date type conversion utilities and `age_and_days()`
 + Move obsolete stuff to `obsolete` package (includes configparse 0.3 as of now)
 + Add `redact` module with `redact_url_password()`
-+ Add more exceptions: `NotFoundError()`
++ Add more exceptions: `NotFoundError()`, `BabelTowerError()`
 
 ## 0.4.0
 

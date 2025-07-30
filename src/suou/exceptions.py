@@ -45,6 +45,13 @@ class NotFoundError(LookupError):
     """
     The requested item was not found.
     """
+    # Werkzeug et al.
+    code = 404
+
+class BabelTowerError(NotFoundError):
+    """
+    The user requested a language that cannot be understood.
+    """
 
 __all__ = (
     'MissingConfigError', 'MissingConfigWarning', 'LexError', 'InconsistencyError', 'NotFoundError'

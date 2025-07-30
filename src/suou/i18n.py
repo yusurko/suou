@@ -23,6 +23,7 @@ import os
 import toml
 from typing import Mapping
 
+from .exceptions import BabelTowerError
 
 class IdentityLang:
     '''
@@ -81,7 +82,10 @@ class I18n(metaclass=ABCMeta):
     def load_lang(self, name: str, filename: str | None = None) -> I18nLang:
         if not filename:
             filename = self.filename_tmpl.format(lang=name, ext=self.EXT)
-        data = self.load_file(filename)
+        try:
+            data = self.load_file(filename)
+        except OSError as e:
+            raise BabelTowerError(f'unknown language: {name}') from e
         l = self.langs.setdefault(name, I18nLang())
         l.update(data[name] if name in data else data)
         if name != self.default_lang:
