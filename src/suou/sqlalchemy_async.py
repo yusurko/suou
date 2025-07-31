@@ -32,8 +32,8 @@ class SQLAlchemy:
     engine: Engine
     NotFound = NotFoundError
 
-    def __init__(self, base: DeclarativeBase):
-        self.base = base
+    def __init__(self, model_class: DeclarativeBase):
+        self.base = model_class
         self.engine = None
     def bind(self, url: str):
         self.engine = create_async_engine(url)
