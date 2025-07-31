@@ -16,6 +16,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 import re
 
+from typing import Any, Iterable, TypeVar
+
+_T = TypeVar('_T')
+
 def matches(regex: str | int, /, length: int = 0, *, flags=0):
     """
     Return a function which returns true if X is shorter than length and matches the given regex.
@@ -26,6 +30,14 @@ def matches(regex: str | int, /, length: int = 0, *, flags=0):
     def validator(s: str):
         return (not length or len(s) < length) and bool(re.fullmatch(regex, s, flags=flags))
     return validator
+
+def must_be(obj: _T | Any, typ: type[_T] | Iterable[type], message: str, *, exc = TypeError) -> _T:
+    """
+    Raise TypeError if the requested object is not of the desired type(s), with a nice message.
+    """
+    if not isinstance(obj, typ):
+        raise TypeError(f'{message}, not {obj.__class__.__name__!r}')
+    return obj
 
 
 __all__ = ('matches', )

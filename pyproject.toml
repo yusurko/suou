@@ -12,6 +12,7 @@ dependencies = [
     "itsdangerous",
     "toml",
     "pydantic",
+    "setuptools>=78.0.0",
     "uvloop; os_name=='posix'"
 ]
 # - further devdependencies below - #
@@ -44,6 +45,7 @@ flask_sqlalchemy = [
     "Flask-SqlAlchemy",
 ]
 peewee = [
+    ## HEADS UP! peewee has setup.py, may slow down installation
     "peewee>=3.0.0"
 ]
 markdown = [
@@ -51,10 +53,12 @@ markdown = [
 ]
 quart = [
     "Quart",
-    "Quart-Schema"
+    "Quart-Schema",
+    "starlette>=0.47.2"
 ]
-quart_sqlalchemy = [
-    "Quart_SQLALchemy>=3.0.0, <4.0"
+sass = [
+    ## HEADS UP!! libsass carries a C extension + uses setup.py
+    "libsass"
 ]
 
 full = [
@@ -63,9 +67,8 @@ full = [
     "sakuragasaki46-suou[quart]",
     "sakuragasaki46-suou[peewee]",
     "sakuragasaki46-suou[markdown]",
-    "sakuragasaki46-suou[flask-sqlalchemy]"
-    # disabled: quart-sqlalchemy causes issues with anyone else. WON'T BE IMPLEMENTED
-    #"sakuragasaki46-suou[quart-sqlalchemy]"
+    "sakuragasaki46-suou[flask-sqlalchemy]",
+    "sakuragasaki46-suou[sass]"
 ]
 
 

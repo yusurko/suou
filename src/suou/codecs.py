@@ -304,6 +304,12 @@ def twocolon_list(s: str | None) -> list[str]:
         return []
     return [x.strip() for x in s.split('::')]
 
+def quote_css_string(s):
+    """Quotes a string as CSS string literal.
+    
+    Source: libsass==0.23.0"""
+    return "'" + ''.join(('\\%06x' % ord(c)) for c in s) + "'"
+
 class StringCase(enum.Enum):
     """
     Enum values used by regex validators and storage converters.

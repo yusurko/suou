@@ -4,11 +4,12 @@
 
 + `sqlalchemy`: add `unbound_fk()`, `bound_fk()`
 + Add `sqlalchemy_async` module with `SQLAlchemy()`
-+ Add `timed_cache()`, `TimedDict()`, `none_pass()`, `twocolon_list()`
++ Add `timed_cache()`, `TimedDict()`, `none_pass()`, `twocolon_list()`, `quote_css_string()`, `must_be()`
 + Add module `calendar` with `want_*` date type conversion utilities and `age_and_days()`
 + Move obsolete stuff to `obsolete` package (includes configparse 0.3 as of now)
 + Add `redact` module with `redact_url_password()`
 + Add more exceptions: `NotFoundError()`, `BabelTowerError()`
++ Add `sass` module
 
 ## 0.4.0
 
