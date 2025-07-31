@@ -14,8 +14,9 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
+from __future__ import annotations
 from sqlalchemy import Engine, Select, func, select
-from sqlalchemy.orm import DeclarativeBase, Session, lazyload
+from sqlalchemy.orm import DeclarativeBase, lazyload
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from flask_sqlalchemy.pagination import Pagination
 
@@ -37,7 +38,7 @@ class SQLAlchemy:
         self.engine = None
     def bind(self, url: str):
         self.engine = create_async_engine(url)
-    async def begin(self) -> Session:
+    async def begin(self) -> AsyncSession:
         if self.engine is None:
             raise RuntimeError('database is not connected')
         return await self.engine.begin()
@@ -47,8 +48,9 @@ class SQLAlchemy:
     async def paginate(self, select: Select, *, 
         page: int | None = None, per_page: int | None = None,
         max_per_page: int | None = None, error_out: bool = True,
-        count: bool = True):
+        count: bool = True) -> AsyncSelectPagination:
         """
+        ...
         """
         async with self as session:
             return AsyncSelectPagination(
@@ -58,7 +60,6 @@ class SQLAlchemy:
                 per_page=per_page, max_per_page=max_per_page,
                 error_out=self.NotFound if error_out else None, count=count
             )
-
 
 
 class AsyncSelectPagination(Pagination):
