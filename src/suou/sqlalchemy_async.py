@@ -37,7 +37,7 @@ class SQLAlchemy:
         self.engine = None
     def bind(self, url: str):
         self.engine = create_async_engine(url)
-    async def begin(self):
+    async def begin(self) -> Session:
         if self.engine is None:
             raise RuntimeError('database is not connected')
         return await self.engine.begin()
