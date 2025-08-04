@@ -41,8 +41,9 @@ class SQLAlchemy:
     async def begin(self) -> AsyncSession:
         if self.engine is None:
             raise RuntimeError('database is not connected')
-        return await self.engine.begin()
-    __aenter__ = begin
+        return self.engine.begin()
+    async def __aenter__(self):
+        return self.begin()
     async def __aexit__(self, e1, e2, e3):
         return await self.engine.__aexit__(e1, e2, e3)
     async def paginate(self, select: Select, *, 

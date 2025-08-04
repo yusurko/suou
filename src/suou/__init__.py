@@ -33,7 +33,7 @@ from .strtools import PrefixIdentifier
 from .validators import matches
 from .redact import redact_url_password
 
-__version__ = "0.5.0-dev30"
+__version__ = "0.5.0-dev31"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
