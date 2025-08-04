@@ -14,6 +14,12 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
+from contextlib import _GeneratorContextManager
+
+
+from sqlalchemy.engine.base import Connection
+
+
 from __future__ import annotations
 from sqlalchemy import Engine, Select, func, select
 from sqlalchemy.orm import DeclarativeBase, lazyload
@@ -44,7 +50,7 @@ class SQLAlchemy:
         if self.engine is None:
             raise RuntimeError('database is not connected')
         ## XXX is it accurate?
-        s = self.engine.begin()
+        s = AsyncSession(self.engine)
         self._sessions.append(s)
         return s
     async def __aenter__(self) -> AsyncSession:
