@@ -14,13 +14,9 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
-from contextlib import _GeneratorContextManager
-
-
-from sqlalchemy.engine.base import Connection
-
-
 from __future__ import annotations
+
+
 from sqlalchemy import Engine, Select, func, select
 from sqlalchemy.orm import DeclarativeBase, lazyload
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
