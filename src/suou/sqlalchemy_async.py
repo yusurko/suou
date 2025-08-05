@@ -58,6 +58,7 @@ class SQLAlchemy:
             await s.rollback()
         else:
             await s.commit()
+        await s.close()
     async def paginate(self, select: Select, *, 
         page: int | None = None, per_page: int | None = None,
         max_per_page: int | None = None, error_out: bool = True,
