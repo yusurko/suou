@@ -62,7 +62,7 @@ class SassAsyncMiddleware(_MiddlewareFactory):
             ## WSGI path — is it valid for ASGI as well??
             asgi_path = f'/{manifest.wsgi_path.strip('/')}/'
             pkg_dir = self.package_dir[pkgname]
-            self.paths.append((asgi_path, package_dir, manifest))
+            self.paths.append((asgi_path, pkg_dir, manifest))
     
     async def __call__(self, /, scope: ASGIScope, receive: ASGIReceive, send: ASGISend):
         path: str = scope.get('path')

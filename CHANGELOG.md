@@ -3,7 +3,8 @@
 ## 0.5.0
 
 + `sqlalchemy`: add `unbound_fk()`, `bound_fk()`
-+ Add `sqlalchemy_async` module with `SQLAlchemy()`
++ Add `sqlalchemy_async` module with `SQLAlchemy()` async database binding. 
+    * Supports being used as an async context manager
 + Add `timed_cache()`, `TimedDict()`, `none_pass()`, `twocolon_list()`, `quote_css_string()`, `must_be()`
 + Add module `calendar` with `want_*` date type conversion utilities and `age_and_days()`
 + Move obsolete stuff to `obsolete` package (includes configparse 0.3 as of now)

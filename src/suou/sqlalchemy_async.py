@@ -19,7 +19,7 @@ from __future__ import annotations
 
 from sqlalchemy import Engine, Select, func, select
 from sqlalchemy.orm import DeclarativeBase, lazyload
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from flask_sqlalchemy.pagination import Pagination
 
 from suou.exceptions import NotFoundError
@@ -32,7 +32,7 @@ class SQLAlchemy:
     NEW 0.5.0
     """
     base: DeclarativeBase
-    engine: Engine
+    engine: AsyncEngine
     _sessions: list[AsyncSession]
     NotFound = NotFoundError
 
@@ -42,9 +42,11 @@ class SQLAlchemy:
         self._sessions = []
     def bind(self, url: str):
         self.engine = create_async_engine(url)
-    async def begin(self) -> AsyncSession:
+    def _ensure_engine(self):
         if self.engine is None:
             raise RuntimeError('database is not connected')
+    async def begin(self) -> AsyncSession:
+        self._ensure_engine()
         ## XXX is it accurate?
         s = AsyncSession(self.engine)
         self._sessions.append(s)
@@ -64,7 +66,7 @@ class SQLAlchemy:
         max_per_page: int | None = None, error_out: bool = True,
         count: bool = True) -> AsyncSelectPagination:
         """
-        ...
+        Return a pagination. Analogous to flask_sqlalchemy.SQLAlchemy.paginate().
         """
         async with self as session:
             return AsyncSelectPagination(
@@ -74,11 +76,22 @@ class SQLAlchemy:
                 per_page=per_page, max_per_page=max_per_page,
                 error_out=self.NotFound if error_out else None, count=count
             )
+    async def create_all(self, *, checkfirst = True):
+        """
+        Initialize database
+        """
+        self._ensure_engine()
+        self.base.metadata.create_all(
+            self.engine, checkfirst=checkfirst
+        )
+
 
 
 class AsyncSelectPagination(Pagination):
     """
-    flask_sqlalchemy.SelectPagination but asynchronous
+    flask_sqlalchemy.SelectPagination but asynchronous.
+
+    Pagination is not part of the public API, therefore expect that it may break
     """
 
     async def _query_items(self) -> list:
