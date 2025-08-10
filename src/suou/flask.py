@@ -67,10 +67,11 @@ def get_flask_conf(key: str, default = None, *, app: Flask | None = None) -> Any
         app = current_app
     return app.config.get(key, default)
 
-## XXX UNTESTED!
 def harden(app: Flask):
     """
     Make common "dork" endpoints unavailable
+
+    XXX UNTESTED!
     """
     i = 1
     for ep in SENSITIVE_ENDPOINTS:
@@ -80,6 +81,7 @@ def harden(app: Flask):
         i += 1
     
     return app
+
 
 # Optional dependency: do not import into __init__.py
 __all__ = ('add_context_from_config', 'add_i18n', 'get_flask_conf', 'harden')

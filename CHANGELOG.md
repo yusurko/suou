@@ -11,6 +11,7 @@
 + Add `redact` module with `redact_url_password()`
 + Add more exceptions: `NotFoundError()`, `BabelTowerError()`
 + Add `sass` module
++ Add `quart` module with `negotiate()`, `add_rest()`, `add_i18n()`, `WantsContentType`
 
 ## 0.4.0
 
