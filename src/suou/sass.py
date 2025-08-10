@@ -114,6 +114,8 @@ class SassAsyncMiddleware(_MiddlewareFactory):
                         'body': resp_body
                     })
 
+                    return
+
                 async def _read_file(path):
                     with open(path, 'rb') as f:
                         while True:
@@ -142,6 +144,8 @@ class SassAsyncMiddleware(_MiddlewareFactory):
                     'type': 'http.response.body',
                     'body': resp_body
                 })
+
+                return
 
         await self.app(scope, receive, send)
         
