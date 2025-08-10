@@ -16,8 +16,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from __future__ import annotations
 
-from flask import current_app
-from quart import Quart, request, g
+from quart import current_app, Quart, request, g
 from quart_schema import QuartSchema
 
 from suou.http import WantsContentType
@@ -58,14 +57,14 @@ def add_i18n(app: Quart, i18n: I18n, var_name: str = 'T', *,
 
 def negotiate() -> WantsContentType:
     """
-    Return an appropriate MIME type for content negotiation.
+    Return an appropriate MIME type for the sake of content negotiation.
     """
-    if 'application/json' in request.accept_mimetypes or any(request.path.startswith(f'/{p.strip('/')}/') for p in current_app.config.get('REST_PATHS')):
+    if any(request.path.startswith(f'/{p.strip('/')}/') for p in current_app.config.get('REST_PATHS', [])):
         return WantsContentType.JSON
     elif request.user_agent.string.startswith('Mozilla/'):
         return WantsContentType.HTML
     else:
-        return WantsContentType.PLAIN
+        return request.accept_mimetypes.best_match([WantsContentType.PLAIN, WantsContentType.JSON, WantsContentType.HTML])
 
 
 def add_rest(app: Quart, *bases: str, **kwargs) -> QuartSchema:

@@ -16,6 +16,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from typing import Any
 from flask import Flask, abort, current_app, g, request
+
+from suou.http import WantsContentType
 from .i18n import I18n
 from .configparse import ConfigOptions
 from .dorks import SENSITIVE_ENDPOINTS
@@ -82,8 +84,19 @@ def harden(app: Flask):
     
     return app
 
+def negotiate() -> WantsContentType:
+    """
+    Return an appropriate MIME type for the sake of content negotiation.
+    """
+    if any(request.path.startswith(f'/{p.strip('/')}/') for p in current_app.config.get('REST_PATHS', [])):
+        return WantsContentType.JSON
+    elif request.user_agent.string.startswith('Mozilla/'):
+        return WantsContentType.HTML
+    else:
+        return request.accept_mimetypes.best_match([WantsContentType.PLAIN, WantsContentType.JSON, WantsContentType.HTML])
+
 
 # Optional dependency: do not import into __init__.py
-__all__ = ('add_context_from_config', 'add_i18n', 'get_flask_conf', 'harden')
+__all__ = ('add_context_from_config', 'add_i18n', 'get_flask_conf', 'harden', 'negotiate')
 
 
