@@ -122,17 +122,19 @@ class SassAsyncMiddleware(_MiddlewareFactory):
                                 yield chunk
                             else:
                                 break
+                
+                file_path = os.path.join(package_dir, result)
 
                 await send({
                     'type': 'http.response.start',
                     'status': 200,
                     'headers': [
                         (b'Content-Type', b'text/css; charset=utf-8'),
-                        (b'Content-Length', want_bytes(f'{os.path.getsize(path)}'))
+                        (b'Content-Length', want_bytes(f'{os.path.getsize(file_path)}'))
                     ]
                 })
 
-                async for chunk in _read_file(os.path.join(package_dir, result)):
+                async for chunk in _read_file(file_path):
                     await send({
                         'type': 'http.response.body',
                         'body': chunk
