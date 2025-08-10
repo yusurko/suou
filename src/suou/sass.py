@@ -11,7 +11,7 @@ from sass import CompileError
 from sassutils.builder import Manifest
 from importlib.metadata import version as _get_version
 
-from .codecs import quote_css_string, want_bytes
+from .codecs import quote_css_string, want_bytes, want_bytes
 from .validators import must_be
 from .asgi import _MiddlewareFactory, ASGIApp, ASGIReceive, ASGIScope, ASGISend
 from . import __version__ as _suou_version
@@ -83,25 +83,35 @@ class SassAsyncMiddleware(_MiddlewareFactory):
                     break
                 except CompileError as e:
                     logger.error(str(e))
+                    resp_body = '\n'.join([
+                        '/*',
+                        str(e),
+                        '***',
+                        f'libsass {_libsass_version} + suou {_suou_version} {datetime.datetime.now().isoformat()}',
+                        '*/',
+                        '',
+                        'body::before {',
+                        f'  content: {quote_css_string(str(e))};',
+                        '  color: maroon;',
+                        '  background-color: white;',
+                        '  white-space: pre-wrap;',
+                        '  display: block;',
+                        '  font-family: monospace;',
+                        '  user-select: text;'
+                        '}'
+                    ]).encode('utf-8')
+
+                    await send({
+                        'type': 'http.response.start',
+                        'status': self.error_status,
+                        'headers': [
+                            (b'Content-Type', b'text/css; charset=utf-8'),
+                            (b'Content-Length', want_bytes(f'{len(resp_body)}'))
+                        ]
+                    })
                     await send({
                         'type': 'http.response.body',
-                        'body': '\n'.join([
-                            '/*',
-                            str(e),
-                            '***',
-                            f'libsass {_libsass_version} + suou {_suou_version} {datetime.datetime.now().isoformat()}',
-                            '*/',
-                            '',
-                            'body::before {',
-                            f'  content: {quote_css_string(str(e))};',
-                            '  color: maroon;',
-                            '  background-color: white;',
-                            '  white-space: pre-wrap;',
-                            '  display: block;',
-                            '  font-family: monospace;',
-                            '  user-select: text;'
-                            '}'
-                        ]).encode('utf-8')
+                        'body': resp_body
                     })
                     await send({
                         'type': 'http.response.start',
@@ -130,7 +140,8 @@ class SassAsyncMiddleware(_MiddlewareFactory):
                     'type': 'http.response.start',
                     'status': 200,
                     'headers': [
-                        (b'Content-Type', b'text/css; charset=utf-8')
+                        (b'Content-Type', b'text/css; charset=utf-8'),
+                        (b'Content-Length', want_bytes(f'{len(resp_body)}'))
                     ]
                 })
 
