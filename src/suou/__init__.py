@@ -32,6 +32,7 @@ from .lex import symbol_table, lex, ilex
 from .strtools import PrefixIdentifier
 from .validators import matches
 from .redact import redact_url_password
+from .http import WantsContentType
 
 __version__ = "0.5.0-dev31"
 
@@ -40,7 +41,7 @@ __all__ = (
     'DictConfigSource', 'EnvConfigSource', 'I18n', 'Incomplete', 'JsonI18n',
     'MissingConfigError', 'MissingConfigWarning', 'PrefixIdentifier',
     'Siq', 'SiqCache', 'SiqGen', 'SiqType', 'Snowflake', 'SnowflakeGen',
-    'StringCase', 'TimedDict', 'TomlI18n', 'Wanted',
+    'StringCase', 'TimedDict', 'TomlI18n', 'Wanted', 'WantsContentType',
     'addattr', 'additem', 'age_and_days', 'b2048decode', 'b2048encode',
     'b32ldecode', 'b32lencode', 'b64encode', 'b64decode', 'cb32encode',
     'cb32decode', 'count_ones', 'deprecated', 'ilex', 'join_bits',

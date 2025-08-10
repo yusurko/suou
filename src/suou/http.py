@@ -22,3 +22,6 @@ class WantsContentType(enum.Enum):
     JSON = 'application/json'
     HTML = 'text/html'
 
+
+
+__all__ = ('WantsContentType',)
