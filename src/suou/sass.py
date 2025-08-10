@@ -113,13 +113,6 @@ class SassAsyncMiddleware(_MiddlewareFactory):
                         'type': 'http.response.body',
                         'body': resp_body
                     })
-                    await send({
-                        'type': 'http.response.start',
-                        'status': self.error_status,
-                        'headers': [
-                            (b'Content-Type', b'text/css; charset=utf-8'),
-                        ]
-                    })
 
                 async def _read_file(path):
                     with open(path, 'rb') as f:
@@ -129,21 +122,21 @@ class SassAsyncMiddleware(_MiddlewareFactory):
                                 yield chunk
                             else:
                                 break
-                
-                async for chunk in _read_file(os.path.join(package_dir, result)):
-                    await send({
-                        'type': 'http.response.body',
-                        'body': chunk
-                    })
 
                 await send({
                     'type': 'http.response.start',
                     'status': 200,
                     'headers': [
                         (b'Content-Type', b'text/css; charset=utf-8'),
-                        (b'Content-Length', want_bytes(f'{len(resp_body)}'))
+                        (b'Content-Length', want_bytes(f'{os.path.getsize(path)}'))
                     ]
                 })
+
+                async for chunk in _read_file(os.path.join(package_dir, result)):
+                    await send({
+                        'type': 'http.response.body',
+                        'body': chunk
+                    })
 
         await self.app(scope, receive, send)
         
