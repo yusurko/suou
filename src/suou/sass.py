@@ -134,11 +134,14 @@ class SassAsyncMiddleware(_MiddlewareFactory):
                     ]
                 })
 
+                resp_body = b''
                 async for chunk in _read_file(file_path):
-                    await send({
-                        'type': 'http.response.body',
-                        'body': chunk
-                    })
+                    resp_body += chunk
+                    
+                await send({
+                    'type': 'http.response.body',
+                    'body': resp_body
+                })
 
         await self.app(scope, receive, send)
         
