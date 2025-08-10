@@ -11,7 +11,7 @@ from sass import CompileError
 from sassutils.builder import Manifest
 from importlib.metadata import version as _get_version
 
-from .codecs import quote_css_string
+from .codecs import quote_css_string, want_bytes
 from .validators import must_be
 from .asgi import _MiddlewareFactory, ASGIApp, ASGIReceive, ASGIScope, ASGISend
 from . import __version__ as _suou_version
@@ -84,13 +84,6 @@ class SassAsyncMiddleware(_MiddlewareFactory):
                 except CompileError as e:
                     logger.error(str(e))
                     await send({
-                        'type': 'http.response.start',
-                        'status': self.error_status,
-                        'headers': [
-                            (b'Content-Type', b'text/css; charset=utf-8'),
-                        ]
-                    })
-                    await send({
                         'type': 'http.response.body',
                         'body': '\n'.join([
                             '/*',
@@ -110,6 +103,13 @@ class SassAsyncMiddleware(_MiddlewareFactory):
                             '}'
                         ]).encode('utf-8')
                     })
+                    await send({
+                        'type': 'http.response.start',
+                        'status': self.error_status,
+                        'headers': [
+                            (b'Content-Type', b'text/css; charset=utf-8'),
+                        ]
+                    })
 
                 async def _read_file(path):
                     with open(path, 'rb') as f:
@@ -120,21 +120,18 @@ class SassAsyncMiddleware(_MiddlewareFactory):
                             else:
                                 break
                 
-                resp_body = b''
                 async for chunk in _read_file(os.path.join(package_dir, result)):
-                    resp_body += chunk
+                    await send({
+                        'type': 'http.response.body',
+                        'body': chunk
+                    })
 
                 await send({
                     'type': 'http.response.start',
                     'status': 200,
                     'headers': [
-                        (b'Content-Type', b'text/css; charset=utf-8'),
+                        (b'Content-Type', b'text/css; charset=utf-8')
                     ]
-                })
-                
-                await send({
-                    'type': 'http.response.body',
-                    'body': resp_body
                 })
 
         await self.app(scope, receive, send)
