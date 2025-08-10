@@ -120,6 +120,10 @@ class SassAsyncMiddleware(_MiddlewareFactory):
                             else:
                                 break
                 
+                resp_body = b''
+                async for chunk in _read_file(os.path.join(package_dir, result)):
+                    resp_body += chunk
+
                 await send({
                     'type': 'http.response.start',
                     'status': 200,
@@ -127,11 +131,11 @@ class SassAsyncMiddleware(_MiddlewareFactory):
                         (b'Content-Type', b'text/css; charset=utf-8'),
                     ]
                 })
-                async for chunk in _read_file(os.path.join(package_dir, result)):
-                    await send({
-                        'type': 'http.response.body',
-                        'body': chunk
-                    })
+                
+                await send({
+                    'type': 'http.response.body',
+                    'body': resp_body
+                })
 
         await self.app(scope, receive, send)
         
