@@ -87,7 +87,7 @@ class SassAsyncMiddleware(_MiddlewareFactory):
                         'type': 'http.response.start',
                         'status': self.error_status,
                         'headers': [
-                            ('Content-Type', 'text/css; charset=utf-8'),
+                            (b'Content-Type', b'text/css; charset=utf-8'),
                         ]
                     })
                     await send({
@@ -124,7 +124,7 @@ class SassAsyncMiddleware(_MiddlewareFactory):
                     'type': 'http.response.start',
                     'status': 200,
                     'headers': [
-                        ('Content-Type', 'text/css; charset=utf-8'),
+                        (b'Content-Type', b'text/css; charset=utf-8'),
                     ]
                 })
                 async for chunk in _read_file(os.path.join(package_dir, result)):
