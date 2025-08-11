@@ -12,6 +12,7 @@
 + Add more exceptions: `NotFoundError()`, `BabelTowerError()`
 + Add `sass` module
 + Add `quart` module with `negotiate()`, `add_rest()`, `add_i18n()`, `WantsContentType`
++ Add `dei` module: it implements a compact and standardized representation for pronouns, inspired by the one in use at PronounDB
 
 ## 0.4.0
 
