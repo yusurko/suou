@@ -146,4 +146,9 @@ class AsyncSelectPagination(Pagination):
             self.total = await self._query_count()
         return self
 
+    async def __aiter__(self):
+        await self
+        for i in self.items:
+            yield i
+
 __all__ = ('SQLAlchemy', )
