@@ -99,12 +99,13 @@ class AsyncSelectPagination(Pagination):
         select = select_q.limit(self.per_page).offset(self._query_offset)
         session: AsyncSession = self._query_args["session"]
         out = (await session.execute(select)).scalars()
+        return out
 
     async def _query_count(self) -> int:
         select_q: Select = self._query_args["select"]
         sub = select_q.options(lazyload("*")).order_by(None).subquery()
         session: AsyncSession = self._query_args["session"]
-        out = await session.execute(select(func.count()).select_from(sub))
+        out = (await session.execute(select(func.count()).select_from(sub))).scalar()
         return out
 
     def __init__(self,
@@ -140,6 +141,8 @@ class AsyncSelectPagination(Pagination):
 
     async def __aiter__(self):
         self.items = await self._query_items()
+        if self.items is None:
+            raise RuntimeError('query returned None')
         if not self.items and self.page != 1 and self.error_out:
             raise self.error_out
         if self.has_count:
