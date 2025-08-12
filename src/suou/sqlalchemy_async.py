@@ -138,16 +138,12 @@ class AsyncSelectPagination(Pagination):
         self.error_out = error_out
         self.has_count = count
 
-    async def __await__(self):
+    async def __aiter__(self):
         self.items = await self._query_items()
         if not self.items and self.page != 1 and self.error_out:
             raise self.error_out
         if self.has_count:
             self.total = await self._query_count()
-        return self
-
-    async def __aiter__(self):
-        await self
         for i in self.items:
             yield i
 
