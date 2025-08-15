@@ -1,5 +1,7 @@
 """
-Helpers for asynchronous user of SQLAlchemy
+Helpers for asynchronous use of SQLAlchemy.
+
+NEW 0.5.0
 
 ---
 
@@ -15,6 +17,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
 from __future__ import annotations
+from functools import wraps
 
 
 from sqlalchemy import Engine, Select, func, select
@@ -150,4 +153,23 @@ class AsyncSelectPagination(Pagination):
         for i in self.items:
             yield i
 
-__all__ = ('SQLAlchemy', )
+
+def async_query(db: SQLAlchemy, multi: False):
+    """
+    Wraps a query returning function into an executor coroutine.
+
+    The query function remains available as the .q or .query attribute.
+    """
+    def decorator(func):
+        @wraps(func)
+        async def executor(*args, **kwargs):
+            async with db as session:
+                result = await session.execute(func(*args, **kwargs))
+                return result.scalars() if multi else result.scalar()
+        executor.query = executor.q = func
+        return executor
+    return decorator
+        
+
+# Optional dependency: do not import into __init__.py
+__all__ = ('SQLAlchemy', 'async_query')
