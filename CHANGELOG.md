@@ -8,7 +8,7 @@
     * Automatically handles commit and rollback
 + `sqlalchemy_async` also offers `async_query()`
 + Changed `sqlalchemy.parent_children()` to use `lazy='selectin'` by default
-+ Add `timed_cache()`, `TimedDict()`, `none_pass()`, `twocolon_list()`, `quote_css_string()`, `must_be()`
++ Add `timed_cache()`, `alru_cache()`, `TimedDict()`, `none_pass()`, `twocolon_list()`, `quote_css_string()`, `must_be()`
 + Add module `calendar` with `want_*` date type conversion utilities and `age_and_days()`
 + Move obsolete stuff to `obsolete` package (includes configparse 0.3 as of now)
 + Add `redact` module with `redact_url_password()`

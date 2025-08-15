@@ -103,6 +103,27 @@ def addattr(obj: Any, /, name: str = None):
         return func
     return decorator
 
+class hashed_list(list):
+    """ 
+    Used by lru_cache() functions.
+    
+    This class guarantees that hash() will be called no more than once
+    per element.  This is important because the lru_cache() will hash
+    the key multiple times on a cache miss.
+
+    Shamelessly copied from functools._HashedSeq() from the Python Standard Library.
+    Never trust underscores, you know.
+    """
+
+    __slots__ = 'hashvalue'
+
+    def __init__(self, tup, hash=hash):
+        self[:] = tup
+        self.hashvalue = hash(tup)
+
+    def __hash__(self):
+        return self.hashvalue
+
 
 __all__ = ('makelist', 'kwargs_prefix', 'ltuple', 'rtuple', 'additem', 'addattr')
 
