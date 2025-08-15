@@ -125,7 +125,7 @@ def _make_alru_cache(_CacheInfo):
         elif callable(maxsize) and isinstance(typed, bool):
             # The user_function was passed in directly via the maxsize argument
             user_function, maxsize = maxsize, 128
-            wrapper = _alru_cache_wrapper(user_function, maxsize, typed, _CacheInfo)
+            wrapper = _alru_cache_wrapper(user_function, maxsize, typed)
             wrapper.cache_parameters = lambda : {'maxsize': maxsize, 'typed': typed}
             return update_wrapper(wrapper, user_function)
         elif maxsize is not None:
@@ -133,7 +133,7 @@ def _make_alru_cache(_CacheInfo):
                 'Expected first argument to be an integer, a callable, or None')
 
         def decorating_function(user_function: CoroutineType):
-            wrapper = _alru_cache_wrapper(user_function, maxsize, typed, _CacheInfo)
+            wrapper = _alru_cache_wrapper(user_function, maxsize, typed)
             wrapper.cache_parameters = lambda : {'maxsize': maxsize, 'typed': typed}
             return update_wrapper(wrapper, user_function)
 
