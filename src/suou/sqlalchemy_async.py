@@ -45,10 +45,10 @@ class SQLAlchemy:
     def _ensure_engine(self):
         if self.engine is None:
             raise RuntimeError('database is not connected')
-    async def begin(self) -> AsyncSession:
+    async def begin(self, *, expire_on_commit = False, **kw) -> AsyncSession:
         self._ensure_engine()
         ## XXX is it accurate?
-        s = AsyncSession(self.engine)
+        s = AsyncSession(self.engine, expire_on_commit=expire_on_commit, **kw)
         self._sessions.append(s)
         return s
     async def __aenter__(self) -> AsyncSession:
