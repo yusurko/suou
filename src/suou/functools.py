@@ -314,5 +314,5 @@ def none_pass(func: Callable, *args, **kwargs) -> Callable:
     return wrapper
 
 __all__ = (
-    'deprecated', 'not_implemented', 'timed_cache', 'none_pass'
+    'deprecated', 'not_implemented', 'timed_cache', 'none_pass', 'alru_cache'
 )

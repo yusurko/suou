@@ -23,7 +23,7 @@ from .bits import count_ones, mask_shift, split_bits, join_bits, mod_ceil, mod_f
 from .calendar import want_datetime, want_isodate, want_timestamp, age_and_days
 from .configparse import MissingConfigError, MissingConfigWarning, ConfigOptions, ConfigParserConfigSource, ConfigSource, DictConfigSource, ConfigValue, EnvConfigSource
 from .collections import TimedDict
-from .functools import deprecated, not_implemented, timed_cache, none_pass
+from .functools import deprecated, not_implemented, timed_cache, none_pass, alru_cache
 from .classtools import Wanted, Incomplete
 from .itertools import makelist, kwargs_prefix, ltuple, rtuple, additem, addattr
 from .i18n import I18n, JsonI18n, TomlI18n
@@ -42,7 +42,7 @@ __all__ = (
     'MissingConfigError', 'MissingConfigWarning', 'PrefixIdentifier',
     'Siq', 'SiqCache', 'SiqGen', 'SiqType', 'Snowflake', 'SnowflakeGen',
     'StringCase', 'TimedDict', 'TomlI18n', 'Wanted', 'WantsContentType',
-    'addattr', 'additem', 'age_and_days', 'b2048decode', 'b2048encode',
+    'addattr', 'additem', 'age_and_days', 'alru_cache', 'b2048decode', 'b2048encode',
     'b32ldecode', 'b32lencode', 'b64encode', 'b64decode', 'cb32encode',
     'cb32decode', 'count_ones', 'deprecated', 'ilex', 'join_bits',
     'jsonencode', 'kwargs_prefix', 'lex', 'ltuple', 'makelist', 'mask_shift',
