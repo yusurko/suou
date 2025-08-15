@@ -204,7 +204,7 @@ def age_pair(*, nullable: bool = False, **ka) -> tuple[Column, Column]:
     return (date_col, acc_col)
 
 
-def parent_children(keyword: str, /, **kwargs):
+def parent_children(keyword: str, /, *, lazy: str = 'selectin', **kwargs):
     """
     Self-referential one-to-many relationship pair.
     Parent comes first, children come later.
@@ -214,13 +214,15 @@ def parent_children(keyword: str, /, **kwargs):
     
     Additional keyword arguments can be sourced with parent_ and child_ argument prefixes,
     obviously.
+
+    CHANGED 0.5.0: the both relationship()s use lazy='selectin' attribute now by default.
     """
 
     parent_kwargs = kwargs_prefix(kwargs, 'parent_')
     child_kwargs = kwargs_prefix(kwargs, 'child_')
 
-    parent = Incomplete(relationship, Wanted(lambda o, n: o.__name__), back_populates=f'child_{keyword}s', **parent_kwargs)
-    child = Incomplete(relationship, Wanted(lambda o, n: o.__name__), back_populates=f'parent_{keyword}', **child_kwargs)
+    parent = Incomplete(relationship, Wanted(lambda o, n: o.__name__), back_populates=f'child_{keyword}s', lazy=lazy, **parent_kwargs)
+    child = Incomplete(relationship, Wanted(lambda o, n: o.__name__), back_populates=f'parent_{keyword}', lazy=lazy, **child_kwargs)
 
     return parent, child
 
