@@ -120,7 +120,8 @@ def match_column(length: int, regex: str, /, case: StringCase = StringCase.AS_IS
             constraint_name=constraint_name or f'{x.__tablename__}_{n}_valid')), *args, **kwargs)
 
 
-def declarative_base(domain_name: str, master_secret: bytes, metadata: dict | None = None, **kwargs):
+
+def declarative_base(domain_name: str, master_secret: bytes, metadata: dict | None = None, **kwargs) -> type[DeclarativeBase]:
     """
     Drop-in replacement for sqlalchemy.orm.declarative_base()
     taking in account requirements for SIQ generation (i.e. domain name).
