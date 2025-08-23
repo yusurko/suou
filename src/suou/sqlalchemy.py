@@ -20,9 +20,14 @@ from abc import ABCMeta, abstractmethod
 from functools import wraps
 from typing import Callable, Iterable, Never, TypeVar
 import warnings
+<<<<<<< HEAD
 from sqlalchemy import BigInteger, Boolean, CheckConstraint, Date, Dialect, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, create_engine, select, text
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, Session, declarative_base as _declarative_base, relationship
 from sqlalchemy.types import TypeEngine
+=======
+from sqlalchemy import BigInteger, CheckConstraint, Date, Dialect, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, create_engine, select, text
+from sqlalchemy.orm import DeclarativeBase, Relationship, Session, declarative_base as _declarative_base, relationship
+>>>>>>> a66f591 (update changelog, add lazy= to parent_children())
 
 from .snowflake import SnowflakeGen
 from .itertools import kwargs_prefix, makelist
@@ -204,7 +209,7 @@ def age_pair(*, nullable: bool = False, **ka) -> tuple[Column, Column]:
     return (date_col, acc_col)
 
 
-def parent_children(keyword: str, /, *, lazy: str = 'selectin', **kwargs):
+def parent_children(keyword: str, /, *, lazy='selectin', **kwargs) -> tuple[Incomplete[Relationship], Incomplete[Relationship]]:
     """
     Self-referential one-to-many relationship pair.
     Parent comes first, children come later.
