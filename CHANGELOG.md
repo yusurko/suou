@@ -4,6 +4,11 @@
 
 👀
 
+## 0.3.8
+
+- Fixed return types for `.sqlalchemy` module.
+- `sqlalchemy.parent_children()` now takes a `lazy` parameter. Backported from 0.5.0.
+
 ## 0.3.7
 
 - Fixed a bug in `b64decode()` padding handling which made the function inconsistent and non injective. Now, leading `'A'` is NEVER stripped.
