@@ -130,7 +130,8 @@ def bool_column(value: bool = False, nullable: bool = False, **kwargs):
     return Column(Boolean, server_default=def_val, nullable=nullable, **kwargs)
 
 
-def declarative_base(domain_name: str, master_secret: bytes, metadata: dict | None = None, **kwargs) -> DeclarativeBase:
+
+def declarative_base(domain_name: str, master_secret: bytes, metadata: dict | None = None, **kwargs) -> type[DeclarativeBase]:
     """
     Drop-in replacement for sqlalchemy.orm.declarative_base()
     taking in account requirements for SIQ generation (i.e. domain name).
