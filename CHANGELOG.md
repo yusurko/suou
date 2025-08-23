@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1
+
+- Fixed return types for `.sqlalchemy` module
+
 ## 0.5.0
 
 + `sqlalchemy`: add `unbound_fk()`, `bound_fk()`
@@ -16,6 +20,11 @@
 + Add `sass` module
 + Add `quart` module with `negotiate()`, `add_rest()`, `add_i18n()`, `WantsContentType`
 + Add `dei` module: it implements a compact and standardized representation for pronouns, inspired by the one in use at PronounDB
+
+## 0.4.1
+
+- Fixed return types for `.sqlalchemy` module.
+- `sqlalchemy.parent_children()` now takes a `lazy` parameter. Backported from 0.5.1.
 
 ## 0.4.0
 
@@ -36,7 +45,7 @@
 ## 0.3.8
 
 - Fixed return types for `.sqlalchemy` module.
-- `sqlalchemy.parent_children()` now takes a `lazy` parameter. Backported from 0.5.0.
+- `sqlalchemy.parent_children()` now takes a `lazy` parameter. Backported from 0.5.1.
 
 ## 0.3.7
 
