@@ -21,7 +21,7 @@ from functools import wraps
 from typing import Callable, Iterable, Never, TypeVar
 import warnings
 from sqlalchemy import BigInteger, Boolean, CheckConstraint, Date, Dialect, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, create_engine, select, text
-from sqlalchemy.orm import DeclarativeBase, Session, declarative_base as _declarative_base, relationship
+from sqlalchemy.orm import DeclarativeBase, Relationship, Session, declarative_base as _declarative_base, relationship
 
 from .snowflake import SnowflakeGen
 from .itertools import kwargs_prefix, makelist
@@ -204,7 +204,7 @@ def age_pair(*, nullable: bool = False, **ka) -> tuple[Column, Column]:
     return (date_col, acc_col)
 
 
-def parent_children(keyword: str, /, **kwargs):
+def parent_children(keyword: str, /, lazy='selectin', **kwargs) -> tuple[Incomplete[Relationship], Incomplete[Relationship]]:
     """
     Self-referential one-to-many relationship pair.
     Parent comes first, children come later.
@@ -219,8 +219,8 @@ def parent_children(keyword: str, /, **kwargs):
     parent_kwargs = kwargs_prefix(kwargs, 'parent_')
     child_kwargs = kwargs_prefix(kwargs, 'child_')
 
-    parent = Incomplete(relationship, Wanted(lambda o, n: o.__name__), back_populates=f'child_{keyword}s', **parent_kwargs)
-    child = Incomplete(relationship, Wanted(lambda o, n: o.__name__), back_populates=f'parent_{keyword}', **child_kwargs)
+    parent = Incomplete(relationship, Wanted(lambda o, n: o.__name__), back_populates=f'child_{keyword}s', lazy=lazy, **parent_kwargs)
+    child = Incomplete(relationship, Wanted(lambda o, n: o.__name__), back_populates=f'parent_{keyword}', lazy=lazy, **child_kwargs)
 
     return parent, child
 
