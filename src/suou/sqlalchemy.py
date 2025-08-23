@@ -204,7 +204,7 @@ def age_pair(*, nullable: bool = False, **ka) -> tuple[Column, Column]:
     return (date_col, acc_col)
 
 
-def parent_children(keyword: str, /, lazy='selectin', **kwargs) -> tuple[Incomplete[Relationship], Incomplete[Relationship]]:
+def parent_children(keyword: str, /, *, lazy='selectin', **kwargs) -> tuple[Incomplete[Relationship], Incomplete[Relationship]]:
     """
     Self-referential one-to-many relationship pair.
     Parent comes first, children come later.

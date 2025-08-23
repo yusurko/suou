@@ -3,7 +3,7 @@
 ## 0.4.1
 
 - Fixed return types for `.sqlalchemy` module.
-- `sqlalchemy.parent_children()` now takes a `lazy` parameter. Backported from 0.5.1.
+- `sqlalchemy.parent_children()` now takes a `lazy` parameter. Backported from 0.5.0.
 
 ## 0.4.0
 
@@ -24,7 +24,7 @@
 ## 0.3.8
 
 - Fixed return types for `.sqlalchemy` module.
-- `sqlalchemy.parent_children()` now takes a `lazy` parameter. Backported from 0.5.1.
+- `sqlalchemy.parent_children()` now takes a `lazy` parameter. Backported from 0.5.0.
 
 ## 0.3.7
 
