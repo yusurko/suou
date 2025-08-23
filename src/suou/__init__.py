@@ -29,7 +29,7 @@ from .snowflake import Snowflake, SnowflakeGen
 from .lex import symbol_table, lex, ilex
 from .strtools import PrefixIdentifier
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
