@@ -20,14 +20,8 @@ from abc import ABCMeta, abstractmethod
 from functools import wraps
 from typing import Callable, Iterable, Never, TypeVar
 import warnings
-<<<<<<< HEAD
 from sqlalchemy import BigInteger, Boolean, CheckConstraint, Date, Dialect, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, create_engine, select, text
-from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, Session, declarative_base as _declarative_base, relationship
-from sqlalchemy.types import TypeEngine
-=======
-from sqlalchemy import BigInteger, CheckConstraint, Date, Dialect, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, create_engine, select, text
-from sqlalchemy.orm import DeclarativeBase, Relationship, Session, declarative_base as _declarative_base, relationship
->>>>>>> a66f591 (update changelog, add lazy= to parent_children())
+from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, Relationship, Session, declarative_base as _declarative_base, relationship
 
 from .snowflake import SnowflakeGen
 from .itertools import kwargs_prefix, makelist
@@ -41,7 +35,7 @@ _T = TypeVar('_T')
 
 # SIQs are 14 bytes long. Storage is padded for alignment
 # Not to be confused with SiqType.
-IdType = LargeBinary(16)
+IdType: type[LargeBinary] = LargeBinary(16)
 
 @not_implemented
 def sql_escape(s: str, /, dialect: Dialect) -> str:
@@ -114,7 +108,7 @@ match_constraint.TEXT_DIALECTS = {
     'mariadb': ':n RLIKE :re'
 }
 
-def match_column(length: int, regex: str, /, case: StringCase = StringCase.AS_IS, *args, constraint_name: str | None = None, **kwargs):
+def match_column(length: int, regex: str, /, case: StringCase = StringCase.AS_IS, *args, constraint_name: str | None = None, **kwargs) -> Incomplete[Column[str]]:
     """
     Syntactic sugar to create a String() column with a check constraint matching the given regular expression.
 
@@ -126,7 +120,7 @@ def match_column(length: int, regex: str, /, case: StringCase = StringCase.AS_IS
             constraint_name=constraint_name or f'{x.__tablename__}_{n}_valid')), *args, **kwargs)
 
 
-def bool_column(value: bool = False, nullable: bool = False, **kwargs):
+def bool_column(value: bool = False, nullable: bool = False, **kwargs) -> Column[bool]:
     """
     Column for a single boolean value.
 
@@ -232,7 +226,7 @@ def parent_children(keyword: str, /, *, lazy='selectin', **kwargs) -> tuple[Inco
     return parent, child
 
 
-def unbound_fk(target: str | Column | InstrumentedAttribute, typ: TypeEngine | None = None, **kwargs):
+def unbound_fk(target: str | Column | InstrumentedAttribute, typ: _T | None = None, **kwargs) -> Column[_T | IdType]:
     """
     Shorthand for creating a "unbound" foreign key column from a column name, the referenced column.
 
@@ -252,7 +246,7 @@ def unbound_fk(target: str | Column | InstrumentedAttribute, typ: TypeEngine | N
 
     return Column(typ, ForeignKey(target_name, ondelete='SET NULL'), nullable=True, **kwargs)
 
-def bound_fk(target: str | Column | InstrumentedAttribute, typ: TypeEngine | None = None, **kwargs):
+def bound_fk(target: str | Column | InstrumentedAttribute, typ: _T = None, **kwargs) -> Column[_T | IdType]:
     """
     Shorthand for creating a "bound" foreign key column from a column name, the referenced column.
 

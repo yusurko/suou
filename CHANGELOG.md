@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2
+
+- Fixed poorly handled merge conflict leaving `.sqlalchemy` modulem unusable
+
 ## 0.5.1
 
 - Fixed return types for `.sqlalchemy` module
