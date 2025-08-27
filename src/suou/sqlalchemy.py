@@ -18,10 +18,11 @@ from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
 from functools import wraps
-from typing import Callable, Iterable, Never, TypeVar
+from typing import Any, Callable, Iterable, Never, TypeVar
 import warnings
 from sqlalchemy import BigInteger, Boolean, CheckConstraint, Date, Dialect, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, create_engine, select, text
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, Relationship, Session, declarative_base as _declarative_base, relationship
+from sqlalchemy.types import TypeEngine
 
 from .snowflake import SnowflakeGen
 from .itertools import kwargs_prefix, makelist
@@ -35,7 +36,7 @@ _T = TypeVar('_T')
 
 # SIQs are 14 bytes long. Storage is padded for alignment
 # Not to be confused with SiqType.
-IdType: type[LargeBinary] = LargeBinary(16)
+IdType: TypeEngine = LargeBinary(16)
 
 @not_implemented
 def sql_escape(s: str, /, dialect: Dialect) -> str:
@@ -158,6 +159,7 @@ def token_signer(id_attr: Column | str, secret_attr: Column | str) -> Incomplete
     Requires a master secret (taken from Base.metadata), a user id (visible in the token)
     and a user secret.
     """
+    id_val: Column | Wanted[Column]
     if isinstance(id_attr, Column):
         id_val = id_attr
     elif isinstance(id_attr, str):
@@ -168,13 +170,16 @@ def token_signer(id_attr: Column | str, secret_attr: Column | str) -> Incomplete
         secret_val = Wanted(secret_attr)
     def token_signer_factory(owner: DeclarativeBase, name: str):
         def my_signer(self):
-            return UserSigner(owner.metadata.info['secret_key'], id_val.__get__(self, owner), secret_val.__get__(self, owner))
+            return UserSigner(
+                owner.metadata.info['secret_key'], 
+                id_val.__get__(self, owner), secret_val.__get__(self, owner)  # pyright: ignore[reportAttributeAccessIssue]
+            )
         my_signer.__name__ = name
         return my_signer
     return Incomplete(Wanted(token_signer_factory))
 
 
-def author_pair(fk_name: str, *, id_type: type = IdType, sig_type: type | None = None, nullable: bool = False, sig_length: int | None = 2048, **ka) -> tuple[Column, Column]:
+def author_pair(fk_name: str, *, id_type: type | TypeEngine = IdType, sig_type: type | None = None, nullable: bool = False, sig_length: int | None = 2048, **ka) -> tuple[Column, Column]:
     """
     Return an owner ID/signature column pair, for authenticated values.
     """
@@ -203,7 +208,7 @@ def age_pair(*, nullable: bool = False, **ka) -> tuple[Column, Column]:
     return (date_col, acc_col)
 
 
-def parent_children(keyword: str, /, *, lazy='selectin', **kwargs) -> tuple[Incomplete[Relationship], Incomplete[Relationship]]:
+def parent_children(keyword: str, /, *, lazy='selectin', **kwargs) -> tuple[Incomplete[Relationship[Any]], Incomplete[Relationship[Any]]]:
     """
     Self-referential one-to-many relationship pair.
     Parent comes first, children come later.
@@ -220,8 +225,8 @@ def parent_children(keyword: str, /, *, lazy='selectin', **kwargs) -> tuple[Inco
     parent_kwargs = kwargs_prefix(kwargs, 'parent_')
     child_kwargs = kwargs_prefix(kwargs, 'child_')
 
-    parent = Incomplete(relationship, Wanted(lambda o, n: o.__name__), back_populates=f'child_{keyword}s', lazy=lazy, **parent_kwargs)
-    child = Incomplete(relationship, Wanted(lambda o, n: o.__name__), back_populates=f'parent_{keyword}', lazy=lazy, **child_kwargs)
+    parent: Incomplete[Relationship[Any]] = Incomplete(relationship, Wanted(lambda o, n: o.__name__), back_populates=f'child_{keyword}s', lazy=lazy, **parent_kwargs)
+    child: Incomplete[Relationship[Any]] = Incomplete(relationship, Wanted(lambda o, n: o.__name__), back_populates=f'parent_{keyword}', lazy=lazy, **child_kwargs)
 
     return parent, child
 

@@ -17,6 +17,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 from __future__ import annotations
 
 from abc import abstractmethod
+from types import EllipsisType
 from typing import Any, Callable, Generic, Iterable, Mapping, TypeVar
 import logging
 
@@ -24,7 +25,10 @@ _T = TypeVar('_T')
 
 logger = logging.getLogger(__name__)
 
-MISSING = object()
+class MissingType(object):
+    __slots__ = ()
+
+MISSING = MissingType()
 
 def _not_missing(v) -> bool:
     return v and v is not MISSING
@@ -43,10 +47,10 @@ class Wanted(Generic[_T]):
     Owner class will call .__set_name__() on the parent Incomplete instance;
     the __set_name__ parameters (owner class and name) will be passed down here.
     """
-    _target: Callable | str | None | Ellipsis
-    def __init__(self, getter: Callable | str | None | Ellipsis):
+    _target: Callable | str | None | EllipsisType
+    def __init__(self, getter: Callable | str | None | EllipsisType):
         self._target = getter
-    def __call__(self, owner: type, name: str | None = None) -> _T:
+    def __call__(self, owner: type, name: str | None = None) -> _T | str | None:
         if self._target is None or self._target is Ellipsis:
             return name
         elif isinstance(self._target, str):
@@ -67,10 +71,10 @@ class Incomplete(Generic[_T]):
     Missing arguments must be passed in the appropriate positions
     (positional or keyword) as a Wanted() object.
     """
-    _obj = Callable[Any, _T]
+    _obj: Callable[..., _T]
     _args: Iterable
     _kwargs: dict
-    def __init__(self, obj: Callable[Any, _T] | Wanted, *args, **kwargs):
+    def __init__(self, obj: Callable[..., _T] | Wanted, *args, **kwargs):
         if isinstance(obj, Wanted):
             self._obj = lambda x: x
             self._args = (obj, )
@@ -120,7 +124,7 @@ class ValueSource(Mapping):
 class ValueProperty(Generic[_T]):
     _name: str | None
     _srcs: dict[str, str]
-    _val: Any | MISSING
+    _val: Any | MissingType
     _default: Any | None
     _cast: Callable | None
     _required: bool
