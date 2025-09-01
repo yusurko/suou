@@ -1,5 +1,7 @@
 """
-Utilities for SQLAlchemy
+Utilities for SQLAlchemy; ORM
+
+NEW 0.6.0
 
 ---
 
@@ -14,53 +16,37 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
-from __future__ import annotations
 
-from abc import ABCMeta, abstractmethod
-from functools import wraps
-from typing import Any, Callable, Iterable, Never, TypeVar
+
+from binascii import Incomplete
+from typing import Any, Callable
 import warnings
-from sqlalchemy import BigInteger, Boolean, CheckConstraint, Date, Dialect, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, create_engine, select, text
-from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, Relationship, Session, declarative_base as _declarative_base, relationship
+from sqlalchemy import BigInteger, Boolean, CheckConstraint, Column, Date, ForeignKey, LargeBinary, MetaData, SmallInteger, String, text
+from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, Relationship, declarative_base as _declarative_base, relationship
 from sqlalchemy.types import TypeEngine
+from suou.classtools import Wanted
+from suou.codecs import StringCase
+from suou.iding import Siq, SiqCache, SiqGen, SiqType
+from suou.itertools import kwargs_prefix
+from suou.snowflake import SnowflakeGen
+from suou.sqlalchemy import IdType
 
-from .snowflake import SnowflakeGen
-from .itertools import kwargs_prefix, makelist
-from .signing import HasSigner, UserSigner
-from .codecs import StringCase
-from .functools import deprecated, not_implemented
-from .iding import Siq, SiqGen, SiqType, SiqCache
-from .classtools import Incomplete, Wanted
 
-_T = TypeVar('_T')
-
-# SIQs are 14 bytes long. Storage is padded for alignment
-# Not to be confused with SiqType.
-IdType: TypeEngine = LargeBinary(16)
-
-@not_implemented
-def sql_escape(s: str, /, dialect: Dialect) -> str:
+def want_column(cls: type[DeclarativeBase], col: Column[_T] | str) -> Column[_T]:
     """
-    Escape a value for SQL embedding, using SQLAlchemy's literal processors.
-    Requires a dialect argument.
+    Return a table's column given its name.
 
-    XXX this function is not mature yet, do not use
+    XXX does it belong outside any scopes?
     """
-    if isinstance(s, str):
-        return String().literal_processor(dialect=dialect)(s)
-    raise TypeError('invalid data type')
+    if isinstance(col, Incomplete):
+        raise TypeError('attempt to pass an uninstanced column. Pass the column name as a string instead.')
+    elif isinstance(col, Column):
+        return col
+    elif isinstance(col, str):
+        return getattr(cls, col)
+    else:
+        raise TypeError
 
-
-def create_session(url: str) -> Session:
-    """
-    Create a session on the fly, given a database URL. Useful for
-    contextless environments, such as Python REPL.
-
-    Heads up: a function with the same name exists in core sqlalchemy, but behaves 
-    completely differently!!
-    """
-    engine = create_engine(url)
-    return Session(bind = engine)
 
 def id_column(typ: SiqType, *, primary_key: bool = True, **kwargs):
     """
@@ -120,7 +106,6 @@ def match_column(length: int, regex: str, /, case: StringCase = StringCase.AS_IS
     return Incomplete(Column, String(length), Wanted(lambda x, n: match_constraint(n, regex, #dialect=x.metadata.engine.dialect.name,
             constraint_name=constraint_name or f'{x.__tablename__}_{n}_valid')), *args, **kwargs)
 
-
 def bool_column(value: bool = False, nullable: bool = False, **kwargs) -> Column[bool]:
     """
     Column for a single boolean value.
@@ -149,34 +134,8 @@ def declarative_base(domain_name: str, master_secret: bytes, metadata: dict | No
     )
     Base = _declarative_base(metadata=MetaData(**metadata), **kwargs)
     return Base
-entity_base = deprecated('use declarative_base() instead')(declarative_base)
+entity_base = warnings.deprecated('use declarative_base() instead')(declarative_base)
 
-
-def token_signer(id_attr: Column | str, secret_attr: Column | str) -> Incomplete[UserSigner]:
-    """
-    Generate a user signing function.
-
-    Requires a master secret (taken from Base.metadata), a user id (visible in the token)
-    and a user secret.
-    """
-    id_val: Column | Wanted[Column]
-    if isinstance(id_attr, Column):
-        id_val = id_attr
-    elif isinstance(id_attr, str):
-        id_val = Wanted(id_attr)
-    if isinstance(secret_attr, Column):
-        secret_val = secret_attr
-    elif isinstance(secret_attr, str):
-        secret_val = Wanted(secret_attr)
-    def token_signer_factory(owner: DeclarativeBase, name: str):
-        def my_signer(self):
-            return UserSigner(
-                owner.metadata.info['secret_key'], 
-                id_val.__get__(self, owner), secret_val.__get__(self, owner)  # pyright: ignore[reportAttributeAccessIssue]
-            )
-        my_signer.__name__ = name
-        return my_signer
-    return Incomplete(Wanted(token_signer_factory))
 
 
 def author_pair(fk_name: str, *, id_type: type | TypeEngine = IdType, sig_type: type | None = None, nullable: bool = False, sig_length: int | None = 2048, **ka) -> tuple[Column, Column]:
@@ -206,6 +165,7 @@ def age_pair(*, nullable: bool = False, **ka) -> tuple[Column, Column]:
     date_col = Column(Date, nullable = nullable, **date_ka)
     acc_col = Column(SmallInteger, nullable = nullable, **acc_ka)
     return (date_col, acc_col)
+
 
 
 def parent_children(keyword: str, /, *, lazy='selectin', **kwargs) -> tuple[Incomplete[Relationship[Any]], Incomplete[Relationship[Any]]]:
@@ -272,93 +232,3 @@ def bound_fk(target: str | Column | InstrumentedAttribute, typ: _T = None, **kwa
 
     return Column(typ, ForeignKey(target_name, ondelete='CASCADE'), nullable=False, **kwargs)
 
-def want_column(cls: type[DeclarativeBase], col: Column[_T] | str) -> Column[_T]:
-    """
-    Return a table's column given its name.
-
-    XXX does it belong outside any scopes?
-    """
-    if isinstance(col, Incomplete):
-        raise TypeError('attempt to pass an uninstanced column. Pass the column name as a string instead.')
-    elif isinstance(col, Column):
-        return col
-    elif isinstance(col, str):
-        return getattr(cls, col)
-    else:
-        raise TypeError
-
-## Utilities for use in web apps below
-
-class AuthSrc(metaclass=ABCMeta):
-    '''
-    AuthSrc object required for require_auth_base().
-
-    This is an abstract class and is NOT usable directly.
-
-    This is not part of the public API
-    '''
-    def required_exc(self) -> Never:
-        raise ValueError('required field missing')
-    def invalid_exc(self, msg: str = 'validation failed') -> Never:
-        raise ValueError(msg)
-    @abstractmethod
-    def get_session(self) -> Session:
-        pass
-    def get_user(self, getter: Callable):
-        return getter(self.get_token())
-    @abstractmethod
-    def get_token(self):
-        pass
-    @abstractmethod
-    def get_signature(self):
-        pass
-
-
-def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, column: str | Column[_T] = 'id', dest: str = 'user',
-        required: bool = False, signed: bool = False, sig_dest: str = 'signature', validators: Callable | Iterable[Callable] | None = None):
-    '''
-    Inject the current user into a view, given the Authorization: Bearer header.
-
-    For portability reasons, this is a partial, two-component function, requiring a AuthSrc() object.
-    '''
-    col = want_column(cls, column)
-    validators = makelist(validators)
-
-    def get_user(token) -> DeclarativeBase:
-        if token is None:
-            return None
-        tok_parts = UserSigner.split_token(token)
-        user: HasSigner = src.get_session().execute(select(cls).where(col == tok_parts[0])).scalar()
-        try:
-            signer: UserSigner = user.signer()
-            signer.unsign(token)
-            return user
-        except Exception:
-            return None
-
-    def _default_invalid(msg: str = 'Validation failed'):
-        raise ValueError(msg)
-        
-    invalid_exc = src.invalid_exc or _default_invalid
-    required_exc = src.required_exc or (lambda: _default_invalid('Login required'))
-
-    def decorator(func: Callable):
-        @wraps(func)
-        def wrapper(*a, **ka):
-            ka[dest] = get_user(src.get_token())
-            if not ka[dest] and required:
-                required_exc()
-            if signed:
-                ka[sig_dest] = src.get_signature()
-            for valid in validators:
-                if not valid(ka[dest]):
-                    invalid_exc(getattr(valid, 'message', 'validation failed').format(user=ka[dest]))
-            return func(*a, **ka)
-        return wrapper
-    return decorator
-
-# Optional dependency: do not import into __init__.py
-__all__ = (
-    'IdType', 'id_column', 'entity_base', 'declarative_base', 'token_signer', 'match_column', 'match_constraint',
-    'author_pair', 'age_pair', 'require_auth_base', 'bound_fk', 'unbound_fk', 'want_column'
-)
