@@ -20,10 +20,12 @@ from typing import Any, Callable, Never
 from flask import abort, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Session
+from .functools import deprecated
 
 from .codecs import want_bytes
 from .sqlalchemy import AuthSrc, require_auth_base
 
+@deprecated('inherits from deprecated and unused class')
 class FlaskAuthSrc(AuthSrc):
     '''
     
@@ -45,6 +47,7 @@ class FlaskAuthSrc(AuthSrc):
     def required_exc(self):
         abort(401, 'Login required')
 
+@deprecated('not intuitive to use')
 def require_auth(cls: type[DeclarativeBase], db: SQLAlchemy) -> Callable[Any, Callable]:
     """
     Make an auth_required() decorator for Flask views.
@@ -77,4 +80,4 @@ def require_auth(cls: type[DeclarativeBase], db: SQLAlchemy) -> Callable[Any, Ca
     return auth_required
 
 # Optional dependency: do not import into __init__.py
-__all__ = ('require_auth', )
+__all__ = ()

@@ -23,6 +23,8 @@ import os
 from typing import Any, Callable, Iterator, override
 from collections import OrderedDict
 
+from argparse import Namespace
+
 from .classtools import ValueSource, ValueProperty
 from .functools import deprecated
 from .exceptions import MissingConfigError, MissingConfigWarning
@@ -104,6 +106,28 @@ class DictConfigSource(ConfigSource):
         yield from self._d
     def __len__(self) -> int:
         return len(self._d)
+
+class ArgConfigSource(ValueSource):
+    """
+    It assumes arguments have already been parsed
+
+    NEW 0.6"""
+    _ns: Namespace
+    def __init__(self, ns: Namespace):
+        super().__init__()
+        self._ns = ns
+    def __getitem__(self, key):
+        return getattr(self._ns, key)
+    def get(self, key, value):
+        return getattr(self._ns, key, value)
+    def __contains__(self, key: str, /) -> bool:
+        return hasattr(self._ns, key)
+    @deprecated('Here for Mapping() implementation. Untested and unused')
+    def __iter__(self) -> Iterator[str]:
+        yield from self._ns._get_args()
+    @deprecated('Here for Mapping() implementation. Untested and unused')
+    def __len__(self) -> int:
+        return len(self._ns._get_args())
 
 class ConfigValue(ValueProperty):
     """
@@ -205,7 +229,8 @@ class ConfigOptions:
 
 
 __all__ = (
-    'MissingConfigError', 'MissingConfigWarning', 'ConfigOptions', 'EnvConfigSource', 'ConfigParserConfigSource', 'DictConfigSource', 'ConfigSource', 'ConfigValue'
+    'MissingConfigError', 'MissingConfigWarning', 'ConfigOptions', 'EnvConfigSource', 'ConfigParserConfigSource', 'DictConfigSource', 'ConfigSource', 'ConfigValue',
+    'ArgConfigSource'
 )
 
 

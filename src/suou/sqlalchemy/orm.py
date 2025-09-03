@@ -19,6 +19,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 
 from binascii import Incomplete
+import os
 from typing import Any, Callable
 import warnings
 from sqlalchemy import BigInteger, Boolean, CheckConstraint, Column, Date, ForeignKey, LargeBinary, MetaData, SmallInteger, String, text
@@ -167,6 +168,16 @@ def age_pair(*, nullable: bool = False, **ka) -> tuple[Column, Column]:
     return (date_col, acc_col)
 
 
+def secret_column(length: int = 64, max_length: int | None = None, gen: Callable[[int], bytes] = os.urandom, nullable=False, **kwargs):
+    """
+    Column filled in by default with random bits (64 by default). Useful for secrets.
+
+    NEW 0.6.0
+    """
+    max_length = max_length or length
+    return Column(LargeBinary(max_length), default=lambda: gen(length), nullable=nullable, **kwargs)
+
+
 
 def parent_children(keyword: str, /, *, lazy='selectin', **kwargs) -> tuple[Incomplete[Relationship[Any]], Incomplete[Relationship[Any]]]:
     """
@@ -189,6 +200,17 @@ def parent_children(keyword: str, /, *, lazy='selectin', **kwargs) -> tuple[Inco
     child: Incomplete[Relationship[Any]] = Incomplete(relationship, Wanted(lambda o, n: o.__name__), back_populates=f'parent_{keyword}', lazy=lazy, **child_kwargs)
 
     return parent, child
+
+
+def a_relationship(primary = None, /, j=None, *, lazy='selectin', **kwargs):
+    """
+    Shorthand for relationship() that sets lazy='selectin' automatically.
+
+    NEW 0.6.0
+    """
+    if j:
+        kwargs['primaryjoin'] = j
+    return relationship(primary, lazy=lazy, **kwargs)  # pyright: ignore[reportArgumentType]
 
 
 def unbound_fk(target: str | Column | InstrumentedAttribute, typ: _T | None = None, **kwargs) -> Column[_T | IdType]:
@@ -231,4 +253,63 @@ def bound_fk(target: str | Column | InstrumentedAttribute, typ: _T = None, **kwa
             typ = IdType
 
     return Column(typ, ForeignKey(target_name, ondelete='CASCADE'), nullable=False, **kwargs)
+
+
+class _BitComparator(Comparator):
+    """
+    Comparator object for BitSelector()
+
+    NEW 0.6.0
+    """
+    _column: Column
+    _flag: int
+    def __init__(self, col, flag):
+        self._column = col
+        self._flag = flag
+    def _bulk_update_tuples(self, value):
+        return [ (self._column, self._upd_exp(value)) ]
+    def operate(self, op, other, **kwargs):
+        return op(self._sel_exp(), self._flag if other else 0, **kwargs)
+    def __clause_element__(self):
+        return self._column
+    def __str__(self):
+        return self._column
+    def _sel_exp(self):
+        return self._column.op('&')(self._flag)
+    def _upd_exp(self, value):
+        return self._column.op('|')(self._flag) if value else self._column.op('&')(~self._flag)
+        
+class BitSelector:
+    """
+    "Virtual" column representing a single bit in an integer column (usually a BigInteger).
+
+    Mimicks peewee's 'BitField()' behavior, with SQLAlchemy.
+
+    NEW 0.6.0
+    """
+    _column: Column
+    _flag: int
+    _name: str
+    def __init__(self, column, flag: int):
+        if bin(flag := int(flag))[2:].rstrip('0') != '1':
+            warnings.warn('using non-powers of 2 as flags may cause errors or undefined behavior', FutureWarning)
+        self._column = column
+        self._flag   = flag
+    def __set_name__(self, name, owner=None):
+        self._name = name
+    def __get__(self, obj, objtype=None):
+        if obj:
+            return getattr(obj, self._column.name) & self._flag > 0
+        else:
+            return _BitComparator(self._column, self._flag)
+    def __set__(self, obj, val):
+        if obj:
+            orig = getattr(obj, self._column.name)
+            if val:
+                orig |= self._flag
+            else:
+                orig &= ~(self._flag)
+            setattr(obj, self._column.name, orig)
+        else:
+            raise NotImplementedError
 
