@@ -29,8 +29,17 @@ from suou.exceptions import NotFoundError
 
 class SQLAlchemy:
     """
-    Drop-in (?) replacement for flask_sqlalchemy.SQLAlchemy()
-    eligible for async environments
+    Drop-in (in fact, almost) replacement for flask_sqlalchemy.SQLAlchemy()
+    eligible for async environments.
+
+    Notable changes:
+    + You have to create the session yourself. Easiest use case:
+
+    async def handler (userid):
+        async with db as session:
+            # do something
+            user = (await session.execute(select(User).where(User.id == userid))).scalar()
+            # ...
 
     NEW 0.5.0
     """
