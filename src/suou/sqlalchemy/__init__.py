@@ -169,5 +169,5 @@ __all__ = (
     'author_pair', 'age_pair', 'bound_fk', 'unbound_fk', 'want_column',
     'a_relationship', 'BitSelector', 'secret_column',
     # .asyncio
-    'SQLAlchemy', 'AsyncSelectPagination', 'async_query'
+    'SQLAlchemy', 'AsyncSelectPagination', 'async_query', 'SessionWrapper'
 )

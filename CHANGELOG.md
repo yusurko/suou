@@ -3,8 +3,9 @@
 ## 0.6.0
 
 + `.sqlalchemy` has been made a subpackage and split; `sqlalchemy_async` has been deprecated. Update your imports.
++ Add several new utilities to `.sqlalchemy`: `BitSelector`, `secret_column`, `a_relationship`, `SessionWrapper`, 
+  `wrap=` argument to SQLAlchemy. Also removed dead batteries.
 + Add `.waiter` module. For now, non-functional.
-+ Add those new utilities to `.sqlalchemy`: `BitSelector`, `secret_column`, `a_relationship`. Also removed dead batteries.
 + Add `ArgConfigSource` to `.configparse`
 
 ## 0.5.3
