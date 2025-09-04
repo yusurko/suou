@@ -10,7 +10,8 @@
 
 ## 0.5.3
 
-...
+- Added docstring to `SQLAlchemy()`.
+- More type fixes.
 
 ## 0.5.2
 
