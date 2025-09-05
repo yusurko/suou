@@ -7,6 +7,7 @@
   `wrap=` argument to SQLAlchemy. Also removed dead batteries.
 + Add `.waiter` module. For now, non-functional.
 + Add `ArgConfigSource` to `.configparse`
++ Add more strings to `.legal` module
 
 ## 0.5.3
 

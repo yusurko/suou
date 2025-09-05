@@ -204,7 +204,7 @@ def parent_children(keyword: str, /, *, lazy='selectin', **kwargs) -> tuple[Inco
 
 def a_relationship(primary = None, /, j=None, *, lazy='selectin', **kwargs):
     """
-    Shorthand for relationship() that sets lazy='selectin' automatically.
+    Shorthand for relationship() that sets lazy='selectin' by default.
 
     NEW 0.6.0
     """

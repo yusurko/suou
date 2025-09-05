@@ -83,7 +83,7 @@ def token_signer(id_attr: Column | str, secret_attr: Column | str) -> Incomplete
 
 
 
-## Utilities for use in web apps below
+## (in)Utilities for use in web apps below
 
 @deprecated('not part of the public API and not even working')
 class AuthSrc(metaclass=ABCMeta):

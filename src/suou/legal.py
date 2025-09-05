@@ -1,5 +1,5 @@
 """
-TOS / policy building blocks for the lazy.
+TOS / policy building blocks for the lazy, in English language.
 
 XXX DANGER! This is not replacement for legal advice. Contact your lawyer.
 
@@ -30,3 +30,20 @@ GOVERNING_LAW = """
 These terms of services are governed by, and shall be interpreted in accordance with, the laws of {0}. You consent to the sole jurisdiction of {1} for all disputes between You and , and You consent to the sole application of {2} law for all such disputes.
 """
 
+ENGLISH_FIRST = """
+In case there is any inconsistency between these Terms and any translation into other languages, the English language version takes precedence.
+"""
+
+EXPECT_UPDATES = """
+{0} may periodically update these Terms of Service. Every time this happens, {0} will make its best efforts to notify You of such changes.
+
+Whenever {0} updates these Terms of Service, Your continued use of the {0} platform constitutes Your agreement to the updated Terms of Service.
+"""
+
+SEVERABILITY = """
+If one clause of these Terms of Service or any policy incorporated here by reference is determined by a court to be unenforceable, the remainder of the Terms and Content Policy shall remain in force.
+"""
+
+COMPLETENESS = """
+These Terms, together with the other policies incorporated into them by reference, contain all the terms and conditions agreed upon by You and {{ app_name }} regarding Your use of the {{ app_name }} service. No other agreement, oral or otherwise, will be deemed to exist or to bind either of the parties to this Agreement.
+"""
