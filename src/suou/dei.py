@@ -18,6 +18,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 
 from __future__ import annotations
+from functools import wraps
+from typing import Callable
 
 
 BRICKS = '@abcdefghijklmnopqrstuvwxyz+?-\'/'
@@ -107,4 +109,29 @@ class Pronoun(int):
         for j, ch in enumerate(s):
             i += BRICKS.index(ch) << (5 * j)
         return Pronoun(i)
+
+
+
+def dei_args(**renames):
+    """
+    Allow for aliases in the keyword argument names, in form alias='real_name'.
+
+    DEI utility for those programmers who don't want to have to do with
+    potentially offensive variable naming.
+
+    Dear conservatives, this does not influence the ability to call the wrapped function
+    with the original parameter names.
+    """
+    def decorator(func: Callable):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            for alias_name, actual_name in renames.items():
+                if alias_name in kwargs:
+                    val = kwargs.pop(alias_name)
+                    kwargs[actual_name] = val
+            
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
 

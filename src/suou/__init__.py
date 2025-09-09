@@ -23,6 +23,7 @@ from .bits import count_ones, mask_shift, split_bits, join_bits, mod_ceil, mod_f
 from .calendar import want_datetime, want_isodate, want_timestamp, age_and_days
 from .configparse import MissingConfigError, MissingConfigWarning, ConfigOptions, ConfigParserConfigSource, ConfigSource, DictConfigSource, ConfigValue, EnvConfigSource
 from .collections import TimedDict
+from .dei import dei_args
 from .functools import deprecated, not_implemented, timed_cache, none_pass, alru_cache
 from .classtools import Wanted, Incomplete
 from .itertools import makelist, kwargs_prefix, ltuple, rtuple, additem, addattr
@@ -45,7 +46,7 @@ __all__ = (
     'StringCase', 'TimedDict', 'TomlI18n', 'UserSigner', 'Wanted', 'WantsContentType',
     'addattr', 'additem', 'age_and_days', 'alru_cache', 'b2048decode', 'b2048encode',
     'b32ldecode', 'b32lencode', 'b64encode', 'b64decode', 'cb32encode',
-    'cb32decode', 'count_ones', 'deprecated', 'ilex', 'join_bits',
+    'cb32decode', 'count_ones', 'dei_args', 'deprecated', 'ilex', 'join_bits',
     'jsonencode', 'kwargs_prefix', 'lex', 'ltuple', 'makelist', 'mask_shift',
     'matches', 'mod_ceil', 'mod_floor', 'none_pass', 'not_implemented',
     'redact_url_password', 'rtuple', 'split_bits', 'ssv_list', 'symbol_table',

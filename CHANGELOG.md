@@ -10,6 +10,7 @@
 + Add Z85 (`z85encode()` `z85decode()`) encoding support
 + Add more strings to `.legal` module
 + `.signing` module is now covered by tests
++ New decorator `dei_args()`. Now offensive naming is no more a worry!
 
 ## 0.5.3
 

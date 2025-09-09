@@ -22,6 +22,7 @@ from itsdangerous import TimestampSigner
 from itsdangerous import Signer as _Signer
 from itsdangerous.encoding import int_to_bytes as _int_to_bytes
 
+from suou.dei import dei_args
 from suou.itertools import rtuple
 
 from .functools import not_implemented
@@ -34,6 +35,7 @@ class UserSigner(TimestampSigner):
     itsdangerous.TimestampSigner() instanced from a user ID, with token generation and validation capabilities.
     """
     user_id: int
+    @dei_args(primary_secret='master_secret')
     def __init__(self, master_secret: bytes, user_id: int, user_secret: bytes, **kwargs):
         super().__init__(master_secret + user_secret, salt=Siq(user_id).to_bytes(), **kwargs)
         self.user_id = user_id

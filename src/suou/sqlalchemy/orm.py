@@ -20,17 +20,22 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from binascii import Incomplete
 import os
-from typing import Any, Callable
+from typing import Any, Callable, TypeVar
 import warnings
 from sqlalchemy import BigInteger, Boolean, CheckConstraint, Column, Date, ForeignKey, LargeBinary, MetaData, SmallInteger, String, text
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, Relationship, declarative_base as _declarative_base, relationship
 from sqlalchemy.types import TypeEngine
-from suou.classtools import Wanted
+from sqlalchemy.ext.hybrid import Comparator
+from suou.classtools import Wanted, Incomplete
 from suou.codecs import StringCase
+from suou.dei import dei_args
 from suou.iding import Siq, SiqCache, SiqGen, SiqType
 from suou.itertools import kwargs_prefix
 from suou.snowflake import SnowflakeGen
 from suou.sqlalchemy import IdType
+
+
+_T = TypeVar('_T')
 
 
 def want_column(cls: type[DeclarativeBase], col: Column[_T] | str) -> Column[_T]:
@@ -117,6 +122,7 @@ def bool_column(value: bool = False, nullable: bool = False, **kwargs) -> Column
     return Column(Boolean, server_default=def_val, nullable=nullable, **kwargs)
 
 
+@dei_args(primary_secret='master_secret')
 def declarative_base(domain_name: str, master_secret: bytes, metadata: dict | None = None, **kwargs) -> type[DeclarativeBase]:
     """
     Drop-in replacement for sqlalchemy.orm.declarative_base()
