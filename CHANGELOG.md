@@ -4,10 +4,12 @@
 
 + `.sqlalchemy` has been made a subpackage and split; `sqlalchemy_async` has been deprecated. Update your imports.
 + Add several new utilities to `.sqlalchemy`: `BitSelector`, `secret_column`, `a_relationship`, `SessionWrapper`, 
-  `wrap=` argument to SQLAlchemy. Also removed dead batteries.
-+ Add `.waiter` module. For now, non-functional.
+  `wrap=` argument to SQLAlchemy. Also removed dead batteries
++ Add `.waiter` module. For now, non-functional
 + Add `ArgConfigSource` to `.configparse`
++ Add Z85 (`z85encode()` `z85decode()`) encoding support
 + Add more strings to `.legal` module
++ `.signing` module is now covered by tests
 
 ## 0.5.3
 

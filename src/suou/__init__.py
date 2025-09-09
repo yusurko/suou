@@ -27,6 +27,7 @@ from .functools import deprecated, not_implemented, timed_cache, none_pass, alru
 from .classtools import Wanted, Incomplete
 from .itertools import makelist, kwargs_prefix, ltuple, rtuple, additem, addattr
 from .i18n import I18n, JsonI18n, TomlI18n
+from .signing import UserSigner
 from .snowflake import Snowflake, SnowflakeGen
 from .lex import symbol_table, lex, ilex
 from .strtools import PrefixIdentifier
@@ -34,14 +35,14 @@ from .validators import matches
 from .redact import redact_url_password
 from .http import WantsContentType
 
-__version__ = "0.6.0-dev35"
+__version__ = "0.6.0-dev36"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
     'DictConfigSource', 'EnvConfigSource', 'I18n', 'Incomplete', 'JsonI18n',
     'MissingConfigError', 'MissingConfigWarning', 'PrefixIdentifier',
     'Siq', 'SiqCache', 'SiqGen', 'SiqType', 'Snowflake', 'SnowflakeGen',
-    'StringCase', 'TimedDict', 'TomlI18n', 'Wanted', 'WantsContentType',
+    'StringCase', 'TimedDict', 'TomlI18n', 'UserSigner', 'Wanted', 'WantsContentType',
     'addattr', 'additem', 'age_and_days', 'alru_cache', 'b2048decode', 'b2048encode',
     'b32ldecode', 'b32lencode', 'b64encode', 'b64decode', 'cb32encode',
     'cb32decode', 'count_ones', 'deprecated', 'ilex', 'join_bits',
@@ -49,5 +50,6 @@ __all__ = (
     'matches', 'mod_ceil', 'mod_floor', 'none_pass', 'not_implemented',
     'redact_url_password', 'rtuple', 'split_bits', 'ssv_list', 'symbol_table',
     'timed_cache', 'twocolon_list', 'want_bytes', 'want_datetime', 'want_isodate',
-    'want_str', 'want_timestamp', 'want_urlsafe', 'want_urlsafe_bytes'
+    'want_str', 'want_timestamp', 'want_urlsafe', 'want_urlsafe_bytes',
+    'z85encode', 'z85decode'
 )

@@ -27,6 +27,8 @@ logger = logging.getLogger(__name__)
 
 class MissingType(object):
     __slots__ = ()
+    def __bool__(self):
+        return False
 
 MISSING = MissingType()
 

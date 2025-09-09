@@ -225,6 +225,28 @@ def rb64decode(val: bytes | str) -> bytes:
     val = want_urlsafe(val)
     return base64.urlsafe_b64decode(val.rjust(mod_ceil(len(val), 4), 'A'))
 
+
+B85_TO_Z85 = str.maketrans(
+    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%&()*+-;<=>?@^_`{|}~',
+    '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-:+=^!/*?&<>()[]{}@%$#'
+)
+Z85_TO_B85 = str.maketrans(
+    '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-:+=^!/*?&<>()[]{}@%$#',
+    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%&()*+-;<=>?@^_`{|}~'
+)
+
+if hasattr(base64, 'z85encode'):
+    # Python >=3.13
+    def z85encode(val: bytes) -> str:
+        return want_str(base64.z85encode(val))
+    z85decode = base64.z85decode
+else:
+    # Python <=3.12
+    def z85encode(val: bytes) -> str:
+        return want_str(base64.b85encode(val)).translate(B85_TO_Z85)
+    def z85decode(val: bytes | str) -> bytes:
+        return base64.b85decode(want_str(val).translate(Z85_TO_B85))
+
 def b2048encode(val: bytes) -> str:
     '''
     Encode a bytestring using the BIP-39 wordlist.
@@ -345,5 +367,6 @@ class StringCase(enum.Enum):
 
 __all__ = (
     'cb32encode', 'cb32decode', 'b32lencode', 'b32ldecode', 'b64encode', 'b64decode', 'jsonencode'
-    'StringCase', 'want_bytes', 'want_str', 'jsondecode', 'ssv_list', 'twocolon_list', 'want_urlsafe', 'want_urlsafe_bytes'
+    'StringCase', 'want_bytes', 'want_str', 'jsondecode', 'ssv_list', 'twocolon_list', 'want_urlsafe', 'want_urlsafe_bytes',
+    'z85encode', 'z85decode'
 )
