@@ -1,0 +1,8 @@
+[project]
+name = "sakuragasaki46_suou"
+authors = [ { name = "Sakuragasaki46" } ]
+version = "0.6.1"
+requires-python = ">=3.10"
+dependencies = [ "suou==0.6.1" ]
+readme = "README.md"
+
