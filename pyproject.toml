@@ -1,5 +1,6 @@
 [project]
-name = "sakuragasaki46_suou"
+name = "suou"
+description = "casual utility library for coding QoL"
 authors = [
     { name = "Sakuragasaki46" }
 ]
@@ -30,7 +31,7 @@ classifiers = [
 ]
 
 [project.urls]
-Repository = "https://github.com/sakuragasaki46/suou"
+Repository = "https://nekode.yusur.moe/yusur/suou"
 
 [project.optional-dependencies]
 # the below are all dev dependencies (and probably already installed)
@@ -62,13 +63,13 @@ sass = [
 ]
 
 full = [
-    "sakuragasaki46-suou[sqlalchemy]",
-    "sakuragasaki46-suou[flask]",
-    "sakuragasaki46-suou[quart]",
-    "sakuragasaki46-suou[peewee]",
-    "sakuragasaki46-suou[markdown]",
-    "sakuragasaki46-suou[flask-sqlalchemy]",
-    "sakuragasaki46-suou[sass]"
+    "suou[sqlalchemy]",
+    "suou[flask]",
+    "suou[quart]",
+    "suou[peewee]",
+    "suou[markdown]",
+    "suou[flask-sqlalchemy]",
+    "suou[sass]"
 ]
 
 

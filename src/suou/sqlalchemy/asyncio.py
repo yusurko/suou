@@ -20,12 +20,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 from __future__ import annotations
 from functools import wraps
 
-
-from sqlalchemy import Engine, Select, Table, func, select
+from contextvars import ContextVar, Token
+from sqlalchemy import Select, Table, func, select
 from sqlalchemy.orm import DeclarativeBase, lazyload
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from flask_sqlalchemy.pagination import Pagination
 
+from suou.classtools import MISSING
 from suou.exceptions import NotFoundError
 
 class SQLAlchemy:
@@ -45,36 +46,44 @@ class SQLAlchemy:
     NEW 0.5.0
 
     UPDATED 0.6.0: added wrap=True
+
+    UPDATED 0.6.1: expire_on_commit is now configurable per-SQLAlchemy();
+    now sessions are stored as context variables
     """
     base: DeclarativeBase
     engine: AsyncEngine
-    _sessions: list[AsyncSession]
+    _session_tok: list[Token[AsyncSession]]
     _wrapsessions: bool
+    _xocommit: bool
     NotFound = NotFoundError
 
-    def __init__(self, model_class: DeclarativeBase, *, wrap = False):
+    def __init__(self, model_class: DeclarativeBase, *, expire_on_commit = False, wrap = False):
         self.base = model_class
         self.engine = None
         self._wrapsessions = wrap
-        self._sessions = []
+        self._xocommit = expire_on_commit
     def bind(self, url: str):
         self.engine = create_async_engine(url)
     def _ensure_engine(self):
         if self.engine is None:
             raise RuntimeError('database is not connected')
-    async def begin(self, *, expire_on_commit = False, wrap = False, **kw) -> AsyncSession:
+    async def begin(self, *, expire_on_commit = None, wrap = False, **kw) -> AsyncSession:
         self._ensure_engine()
         ## XXX is it accurate?
-        s = AsyncSession(self.engine, expire_on_commit=expire_on_commit, **kw)
+        s = AsyncSession(self.engine, 
+            expire_on_commit=expire_on_commit if expire_on_commit is not None else self._xocommit,
+            **kw)
         if wrap:
             s = SessionWrapper(s)
-        self._sessions.append(s)
+        current_session.set(s)
         return s
     async def __aenter__(self) -> AsyncSession:
         return await self.begin()
     async def __aexit__(self, e1, e2, e3):
         ## XXX is it accurate?
-        s = self._sessions.pop()
+        s = current_session.get()
+        if not s:
+            raise RuntimeError('session not closed')
         if e1:
             await s.rollback()
         else:
@@ -104,7 +113,8 @@ class SQLAlchemy:
             self.engine, checkfirst=checkfirst
         )
 
-
+# XXX NOT public API! DO NOT USE
+current_session: ContextVar[AsyncSession] = ContextVar('current_session')
 
 class AsyncSelectPagination(Pagination):
     """

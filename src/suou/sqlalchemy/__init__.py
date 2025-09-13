@@ -158,7 +158,7 @@ def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, column: str |
 
 from .asyncio import SQLAlchemy, AsyncSelectPagination, async_query
 from .orm import (
-    id_column, snowflake_column, match_column, match_constraint, bool_column, declarative_base, 
+    id_column, snowflake_column, match_column, match_constraint, bool_column, declarative_base, parent_children,
     author_pair, age_pair, bound_fk, unbound_fk, want_column, a_relationship, BitSelector, secret_column
 )
 

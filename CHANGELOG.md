@@ -1,8 +1,13 @@
 # Changelog
 
+## 0.6.1
+
+- First release on PyPI under the name `suou`.
+- Fix `sqlalchemy.asyncio.SQLAlchemy()` to use context vars; `expire_on_commit=` is now configurable at instantiation. Fix some missing re-exports.
+
 ## 0.6.0
 
-+ `.sqlalchemy` has been made a subpackage and split; `sqlalchemy_async` has been deprecated. Update your imports.
++ `.sqlalchemy` has been made a subpackage and split; `sqlalchemy_async` (moved to `sqlalchemy.asyncio`) has been deprecated. Update your imports.
 + Add several new utilities to `.sqlalchemy`: `BitSelector`, `secret_column`, `a_relationship`, `SessionWrapper`, 
   `wrap=` argument to SQLAlchemy. Also removed dead batteries
 + Add `.waiter` module. For now, non-functional ~
