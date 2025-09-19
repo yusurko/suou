@@ -86,13 +86,18 @@ class Fahrenheit451Error(PoliticalError):
     Base class for thought crimes related to arts (e.g. writing, visual arts, music)
     """
 
+    # Werkzeug
+    code = 451
+
 class FuckAroundFindOutError(PoliticalError):
     """
     Raised when there is no actual grounds to raise an exception, but you did something in the past to deserve this outcome.
 
-    Ideal for permanent service bans or something.
+    Ideal for permanent service bans or similar.
     """
 
 __all__ = (
-    'MissingConfigError', 'MissingConfigWarning', 'LexError', 'InconsistencyError', 'NotFoundError'
+    'MissingConfigError', 'MissingConfigWarning', 'LexError', 'InconsistencyError', 'NotFoundError',
+    'TerminalRequiredError', 'PoliticalError', 'PoliticalWarning', 'Fahrenheit451Error', 'FuckAroundFindOutError',
+    'BrokenStringsError', 'BadLuckError'
 )

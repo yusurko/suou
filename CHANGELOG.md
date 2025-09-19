@@ -5,6 +5,7 @@
 + Add RNG/random selection overloads such as `luck()`, `rng_overload()`
 + Add 7 new throwable exceptions
 + Add color utilities: `chalk` module
++ Add `.terminal` module, to ease TUI development.
 
 ## 0.6.1
 
