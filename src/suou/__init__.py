@@ -24,7 +24,7 @@ from .calendar import want_datetime, want_isodate, want_timestamp, age_and_days
 from .configparse import MissingConfigError, MissingConfigWarning, ConfigOptions, ConfigParserConfigSource, ConfigSource, DictConfigSource, ConfigValue, EnvConfigSource
 from .collections import TimedDict
 from .dei import dei_args
-from .functools import deprecated, not_implemented, timed_cache, none_pass, alru_cache
+from .functools import deprecated, not_implemented, timed_cache, none_pass, alru_cache, future
 from .classtools import Wanted, Incomplete
 from .itertools import makelist, kwargs_prefix, ltuple, rtuple, additem, addattr
 from .i18n import I18n, JsonI18n, TomlI18n
@@ -47,7 +47,8 @@ __all__ = (
     'StringCase', 'TimedDict', 'TomlI18n', 'UserSigner', 'Wanted', 'WantsContentType',
     'addattr', 'additem', 'age_and_days', 'alru_cache', 'b2048decode', 'b2048encode',
     'b32ldecode', 'b32lencode', 'b64encode', 'b64decode', 'cb32encode',
-    'cb32decode', 'chalk', 'count_ones', 'dei_args', 'deprecated', 'ilex', 'join_bits',
+    'cb32decode', 'chalk', 'count_ones', 'dei_args', 'deprecated',
+    'future', 'ilex', 'join_bits',
     'jsonencode', 'kwargs_prefix', 'lex', 'ltuple', 'makelist', 'mask_shift',
     'matches', 'mod_ceil', 'mod_floor', 'none_pass', 'not_implemented',
     'redact_url_password', 'rtuple', 'split_bits', 'ssv_list', 'symbol_table',

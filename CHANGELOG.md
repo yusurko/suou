@@ -5,9 +5,10 @@
 + Add RNG/random selection overloads such as `luck()`, `rng_overload()`
 + Add 7 new throwable exceptions
 + Add color utilities: `chalk` module
-+ Add `.terminal` module, to ease TUI development.
-+ `calendar`: add `parse_time()`.
-+ Add validator `not_greater_than()`.
++ Add `.terminal` module, to ease TUI development
++ `calendar`: add `parse_time()`
++ Add validator `not_greater_than()`
++ Add `@future()` decorator
 
 ## 0.6.1
 

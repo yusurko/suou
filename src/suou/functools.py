@@ -28,37 +28,43 @@ from suou.itertools import hashed_list
 _T = TypeVar('_T')
 _U = TypeVar('_U')
 
+
+def _suou_deprecated(message: str, /, *, category=DeprecationWarning, stacklevel: int = 1) -> Callable[[Callable[_T, _U]], Callable[_T, _U]]:
+    """
+    Backport of PEP 702 for Python <=3.12.
+    The stack_level stuff is used by warnings.warn() btw
+    """
+    def decorator(func: Callable[_T, _U]) -> Callable[_T, _U]:
+        @wraps(func)
+        def wrapper(*a, **ka):
+            if category is not None:
+                warnings.warn(message, category, stacklevel=stacklevel)
+            return func(*a, **ka)
+        func.__deprecated__ = True
+        wrapper.__deprecated__ = True
+        return wrapper
+    return decorator
+
 try:
     from warnings import deprecated
 except ImportError:
     # Python <=3.12 does not implement warnings.deprecated
-    def deprecated(message: str, /, *, category=DeprecationWarning, stacklevel: int = 1) -> Callable[[Callable[_T, _U]], Callable[_T, _U]]:
-        """
-        Backport of PEP 702 for Python <=3.12.
-        The stack_level stuff is not reimplemented on purpose because
-        too obscure for the average programmer.
-        """
-        def decorator(func: Callable[_T, _U]) -> Callable[_T, _U]:
-            @wraps(func)
-            def wrapper(*a, **ka):
-                if category is not None:
-                    warnings.warn(message, category, stacklevel=stacklevel)
-                return func(*a, **ka)
-            func.__deprecated__ = True
-            wrapper.__deprecated__ = True
-            return wrapper
-        return decorator
+    deprecated = _suou_deprecated
 
 ## this syntactic sugar for deprecated() is ... deprecated, which is ironic.
 ## Needed move because VSCode seems to not sense deprecated_alias()es as deprecated.
 @deprecated('use deprecated(message)(func) instead')
-def deprecated_alias(func: Callable, /, message='use .{name}() instead', *, category=DeprecationWarning) -> Callable:
+def deprecated_alias(func: Callable[_T, _U], /, message='use .{name}() instead', *, category=DeprecationWarning) -> Callable[_T, _U]:
     """
     Syntactic sugar helper for renaming functions.
 
     DEPRECATED use deprecated(message)(func) instead
     """
-    return deprecated(message.format(name=func.__name__), category=category)(func)
+    @deprecated(message.format(name=func.__name__), category=category)
+    @wraps(func)
+    def deprecated_wrapper(*a, **k) -> _U:
+        return func(*a, **k)
+    return deprecated_wrapper
 
 def not_implemented(msg: Callable | str | None = None):
     """
@@ -74,6 +80,20 @@ def not_implemented(msg: Callable | str | None = None):
         return decorator(msg)
     return decorator
 
+def future(message: str | None = None):
+    """
+    Describes experimental or future API's introduced as bug fixes (including as backports)
+    but not yet intended for general use (mostly to keep semver consistent).
+
+    NEW 0.7.0
+    """
+    def decorator(func: Callable[_T, _U]) -> Callable[_T, _U]:
+        @wraps(func)
+        def wrapper(*a, **k) -> _U:
+            warnings.warn(message or f'{func.__name__}() is intended for a future release and not intended for use right now', FutureWarning)
+            return func(*a, **k)
+        return wrapper
+    return decorator
 
 def flat_args(args: Iterable, kwds: Mapping, typed,
              kwd_mark = (object(),),
