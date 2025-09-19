@@ -1,5 +1,7 @@
 """
-Fortune and esoterism helpers.
+Fortune' RNG and esoterism.
+
+NEW 0.7.0
 
 ---
 
@@ -108,5 +110,5 @@ def rng_overload(prev_func: RngCallable[_T, _U] | int | None, /, *, weight: int 
     return decorator
 
     
-
-    
+# This module is experimental and therefore not re-exported into __init__
+__all__ = ('lucky', 'rng_overload')

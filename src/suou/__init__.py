@@ -35,6 +35,7 @@ from .strtools import PrefixIdentifier
 from .validators import matches
 from .redact import redact_url_password
 from .http import WantsContentType
+from .color import chalk
 
 __version__ = "0.7.0-dev37"
 
@@ -46,7 +47,7 @@ __all__ = (
     'StringCase', 'TimedDict', 'TomlI18n', 'UserSigner', 'Wanted', 'WantsContentType',
     'addattr', 'additem', 'age_and_days', 'alru_cache', 'b2048decode', 'b2048encode',
     'b32ldecode', 'b32lencode', 'b64encode', 'b64decode', 'cb32encode',
-    'cb32decode', 'count_ones', 'dei_args', 'deprecated', 'ilex', 'join_bits',
+    'cb32decode', 'chalk', 'count_ones', 'dei_args', 'deprecated', 'ilex', 'join_bits',
     'jsonencode', 'kwargs_prefix', 'lex', 'ltuple', 'makelist', 'mask_shift',
     'matches', 'mod_ceil', 'mod_floor', 'none_pass', 'not_implemented',
     'redact_url_password', 'rtuple', 'split_bits', 'ssv_list', 'symbol_table',

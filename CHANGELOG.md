@@ -2,8 +2,9 @@
 
 ## 0.7.0 "The Lucky Update"
 
-+ Add RNG/random selection overloads such as `luck()`, `rng_overload()`.
-+ Add 7 new throwable exceptions.
++ Add RNG/random selection overloads such as `luck()`, `rng_overload()`
++ Add 7 new throwable exceptions
++ Add color utilities: `chalk` module
 
 ## 0.6.1
 

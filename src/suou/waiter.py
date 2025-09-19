@@ -54,4 +54,5 @@ def ko(status: int, /, content = None, **ka):
         return PlainTextResponse(content, status_code=status, **ka)
     return content
 
+# This module is experimental and therefore not re-exported into __init__
 __all__ = ('ko', 'ok', 'Waiter')
