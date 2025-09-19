@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.0 "The Lucky Update"
+
++ Add RNG/random selection overloads such as `luck()`, `rng_overload()`.
++ Add 7 new throwable exceptions.
+
 ## 0.6.1
 
 - First release on PyPI under the name `suou`.

@@ -1,5 +1,5 @@
 """
-Exceptions and throwables for various purposes
+Exceptions and throwables for all purposes!
 
 ---
 
@@ -13,6 +13,17 @@ limitations under the License.
 This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
+
+
+class PoliticalError(Exception):
+    """
+    Base class for anything that is refused to be executed for political reasons.
+    """
+
+class PoliticalWarning(PoliticalError, Warning):
+    """
+    Base class for politically suspicious behaviors.
+    """
 
 class MissingConfigError(LookupError):
     """
@@ -51,6 +62,35 @@ class NotFoundError(LookupError):
 class BabelTowerError(NotFoundError):
     """
     The user requested a language that cannot be understood.
+    """
+
+class BadLuckError(Exception):
+    """
+    Stuff did not go as expected.
+
+    Raised by @lucky decorator.
+    """
+
+class TerminalRequiredError(OSError):
+    """
+    Raised by terminal_required() decorator when a function is called from a non-interactive environment.
+    """
+
+class BrokenStringsError(OSError):
+    """
+    Issues related to audio happened, i.e. appropriate executables/libraries/drivers are not installed.
+    """
+
+class Fahrenheit451Error(PoliticalError):
+    """
+    Base class for thought crimes related to arts (e.g. writing, visual arts, music)
+    """
+
+class FuckAroundFindOutError(PoliticalError):
+    """
+    Raised when there is no actual grounds to raise an exception, but you did something in the past to deserve this outcome.
+
+    Ideal for permanent service bans or something.
     """
 
 __all__ = (
