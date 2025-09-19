@@ -44,7 +44,8 @@ def lucky(validators: Iterable[Callable[[_U], bool]] = ()):
             for v in validators:
                 try:
                     if not v(result):
-                        raise BadLuckError(f'result not expected: {result!r}')
+                        message = 'result not expected'
+                        raise BadLuckError(f'{message}: {result!r}')
                 except BadLuckError:
                     raise
                 except Exception as e:

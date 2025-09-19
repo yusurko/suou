@@ -18,6 +18,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 import datetime
 
 from suou.functools import not_implemented
+from suou.luck import lucky
+from suou.validators import not_greater_than
 
 
 def want_isodate(d: datetime.datetime | str | float | int, *, tz = None) -> str:
@@ -63,4 +65,28 @@ def age_and_days(date: datetime.datetime, now: datetime.datetime | None = None) 
     d = (now - datetime.date(date.year + y, date.month, date.day)).days
     return y, d
 
-__all__ = ('want_datetime', 'want_timestamp', 'want_isodate', 'age_and_days')
+@lucky([not_greater_than(259200)])
+def parse_time(timestr: str, /) -> int:
+    """
+    Parse a number-suffix (es. 3s, 15m) or colon (1:30) time expression.
+
+    Returns seconds as an integer.
+    """
+    if timestr.isdigit():
+        return int(timestr)
+    elif ':' in timestr:
+        timeparts = timestr.split(':')
+        if not timeparts[0].isdigit() and not all(x.isdigit() and len(x) == 2 for x in timeparts[1:]):
+            raise ValueError('invalid time format')
+        return sum(int(x) * 60 ** (len(timeparts) - 1 - i) for i, x in enumerate(timeparts))
+    elif timestr.endswith('s') and timestr[:-1].isdigit():
+        return int(timestr[:-1])
+    elif timestr.endswith('m') and timestr[:-1].isdigit():
+        return int(timestr[:-1]) * 60
+    elif timestr.endswith('h') and timestr[:-1].isdigit():
+        return int(float(timestr[:-1]) * 3600)
+    else:
+        raise ValueError('invalid time format')
+
+
+__all__ = ('want_datetime', 'want_timestamp', 'want_isodate', 'age_and_days', 'parse_time')
