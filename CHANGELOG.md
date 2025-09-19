@@ -1,8 +1,13 @@
 # Changelog
 
+## 0.7.0
+
+👀
+
 ## 0.6.1
 
 - First release on PyPI under the name `suou`.
+  - **BREAKING**: if you installed `sakuragasaki46-suou<=0.6.0` you need to uninstall and reinstall or things may break.
 - Fix `sqlalchemy.asyncio.SQLAlchemy()` to use context vars; `expire_on_commit=` is now configurable at instantiation. Fix some missing re-exports.
 
 ## 0.6.0
