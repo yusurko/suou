@@ -4,6 +4,10 @@
 
 👀
 
+## 0.6.2
+
+- No changes to the library. However, the CD/CI script has been updated to upload the old `sakuragasaki46-suou` name as a full duplicate instead of an alias, solving the "reinstall needed" issue for `<=0.6.0` users.
+
 ## 0.6.1
 
 - First release on PyPI under the name `suou`.

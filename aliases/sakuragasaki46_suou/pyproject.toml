@@ -1,8 +1,77 @@
 [project]
 name = "sakuragasaki46_suou"
-authors = [ { name = "Sakuragasaki46" } ]
-version = "0.6.1"
+description = "casual utility library for coding QoL"
+authors = [
+    { name = "Sakuragasaki46" }
+]
+dynamic = [ "version" ]
 requires-python = ">=3.10"
-dependencies = [ "suou==0.6.1" ]
+license = "Apache-2.0"
 readme = "README.md"
 
+dependencies = [
+    "itsdangerous",
+    "toml",
+    "pydantic",
+    "setuptools>=78.0.0",
+    "uvloop; os_name=='posix'"
+]
+# - further devdependencies below - #
+
+# - publishing -
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    
+    # actively supported Pythons
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13"
+]
+
+[project.urls]
+Repository = "https://nekode.yusur.moe/yusur/suou"
+
+[project.optional-dependencies]
+# the below are all dev dependencies (and probably already installed)
+sqlalchemy = [
+    "SQLAlchemy[asyncio]>=2.0.0"
+]
+flask = [
+    "Flask>=2.0.0",
+    "Flask-RestX"
+]
+flask_sqlalchemy = [
+    "Flask-SqlAlchemy",
+]
+peewee = [
+    ## HEADS UP! peewee has setup.py, may slow down installation
+    "peewee>=3.0.0"
+]
+markdown = [
+    "markdown>=3.0.0"
+]
+quart = [
+    "Quart",
+    "Quart-Schema",
+    "starlette>=0.47.2"
+]
+sass = [
+    ## HEADS UP!! libsass carries a C extension + uses setup.py
+    "libsass"
+]
+
+full = [
+    "sakuragasaki46_suou[sqlalchemy]",
+    "sakuragasaki46_suou[flask]",
+    "sakuragasaki46_suou[quart]",
+    "sakuragasaki46_suou[peewee]",
+    "sakuragasaki46_suou[markdown]",
+    "sakuragasaki46_suou[flask-sqlalchemy]",
+    "sakuragasaki46_suou[sass]"
+]
+
+
+[tool.setuptools.dynamic]
+version = { attr = "suou.__version__" }
