@@ -17,7 +17,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 """
 
+from __future__ import annotations
 
+from collections import namedtuple
 from functools import lru_cache
 
 
@@ -75,5 +77,56 @@ class Chalk:
         return self._wrap(self.FAINT, self.END_BOLD)
 
 
-## TODO make it lazy?
+## TODO make it lazy / an instance variable?
 chalk = Chalk()
+
+
+## Utilities for web colors
+
+class WebColor(namedtuple('_WebColor', 'red green blue')):
+    """
+    Representation of a color in the TrueColor space (aka rgb).
+
+    Useful for theming.
+    """
+    def lighten(self, *, factor = .75):
+        """
+        Return a whitened shade of the color.
+        Factor stands between 0 and 1: 0 = total white, 1 = no change. Default is .75
+        """
+        return WebColor(
+            255 - int((255 - self.red) * factor),
+            255 - int((255 - self.green) * factor),
+            255 - int((255 - self.blue) * factor),
+        )
+    def darken(self, *, factor = .75):
+        """
+        Return a darkened shade of the color.
+        Factor stands between 0 and 1: 0 = total black, 1 = no change. Default is .75
+        """
+        return WebColor(
+            int(self.red * factor),
+            int(self.green * factor),
+            int(self.blue * factor)
+        )
+    def greyen(self, *, factor = .75):
+        """
+        Return a desaturated shade of the color.
+        Factor stands between 0 and 1: 0 = gray, 1 = no change. Default is .75
+        """
+        return self.darken(factor=factor) + self.lighten(factor=factor)
+        
+    def blend_with(self, other: WebColor):
+        """
+        Mix two colors, returning the average.
+        """
+        return WebColor (
+            (self.red + other.red) // 2,
+            (self.green + other.green) // 2,
+            (self.blue + other.blue) // 2
+        )
+
+    __add__ = blend_with
+
+    def __str__(self):
+        return f"rgb({self.red}, {self.green}, {self.blue})"

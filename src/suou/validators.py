@@ -49,5 +49,11 @@ def not_greater_than(y):
     """
     return lambda x: x <= y
 
+def not_less_than(y):
+    """
+    Return a function that returns True if X is not less than (i.e. greater than or equal to) the given value.
+    """
+    return lambda x: x >= y
+
 __all__ = ('matches', 'not_greater_than')
 

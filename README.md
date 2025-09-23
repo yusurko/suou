@@ -1,6 +1,6 @@
 # SIS Unified Object Underarmor
 
-Good morning, my brother! Welcome **SUOU** (**S**IS **U**nified **O**bject **U**nderarmor), the Python library which makes API development faster for developing API's, database schemas and stuff in Python.
+Good morning, my brother! Welcome **SUOU** (**S**IS **U**nified **O**bject **U**nderarmor), the Python library which speeds up and makes it pleasing to develop API, database schemas and stuff in Python.
 
 It provides utilities such as:
 * [SIQ](https://yusur.moe/protocols/siq.html)

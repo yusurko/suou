@@ -16,6 +16,7 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
+from functools import wraps
 from typing import Callable, Generic, Iterable, TypeVar
 import random
 from suou.exceptions import BadLuckError
@@ -34,7 +35,7 @@ def lucky(validators: Iterable[Callable[[_U], bool]] = ()):
 
     NEW 0.7.0
     """
-    def decorator(func: Callable[_T, _U]):
+    def decorator(func: Callable[..., _U]):
         @wraps(func)
         def wrapper(*args, **kwargs) -> _U:
             try:
@@ -56,7 +57,7 @@ def lucky(validators: Iterable[Callable[[_U], bool]] = ()):
 
 class RngCallable(Callable, Generic[_T, _U]):
     """
-    Overloaded ... randomly chosen callable.
+    Overloaded ...randomly chosen callable.
 
     UNTESTED
 
@@ -86,13 +87,13 @@ class RngCallable(Callable, Generic[_T, _U]):
                 choice -= w
 
 
-def rng_overload(prev_func: RngCallable[_T, _U] | int | None, /, *, weight: int = 1) -> RngCallable[_T, _U]:
+def rng_overload(prev_func: RngCallable[..., _U] | int | None, /, *, weight: int = 1) -> RngCallable[..., _U]:
     """
     Decorate the first function with @rng_overload and the weight= parameter
     (default 1, must be an integer) to create a "RNG" overloaded callable.
 
-    Each call chooses randomly one candidate (weight is taken in consideration)
-    , calls it, and returns the result.
+    Each call chooses randomly one candidate (weight is taken in consideration),
+    calls it, and returns the result.
 
     UNTESTED 
 

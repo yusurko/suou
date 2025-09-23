@@ -4,11 +4,11 @@
 
 + Add RNG/random selection overloads such as `luck()`, `rng_overload()`
 + Add 7 new throwable exceptions
-+ Add color utilities: `chalk` module
++ Add color utilities: `chalk` object and `WebColor()`
 + Add `.terminal` module, to ease TUI development
 + `calendar`: add `parse_time()`
-+ Add validator `not_greater_than()`
-+ Add `@future()` decorator
++ Add validators `not_greater_than()`, `not_less_than()`
++ Add `@future()` decorator: it signals features not yet intended to be public, for instance, backported as a part of a bug fix.
 
 ## 0.6.1
 
