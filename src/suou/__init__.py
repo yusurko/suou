@@ -36,7 +36,7 @@ from .validators import matches
 from .redact import redact_url_password
 from .http import WantsContentType
 
-__version__ = "0.6.2.rc1"
+__version__ = "0.6.2"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
