@@ -26,3 +26,6 @@ dist/
 /run.sh
 ROADMAP.md
 aliases/*/src
+docs/_build
+docs/_static
+docs/templates

@@ -1,0 +1,6 @@
+﻿suou
+====
+
+.. automodule:: suou
+
+   
