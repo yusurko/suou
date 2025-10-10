@@ -72,6 +72,11 @@ full = [
     "suou[sass]"
 ]
 
+docs = [
+    "sphinx>=2.1",
+    "myst_parser"
+]
+
 
 [tool.setuptools.dynamic]
 version = { attr = "suou.__version__" }

@@ -1,0 +1,12 @@
+# for sphinx/readthedocs
+
+itsdangerous
+libsass
+peewee
+pydantic
+quart_schema
+setuptools
+starlette
+toml
+sphinx
+myst_parser
