@@ -6,3 +6,4 @@ quart_schema==0.22.0
 setuptools==80.9.0
 starlette==0.48.0
 toml==0.10.2
+sphinx_rtd_theme
