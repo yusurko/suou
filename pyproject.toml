@@ -74,7 +74,8 @@ full = [
 
 docs = [
     "sphinx>=2.1",
-    "myst_parser"
+    "myst_parser",
+    "sphinx_rtd_theme"
 ]
 
 
