@@ -1,5 +1,5 @@
 """
-Utilities for SQLAlchemy
+Utilities for SQLAlchemy.
 
 ---
 
@@ -33,12 +33,16 @@ from ..iding import Siq, SiqGen, SiqType, SiqCache
 from ..classtools import Incomplete, Wanted
 
 
-
 _T = TypeVar('_T')
+_U = TypeVar('_U')
 
-# SIQs are 14 bytes long. Storage is padded for alignment
-# Not to be confused with SiqType.
 IdType: TypeEngine = LargeBinary(16)
+"""
+Database type for SIQ.
+
+SIQs are 14 bytes long. Storage is padded for alignment
+Not to be confused with SiqType.
+"""
 
 def create_session(url: str) -> Session:
     """
@@ -50,7 +54,6 @@ def create_session(url: str) -> Session:
     """
     engine = create_engine(url)
     return Session(bind = engine)
-
 
 
 def token_signer(id_attr: Column | str, secret_attr: Column | str) -> Incomplete[UserSigner]:
@@ -80,9 +83,6 @@ def token_signer(id_attr: Column | str, secret_attr: Column | str) -> Incomplete
     return Incomplete(Wanted(token_signer_factory))
 
 
-
-
-
 ## (in)Utilities for use in web apps below
 
 @deprecated('not part of the public API and not even working')
@@ -93,6 +93,8 @@ class AuthSrc(metaclass=ABCMeta):
     This is an abstract class and is NOT usable directly.
 
     This is not part of the public API
+
+    DEPRECATED
     '''
     def required_exc(self) -> Never:
         raise ValueError('required field missing')
@@ -140,7 +142,7 @@ def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, column: str |
     invalid_exc = src.invalid_exc or _default_invalid
     required_exc = src.required_exc or (lambda: _default_invalid('Login required'))
 
-    def decorator(func: Callable):
+    def decorator(func: Callable[_T, _U]) -> Callable[_T, _U]:
         @wraps(func)
         def wrapper(*a, **ka):
             ka[dest] = get_user(src.get_token())

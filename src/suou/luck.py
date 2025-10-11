@@ -35,7 +35,7 @@ def lucky(validators: Iterable[Callable[[_U], bool]] = ()):
 
     NEW 0.7.0
     """
-    def decorator(func: Callable[..., _U]):
+    def decorator(func: Callable[_T, _U]) -> Callable[_T, _U]:
         @wraps(func)
         def wrapper(*args, **kwargs) -> _U:
             try:
@@ -102,7 +102,7 @@ def rng_overload(prev_func: RngCallable[..., _U] | int | None, /, *, weight: int
     if isinstance(prev_func, int) and weight == 1:
         weight, prev_func = prev_func, None
 
-    def decorator(func: Callable[_T, _U]):
+    def decorator(func: Callable[_T, _U]) -> RngCallable[_T, _U]:
         nonlocal prev_func
         if prev_func is None:
             prev_func = RngCallable(func, weight=weight)

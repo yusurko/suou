@@ -19,7 +19,7 @@ import math
 from threading import RLock
 import time
 from types import CoroutineType, NoneType
-from typing import Callable, Iterable, Mapping, TypeVar
+from typing import Any, Callable, Iterable, Mapping, Never, TypeVar
 import warnings
 from functools import update_wrapper, wraps, lru_cache
 
@@ -70,7 +70,7 @@ def not_implemented(msg: Callable | str | None = None):
     """
     A more elegant way to say a method is not implemented, but may get in the future.
     """
-    def decorator(func: Callable) -> Callable:
+    def decorator(func: Callable[_T, Any]) -> Callable[_T, Never]:
         da_msg = msg if isinstance(msg, str) else 'method {name}() is not implemented'.format(name=func.__name__)
         @wraps(func)
         def wrapper(*a, **k):
@@ -288,7 +288,7 @@ def timed_cache(ttl: int, maxsize: int = 128, typed: bool = False, *, async_: bo
     
     NEW 0.5.0
     """
-    def decorator(func):
+    def decorator(func: Callable[_T, _U]) -> Callable[_T, _U]:
         start_time = None
 
         if async_:
@@ -318,7 +318,7 @@ def timed_cache(ttl: int, maxsize: int = 128, typed: bool = False, *, async_: bo
             return wrapper
     return decorator
 
-def none_pass(func: Callable, *args, **kwargs) -> Callable:
+def none_pass(func: Callable[_T, _U], *args, **kwargs) -> Callable[_T, _U]:
     """
     Wrap callable so that gets called only on not None values.
 

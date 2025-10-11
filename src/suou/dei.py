@@ -19,7 +19,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from __future__ import annotations
 from functools import wraps
-from typing import Callable
+from typing import Callable, TypeVar
+
+_T = TypeVar('_T')
+_U = TypeVar('_U')
 
 
 BRICKS = '@abcdefghijklmnopqrstuvwxyz+?-\'/'
@@ -122,7 +125,7 @@ def dei_args(**renames):
     Dear conservatives, this does not influence the ability to call the wrapped function
     with the original parameter names.
     """
-    def decorator(func: Callable):
+    def decorator(func: Callable[_T, _U]) -> Callable[_T, _U]:
         @wraps(func)
         def wrapper(*args, **kwargs):
             for alias_name, actual_name in renames.items():

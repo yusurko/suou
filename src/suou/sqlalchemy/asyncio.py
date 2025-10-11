@@ -21,13 +21,16 @@ from __future__ import annotations
 from functools import wraps
 
 from contextvars import ContextVar, Token
+from typing import Callable, TypeVar
 from sqlalchemy import Select, Table, func, select
 from sqlalchemy.orm import DeclarativeBase, lazyload
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from flask_sqlalchemy.pagination import Pagination
 
-from suou.classtools import MISSING
 from suou.exceptions import NotFoundError
+
+_T = TypeVar('_T')
+_U = TypeVar('_U')
 
 class SQLAlchemy:
     """
@@ -186,7 +189,7 @@ def async_query(db: SQLAlchemy, multi: False):
 
     The query function remains available as the .q or .query attribute.
     """
-    def decorator(func):
+    def decorator(func: Callable[_T, _U]) -> Callable[_T, _U]:
         @wraps(func)
         async def executor(*args, **kwargs):
             async with db as session:
