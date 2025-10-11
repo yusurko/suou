@@ -1,4 +1,4 @@
-﻿suou.collections
+suou.collections
 ================
 
 .. automodule:: suou.collections

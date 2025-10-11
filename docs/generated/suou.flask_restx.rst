@@ -1,4 +1,4 @@
-﻿suou.flask\_restx
+suou.flask\_restx
 =================
 
 .. automodule:: suou.flask_restx

@@ -1,4 +1,4 @@
-﻿suou.i18n
+suou.i18n
 =========
 
 .. automodule:: suou.i18n

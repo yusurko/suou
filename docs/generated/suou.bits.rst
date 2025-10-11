@@ -1,4 +1,4 @@
-﻿suou.bits
+suou.bits
 =========
 
 .. automodule:: suou.bits

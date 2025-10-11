@@ -1,4 +1,4 @@
-﻿suou.redact
+suou.redact
 ===========
 
 .. automodule:: suou.redact

@@ -1,4 +1,4 @@
-﻿suou.color
+suou.color
 ==========
 
 .. automodule:: suou.color

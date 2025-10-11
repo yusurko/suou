@@ -1,4 +1,4 @@
-﻿suou.iding
+suou.iding
 ==========
 
 .. automodule:: suou.iding

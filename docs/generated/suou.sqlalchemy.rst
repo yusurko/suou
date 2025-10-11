@@ -1,8 +1,14 @@
-﻿suou.sqlalchemy
+suou.sqlalchemy
 ===============
 
 .. automodule:: suou.sqlalchemy
 
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      IdType
    
    .. rubric:: Functions
 
@@ -18,3 +24,11 @@
    
       AuthSrc
    
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   asyncio
+   orm

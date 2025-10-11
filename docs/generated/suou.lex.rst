@@ -1,4 +1,4 @@
-﻿suou.lex
+suou.lex
 ========
 
 .. currentmodule:: suou

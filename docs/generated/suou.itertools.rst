@@ -1,4 +1,4 @@
-﻿suou.itertools
+suou.itertools
 ==============
 
 .. automodule:: suou.itertools

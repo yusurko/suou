@@ -1,4 +1,4 @@
-﻿suou.legal
+suou.legal
 ==========
 
 .. automodule:: suou.legal

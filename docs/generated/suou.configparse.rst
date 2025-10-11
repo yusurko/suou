@@ -1,4 +1,4 @@
-﻿suou.configparse
+suou.configparse
 ================
 
 .. automodule:: suou.configparse

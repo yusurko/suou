@@ -1,4 +1,4 @@
-﻿suou.terminal
+suou.terminal
 =============
 
 .. automodule:: suou.terminal

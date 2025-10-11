@@ -1,4 +1,4 @@
-﻿suou.waiter
+suou.waiter
 ===========
 
 .. automodule:: suou.waiter

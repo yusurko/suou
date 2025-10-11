@@ -1,4 +1,4 @@
-﻿suou.asgi
+suou.asgi
 =========
 
 .. automodule:: suou.asgi

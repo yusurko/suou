@@ -3,7 +3,8 @@ API
 
 .. autosummary::
    :toctree: generated
-
+   :recursive:
+   
    suou.sqlalchemy
    suou.asgi
    suou.bits
@@ -39,3 +40,4 @@ API
    suou.terminal
    suou.validators
    suou.waiter
+

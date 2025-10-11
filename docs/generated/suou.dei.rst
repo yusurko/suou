@@ -1,4 +1,4 @@
-﻿suou.dei
+suou.dei
 ========
 
 .. automodule:: suou.dei

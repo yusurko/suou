@@ -1,4 +1,4 @@
-﻿suou.signing
+suou.signing
 ============
 
 .. automodule:: suou.signing

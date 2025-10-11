@@ -1,4 +1,4 @@
-﻿suou.dorks
+suou.dorks
 ==========
 
 .. automodule:: suou.dorks

@@ -1,4 +1,4 @@
-﻿suou.markdown
+suou.markdown
 =============
 
 .. automodule:: suou.markdown

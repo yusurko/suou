@@ -1,4 +1,4 @@
-﻿suou.codecs
+suou.codecs
 ===========
 
 .. automodule:: suou.codecs

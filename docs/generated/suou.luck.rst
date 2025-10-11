@@ -1,4 +1,4 @@
-﻿suou.luck
+suou.luck
 =========
 
 .. automodule:: suou.luck

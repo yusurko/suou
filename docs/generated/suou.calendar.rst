@@ -1,4 +1,4 @@
-﻿suou.calendar
+suou.calendar
 =============
 
 .. automodule:: suou.calendar

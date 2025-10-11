@@ -1,4 +1,4 @@
-﻿suou.exceptions
+suou.exceptions
 ===============
 
 .. automodule:: suou.exceptions

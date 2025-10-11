@@ -1,4 +1,4 @@
-﻿suou.flask
+suou.flask
 ==========
 
 .. automodule:: suou.flask

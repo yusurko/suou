@@ -1,4 +1,4 @@
-﻿suou.migrate
+suou.migrate
 ============
 
 .. automodule:: suou.migrate

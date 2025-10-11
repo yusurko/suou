@@ -1,4 +1,4 @@
-﻿suou.http
+suou.http
 =========
 
 .. automodule:: suou.http

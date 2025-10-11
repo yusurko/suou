@@ -1,4 +1,4 @@
-﻿suou.snowflake
+suou.snowflake
 ==============
 
 .. automodule:: suou.snowflake

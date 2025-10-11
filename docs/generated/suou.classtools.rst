@@ -1,4 +1,4 @@
-﻿suou.classtools
+suou.classtools
 ===============
 
 .. automodule:: suou.classtools

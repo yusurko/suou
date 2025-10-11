@@ -41,3 +41,13 @@ autodoc_mock_imports = [
 html_theme = 'sphinx_rtd_theme'
 html_theme_path = ["_themes", ]
 html_static_path = ['_static']
+
+def polish_module_docstring(app, what, name, obj, options, lines):
+    if what == "module" and 'members' in options:
+        try:
+            del lines[lines.index('---'):]
+        except Exception:
+            pass
+
+def setup(app):
+    app.connect("autodoc-process-docstring", polish_module_docstring)

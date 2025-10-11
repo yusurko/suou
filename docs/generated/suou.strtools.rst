@@ -1,4 +1,4 @@
-﻿suou.strtools
+suou.strtools
 =============
 
 .. automodule:: suou.strtools

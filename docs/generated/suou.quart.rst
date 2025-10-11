@@ -1,4 +1,4 @@
-﻿suou.quart
+suou.quart
 ==========
 
 .. automodule:: suou.quart

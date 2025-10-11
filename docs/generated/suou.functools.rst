@@ -1,4 +1,4 @@
-﻿suou.functools
+suou.functools
 ==============
 
 .. automodule:: suou.functools

@@ -1,4 +1,4 @@
-﻿suou.validators
+suou.validators
 ===============
 
 .. automodule:: suou.validators

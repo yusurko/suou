@@ -1,4 +1,4 @@
-﻿suou.sass
+suou.sass
 =========
 
 .. automodule:: suou.sass
