@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.1
+
++ Add documentation ([Read The Docs](https://suou.readthedocs.io/))
++ Improved decorator typing
+
 ## 0.7.0 "The Lucky Update"
 
 + Add RNG/random selection overloads such as `luck()`, `rng_overload()`

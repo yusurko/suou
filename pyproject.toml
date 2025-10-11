@@ -32,6 +32,7 @@ classifiers = [
 
 [project.urls]
 Repository = "https://nekode.yusur.moe/yusur/suou"
+Documentation = "https://suou.readthedocs.io"
 
 [project.optional-dependencies]
 # the below are all dev dependencies (and probably already installed)
