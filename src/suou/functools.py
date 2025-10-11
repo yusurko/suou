@@ -80,17 +80,23 @@ def not_implemented(msg: Callable | str | None = None):
         return decorator(msg)
     return decorator
 
-def future(message: str | None = None):
+def future(message: str | None = None, *, version: str = None):
     """
     Describes experimental or future API's introduced as bug fixes (including as backports)
     but not yet intended for general use (mostly to keep semver consistent).
+
+    version= is the intended version release.
 
     NEW 0.7.0
     """
     def decorator(func: Callable[_T, _U]) -> Callable[_T, _U]:
         @wraps(func)
         def wrapper(*a, **k) -> _U:
-            warnings.warn(message or f'{func.__name__}() is intended for a future release and not intended for use right now', FutureWarning)
+            warnings.warn(message or (
+                f'{func.__name__}() is intended for release on {version} and not ready for use right now'
+                if version else
+                f'{func.__name__}() is intended for a future release and not ready for use right now'
+            ), FutureWarning)
             return func(*a, **k)
         return wrapper
     return decorator

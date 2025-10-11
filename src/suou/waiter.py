@@ -21,6 +21,9 @@ from starlette.applications import Starlette
 from starlette.responses import JSONResponse, PlainTextResponse, Response
 from starlette.routing import Route
 
+from suou.functools import future
+
+@future()
 class Waiter():
     def __init__(self):
         self.routes: list[Route] = []

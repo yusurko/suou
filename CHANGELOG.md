@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.2
+
++ `@future()` now can take a `version=` argument
++ `Waiter()` got marked `@future` indefinitely
++ Stage `username_column()` for release in 0.8.0
++ Explicit support for Python 3.14 (aka python pi)
+
 ## 0.7.1
 
 + Add documentation ([Read The Docs](https://suou.readthedocs.io/))

@@ -1,7 +1,7 @@
 """
 Utilities for SQLAlchemy; ORM
 
-NEW 0.6.0
+NEW 0.6.0 (moved)
 
 ---
 
@@ -20,12 +20,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from binascii import Incomplete
 import os
+import re
 from typing import Any, Callable, TypeVar
 import warnings
 from sqlalchemy import BigInteger, Boolean, CheckConstraint, Column, Date, ForeignKey, LargeBinary, MetaData, SmallInteger, String, text
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, Relationship, declarative_base as _declarative_base, relationship
 from sqlalchemy.types import TypeEngine
 from sqlalchemy.ext.hybrid import Comparator
+from suou.functools import future
 from suou.classtools import Wanted, Incomplete
 from suou.codecs import StringCase
 from suou.dei import dei_args
@@ -101,7 +103,7 @@ match_constraint.TEXT_DIALECTS = {
     'mariadb': ':n RLIKE :re'
 }
 
-def match_column(length: int, regex: str, /, case: StringCase = StringCase.AS_IS, *args, constraint_name: str | None = None, **kwargs) -> Incomplete[Column[str]]:
+def match_column(length: int, regex: str | re.Pattern, /, case: StringCase = StringCase.AS_IS, *args, constraint_name: str | None = None, **kwargs) -> Incomplete[Column[str]]:
     """
     Syntactic sugar to create a String() column with a check constraint matching the given regular expression.
 
@@ -111,6 +113,24 @@ def match_column(length: int, regex: str, /, case: StringCase = StringCase.AS_IS
         warnings.warn('case arg is currently not working', FutureWarning)
     return Incomplete(Column, String(length), Wanted(lambda x, n: match_constraint(n, regex, #dialect=x.metadata.engine.dialect.name,
             constraint_name=constraint_name or f'{x.__tablename__}_{n}_valid')), *args, **kwargs)
+
+
+@future(version='0.8.0')
+def username_column(
+        length: int = 32, regex: str | re.Pattern = '[a-z_][a-z0-9_-]+', *args, case: StringCase = StringCase.LOWER,
+        nullable : bool = False, **kwargs) -> Incomplete[Column[str] | Column[str | None]]:
+    """
+    Construct a column containing a unique handle / username.
+
+    Username must match the given `regex` and be at most `length` characters long.
+
+    NEW 0.8.0
+    """
+    if case is StringCase.AS_IS:
+        warnings.warn('case sensitive usernames may lead to impersonation and unexpected behavior', UserWarning)
+
+    return match_column(length, regex, case=case, nullable=nullable, unique=True, *args, **kwargs)
+
 
 def bool_column(value: bool = False, nullable: bool = False, **kwargs) -> Column[bool]:
     """
