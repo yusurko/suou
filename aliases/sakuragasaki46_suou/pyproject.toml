@@ -10,7 +10,7 @@ license = "Apache-2.0"
 readme = "README.md"
 
 dependencies = [
-    "suou==0.7.0",
+    "suou==0.7.1",
     "itsdangerous",
     "toml",
     "pydantic",
@@ -33,6 +33,7 @@ classifiers = [
 
 [project.urls]
 Repository = "https://nekode.yusur.moe/yusur/suou"
+Documentation = "https://suou.readthedocs.io"
 
 [project.optional-dependencies]
 # the below are all dev dependencies (and probably already installed)
@@ -71,6 +72,12 @@ full = [
     "sakuragasaki46_suou[markdown]",
     "sakuragasaki46_suou[flask-sqlalchemy]",
     "sakuragasaki46_suou[sass]"
+]
+
+docs = [
+    "sphinx>=2.1",
+    "myst_parser",
+    "sphinx_rtd_theme"
 ]
 
 
