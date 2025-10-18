@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.3
+
++ Fixed some broken imports in `.sqlalchemy`
++ Stage `@glue()` for release in 0.8.0
++ Add docs to `.sqlalchemy`
+
 ## 0.7.2
 
 + `@future()` now can take a `version=` argument

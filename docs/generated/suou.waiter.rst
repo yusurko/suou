@@ -1,4 +1,4 @@
-suou.waiter
+﻿suou.waiter
 ===========
 
 .. automodule:: suou.waiter
@@ -8,12 +8,7 @@ suou.waiter
 
    .. autosummary::
    
+      Waiter
       ko
       ok
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      Waiter
    

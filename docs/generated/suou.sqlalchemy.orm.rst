@@ -1,4 +1,4 @@
-suou.sqlalchemy.orm
+﻿suou.sqlalchemy.orm
 ===================
 
 .. automodule:: suou.sqlalchemy.orm
@@ -22,6 +22,7 @@ suou.sqlalchemy.orm
       secret_column
       snowflake_column
       unbound_fk
+      username_column
       want_column
    
    .. rubric:: Classes

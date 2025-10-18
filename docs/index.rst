@@ -3,16 +3,15 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-suou documentation
+SUOU
 ==================
 
-SUOU (acronym for ) is a casual Python library providing utilities to
-ease programmer's QoL.
-
-
+SUOU (acronym for **SIS Unified Object Underarmour**) is a casual Python library providing utilities to
+ease programmer's QoL and write shorter and cleaner code that works.
 
 
 .. toctree::
    :maxdepth: 2
    
+   sqlalchemy
    api

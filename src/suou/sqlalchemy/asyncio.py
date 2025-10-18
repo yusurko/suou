@@ -25,9 +25,9 @@ from typing import Callable, TypeVar
 from sqlalchemy import Select, Table, func, select
 from sqlalchemy.orm import DeclarativeBase, lazyload
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
-from flask_sqlalchemy.pagination import Pagination
 
 from suou.exceptions import NotFoundError
+from suou.glue import glue
 
 _T = TypeVar('_T')
 _U = TypeVar('_U')
@@ -119,68 +119,76 @@ class SQLAlchemy:
 # XXX NOT public API! DO NOT USE
 current_session: ContextVar[AsyncSession] = ContextVar('current_session')
 
-class AsyncSelectPagination(Pagination):
-    """
-    flask_sqlalchemy.SelectPagination but asynchronous.
+## experimental
+@glue('flask_sqlalchemy')
+def _make_AsyncSelectPagination(flask_sqlalchemy):
+    class AsyncSelectPagination(flask_sqlalchemy.pagination.Pagination):
+        """
+        flask_sqlalchemy.SelectPagination but asynchronous.
 
-    Pagination is not part of the public API, therefore expect that it may break
-    """
+        Pagination is not part of the public API, therefore expect that it may break
+        """
 
-    async def _query_items(self) -> list:
-        select_q: Select = self._query_args["select"]
-        select = select_q.limit(self.per_page).offset(self._query_offset)
-        session: AsyncSession = self._query_args["session"]
-        out = (await session.execute(select)).scalars()
-        return out
+        async def _query_items(self) -> list:
+            select_q: Select = self._query_args["select"]
+            select = select_q.limit(self.per_page).offset(self._query_offset)
+            session: AsyncSession = self._query_args["session"]
+            out = (await session.execute(select)).scalars()
+            return out
 
-    async def _query_count(self) -> int:
-        select_q: Select = self._query_args["select"]
-        sub = select_q.options(lazyload("*")).order_by(None).subquery()
-        session: AsyncSession = self._query_args["session"]
-        out = (await session.execute(select(func.count()).select_from(sub))).scalar()
-        return out
+        async def _query_count(self) -> int:
+            select_q: Select = self._query_args["select"]
+            sub = select_q.options(lazyload("*")).order_by(None).subquery()
+            session: AsyncSession = self._query_args["session"]
+            out = (await session.execute(select(func.count()).select_from(sub))).scalar()
+            return out
 
-    def __init__(self,
-        page: int | None = None,
-        per_page: int | None = None,
-        max_per_page: int | None = 100,
-        error_out: Exception | None = NotFoundError,
-        count: bool = True,
-        **kwargs):
-        ## XXX flask-sqlalchemy says Pagination() is not public API.
-        ## Things may break; beware.
-        self._query_args = kwargs
-        page, per_page = self._prepare_page_args(
-            page=page,
-            per_page=per_page,
-            max_per_page=max_per_page,
-            error_out=error_out,
-        )
+        def __init__(self,
+            page: int | None = None,
+            per_page: int | None = None,
+            max_per_page: int | None = 100,
+            error_out: Exception | None = NotFoundError,
+            count: bool = True,
+            **kwargs):
+            ## XXX flask-sqlalchemy says Pagination() is not public API.
+            ## Things may break; beware.
+            self._query_args = kwargs
+            page, per_page = self._prepare_page_args(
+                page=page,
+                per_page=per_page,
+                max_per_page=max_per_page,
+                error_out=error_out,
+            )
 
-        self.page: int = page
-        """The current page."""
+            self.page: int = page
+            """The current page."""
 
-        self.per_page: int = per_page
-        """The maximum number of items on a page."""
+            self.per_page: int = per_page
+            """The maximum number of items on a page."""
 
-        self.max_per_page: int | None = max_per_page
-        """The maximum allowed value for ``per_page``."""
+            self.max_per_page: int | None = max_per_page
+            """The maximum allowed value for ``per_page``."""
 
-        self.items = None
-        self.total = None
-        self.error_out = error_out
-        self.has_count = count
+            self.items = None
+            self.total = None
+            self.error_out = error_out
+            self.has_count = count
 
-    async def __aiter__(self):
-        self.items = await self._query_items()
-        if self.items is None:
-            raise RuntimeError('query returned None')
-        if not self.items and self.page != 1 and self.error_out:
-            raise self.error_out
-        if self.has_count:
-            self.total = await self._query_count()
-        for i in self.items:
-            yield i
+        async def __aiter__(self):
+            self.items = await self._query_items()
+            if self.items is None:
+                raise RuntimeError('query returned None')
+            if not self.items and self.page != 1 and self.error_out:
+                raise self.error_out
+            if self.has_count:
+                self.total = await self._query_count()
+            for i in self.items:
+                yield i
+
+    return AsyncSelectPagination
+
+AsyncSelectPagination = _make_AsyncSelectPagination()
+del _make_AsyncSelectPagination
 
 
 def async_query(db: SQLAlchemy, multi: False):
