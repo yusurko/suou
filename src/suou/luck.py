@@ -1,5 +1,5 @@
 """
-Fortune' RNG and esoterism.
+Fortune, RNG and esoterism.
 
 NEW 0.7.0
 

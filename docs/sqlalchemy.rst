@@ -38,7 +38,8 @@ Column pairs
 Misc
 ----
 
-.. autofunction:: BitSelector
+.. autoclass:: BitSelector
+
 .. autofunction:: match_constraint
 .. autofunction:: a_relationship
 .. autofunction:: declarative_base

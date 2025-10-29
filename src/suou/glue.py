@@ -18,6 +18,7 @@ import importlib
 from types import ModuleType
 
 from functools import wraps
+from suou.classtools import MISSING
 from suou.functools import future
 
 
@@ -32,28 +33,36 @@ class FakeModule(ModuleType):
         raise AttributeError(f'Module {self.__name__} not found; this feature is not available ({self._exc})') from self._exc
 
 
-@future(version = "0.8.0")
+@future(version = "0.9.0")
 def glue(*modules):
     """
     Helper for "glue" code -- it imports the given modules and passes them as keyword arguments to the wrapped functions.
 
-    NEW 0.8.0
+    NEW 0.9.0
     """
     module_dict = dict()
+    imports_succeeded = True
 
     for module in modules:
         try:
             module_dict[module] = importlib.import_module(module)
         except Exception as e:
+            imports_succeeded = False
             module_dict[module] = FakeModule(module, e)
     
     def decorator(func):
         @wraps(func)
         def wrapper(*a, **k):
-            k.update(module_dict)
-            return func(*a, **k)
+            try:
+                result = func(*a, **k)
+            except Exception:
+                if not imports_succeeded:
+                    ## XXX return an iterable? A Fake****?
+                    return MISSING
+                raise
+            return result
         return wrapper
     return decorator
 
 # This module is experimental and therefore not re-exported into __init__
-__all__ = ('glue',)
+__all__ = ('glue', 'FakeModule')

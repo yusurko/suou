@@ -31,7 +31,7 @@ autodoc_mock_imports = [
     "toml",
     "starlette",
     "itsdangerous",
-    "pydantic",
+    #"pydantic",
     "quart_schema"
 ]
 

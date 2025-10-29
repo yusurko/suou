@@ -31,6 +31,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 from __future__ import annotations
 import base64
 import binascii
+import datetime
 import enum
 from functools import cached_property
 import hashlib
@@ -39,6 +40,8 @@ import time
 import os
 from typing import Iterable, override
 import warnings
+
+from suou.calendar import want_timestamp
 
 from .functools import deprecated
 from .codecs import b32lencode, b64encode, cb32decode, cb32encode, want_str
@@ -120,20 +123,30 @@ class SiqGen:
     """
     Implement a SIS-compliant SIQ generator.
     """
-    __slots__ = ('domain_hash', 'last_gen_ts', 'counters', 'shard_id', '__weakref__')
+    __slots__ = ('domain_hash', 'last_gen_ts', 'counters', 'shard_id', '_test_cur_ts', '__weakref__')
 
     domain_hash: int
     last_gen_ts: int
     shard_id: int
     counters: dict[SiqType, int]
+    _test_cur_timestamp: int | None
 
     def __init__(self, domain: str, last_siq: int = 0, local_id: int | None = None, shard_id: int | None = None):
         self.domain_hash = make_domain_hash(domain, local_id)
+        self._test_cur_ts = None ## test only
         self.last_gen_ts = min(last_siq >> 56, self.cur_timestamp())
         self.counters = dict()
         self.shard_id = (shard_id or os.getpid()) % 256
     def cur_timestamp(self) -> int:
+        if self._test_cur_ts is not None:
+            return self._test_cur_ts
         return int(time.time() * (1 << 16))
+    def set_cur_timestamp(self, value: datetime.datetime):
+        """
+        Intended to be used by tests only! Do not use in production!
+        """
+        self._test_cur_ts = int(want_timestamp(value) * 2 ** 16)
+        self.last_gen_ts = int(want_timestamp(value) * 2 ** 16)
     def generate(self, /, typ: SiqType, n: int = 1) -> Iterable[int]:
         """
         Generate one or more SIQ's.
@@ -152,7 +165,7 @@ class SiqGen:
         elif now > self.last_gen_ts:
             self.counters[typ] = 0
         while n:
-            idseq = typ.prepend(self.counters[typ])
+            idseq = typ.prepend(self.counters.setdefault(typ, 0))
             if idseq >= (1 << 16):
                 while (now := self.cur_timestamp()) <= self.last_gen_ts:
                     time.sleep(1 / (1 << 16))
