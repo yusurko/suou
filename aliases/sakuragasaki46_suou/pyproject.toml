@@ -10,7 +10,7 @@ license = "Apache-2.0"
 readme = "README.md"
 
 dependencies = [
-    "suou==0.7.4",
+    "suou==0.7.5",
     "itsdangerous",
     "toml",
     "pydantic",
@@ -39,14 +39,16 @@ Documentation = "https://suou.readthedocs.io"
 [project.optional-dependencies]
 # the below are all dev dependencies (and probably already installed)
 sqlalchemy = [
-    "SQLAlchemy[asyncio]>=2.0.0"
+    "SQLAlchemy[asyncio]>=2.0.0",
+    "flask-sqlalchemy"
 ]
 flask = [
     "Flask>=2.0.0",
     "Flask-RestX"
 ]
 flask_sqlalchemy = [
-    "Flask-SqlAlchemy",
+    "sakuragasaki46_suou[sqlalchemy]",
+    "sakuragasaki46_suou[flask]"
 ]
 peewee = [
     ## HEADS UP! peewee has setup.py, may slow down installation
@@ -71,7 +73,6 @@ full = [
     "sakuragasaki46_suou[quart]",
     "sakuragasaki46_suou[peewee]",
     "sakuragasaki46_suou[markdown]",
-    "sakuragasaki46_suou[flask-sqlalchemy]",
     "sakuragasaki46_suou[sass]"
 ]
 
