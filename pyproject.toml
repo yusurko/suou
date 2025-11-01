@@ -38,14 +38,16 @@ Documentation = "https://suou.readthedocs.io"
 [project.optional-dependencies]
 # the below are all dev dependencies (and probably already installed)
 sqlalchemy = [
-    "SQLAlchemy[asyncio]>=2.0.0"
+    "SQLAlchemy[asyncio]>=2.0.0",
+    "flask-sqlalchemy"
 ]
 flask = [
     "Flask>=2.0.0",
     "Flask-RestX"
 ]
 flask_sqlalchemy = [
-    "Flask-SqlAlchemy",
+    "suou[sqlalchemy]",
+    "suou[flask]"
 ]
 peewee = [
     ## HEADS UP! peewee has setup.py, may slow down installation
@@ -70,7 +72,6 @@ full = [
     "suou[quart]",
     "suou[peewee]",
     "suou[markdown]",
-    "suou[flask-sqlalchemy]",
     "suou[sass]"
 ]
 

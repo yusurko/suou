@@ -22,6 +22,7 @@ from suou.classtools import MISSING
 from suou.functools import future
 
 
+@future(version="0.9.0")
 class FakeModule(ModuleType):
     """
     Fake module used in @glue() in case of import error
