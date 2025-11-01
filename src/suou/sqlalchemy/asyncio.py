@@ -25,6 +25,7 @@ from typing import Callable, TypeVar
 from sqlalchemy import Select, Table, func, select
 from sqlalchemy.orm import DeclarativeBase, lazyload
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
+from flask_sqlalchemy.pagination import Pagination
 
 from suou.exceptions import NotFoundError
 from suou.glue import glue
@@ -122,7 +123,7 @@ current_session: ContextVar[AsyncSession] = ContextVar('current_session')
 
 
 
-class AsyncSelectPagination(flask_sqlalchemy.pagination.Pagination):
+class AsyncSelectPagination(Pagination):
     """
     flask_sqlalchemy.SelectPagination but asynchronous.
 
