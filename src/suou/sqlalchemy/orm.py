@@ -255,6 +255,8 @@ def unbound_fk(target: str | Column | InstrumentedAttribute, typ: _T | None = No
         target_name = target
         if typ is None:
             typ = IdType
+    else:
+        raise TypeError('target must be a str, a Column or a InstrumentedAttribute')
 
     return Column(typ, ForeignKey(target_name, ondelete='SET NULL'), nullable=True, **kwargs)
 
@@ -276,6 +278,8 @@ def bound_fk(target: str | Column | InstrumentedAttribute, typ: _T = None, **kwa
         target_name = target
         if typ is None:
             typ = IdType
+    else:
+        raise TypeError('target must be a str, a Column or a InstrumentedAttribute')
 
     return Column(typ, ForeignKey(target_name, ondelete='CASCADE'), nullable=False, **kwargs)
 
