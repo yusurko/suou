@@ -25,6 +25,8 @@ Columns
 
 .. autofunction:: bool_column
 
+.. autofunction:: username_column
+
 .. autofunction:: unbound_fk
 .. autofunction:: bound_fk
 

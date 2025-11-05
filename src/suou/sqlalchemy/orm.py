@@ -115,7 +115,6 @@ def match_column(length: int, regex: str | re.Pattern, /, case: StringCase = Str
             constraint_name=constraint_name or f'{x.__tablename__}_{n}_valid')), *args, **kwargs)
 
 
-@future(version='0.8.0')
 def username_column(
         length: int = 32, regex: str | re.Pattern = '[a-z_][a-z0-9_-]+', *args, case: StringCase = StringCase.LOWER,
         nullable : bool = False, **kwargs) -> Incomplete[Column[str] | Column[str | None]]:

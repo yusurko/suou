@@ -16,11 +16,13 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
+
 import warnings
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse, PlainTextResponse, Response
 from starlette.routing import Route
 
+from suou.itertools import makelist
 from suou.functools import future
 
 @future()
@@ -34,6 +36,27 @@ class Waiter():
             debug = not self.production,
             routes= self.routes
         )
+
+    def get(self, endpoint: str, *a, **k):
+        return self._route('GET', endpoint, *a, **k)
+
+    def post(self, endpoint: str, *a, **k):
+        return self._route('POST', endpoint, *a, **k)
+
+    def delete(self, endpoint: str, *a, **k):
+        return self._route('DELETE', endpoint, *a, **k)
+
+    def put(self, endpoint: str, *a, **k):
+        return self._route('PUT', endpoint, *a, **k)
+
+    def patch(self, endpoint: str, *a, **k):
+        return self._route('PATCH', endpoint, *a, **k)
+
+    def _route(self, methods: list[str], endpoint: str, **kwargs):
+        def decorator(func):
+            self.routes.append(Route(endpoint, func, methods=makelist(methods, False), **kwargs))
+            return func
+        return decorator
 
     ## TODO get, post, etc.
 

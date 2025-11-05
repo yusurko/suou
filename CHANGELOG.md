@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.8.0
+
++ Add `username_column()` to `.sqlalchemy`
++ Improve (experimental) `Waiter`
+
+## 0.7.7
+
++ Fix imports in `.sqlalchemy`
+
 ## 0.7.5
 
 + Delay release of `FakeModule` to 0.9.0
