@@ -10,7 +10,7 @@ license = "Apache-2.0"
 readme = "README.md"
 
 dependencies = [
-    "suou==0.8.0",
+    "suou==0.8.1",
     "itsdangerous",
     "toml",
     "pydantic",

@@ -35,9 +35,9 @@ from .strtools import PrefixIdentifier
 from .validators import matches
 from .redact import redact_url_password
 from .http import WantsContentType
-from .color import chalk
+from .color import chalk, WebColor
 
-__version__ = "0.8.1"
+__version__ = "0.8.2"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
@@ -45,6 +45,7 @@ __all__ = (
     'MissingConfigError', 'MissingConfigWarning', 'PrefixIdentifier',
     'Siq', 'SiqCache', 'SiqGen', 'SiqType', 'Snowflake', 'SnowflakeGen',
     'StringCase', 'TimedDict', 'TomlI18n', 'UserSigner', 'Wanted', 'WantsContentType',
+    'WebColor',
     'addattr', 'additem', 'age_and_days', 'alru_cache', 'b2048decode', 'b2048encode',
     'b32ldecode', 'b32lencode', 'b64encode', 'b64decode', 'cb32encode',
     'cb32decode', 'chalk', 'count_ones', 'dei_args', 'deprecated',

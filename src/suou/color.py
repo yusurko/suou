@@ -55,24 +55,34 @@ class Chalk:
         return Chalk(self._flags + (beg,), self._ends + (end,))
     def __call__(self, s: str) -> str:
         return ''.join(self._flags) + s + ''.join(reversed(self._ends))
+    @property
     def red(self):
         return self._wrap(self.RED, self.END_COLOR)
+    @property
     def green(self):
         return self._wrap(self.GREEN, self.END_COLOR)
+    @property
     def blue(self):
         return self._wrap(self.BLUE, self.END_COLOR)
+    @property
     def yellow(self):
         return self._wrap(self.YELLOW, self.END_COLOR)
+    @property
     def cyan(self):
         return self._wrap(self.CYAN, self.END_COLOR)
+    @property
     def purple(self):
         return self._wrap(self.PURPLE, self.END_COLOR)
+    @property
     def grey(self):
         return self._wrap(self.GREY, self.END_COLOR)
     gray = grey
     marine = blue
+    magenta = purple
+    @property
     def bold(self):
         return self._wrap(self.BOLD, self.END_BOLD)
+    @property
     def faint(self):
         return self._wrap(self.FAINT, self.END_BOLD)
 
@@ -130,3 +140,7 @@ class WebColor(namedtuple('_WebColor', 'red green blue')):
 
     def __str__(self):
         return f"rgb({self.red}, {self.green}, {self.blue})"
+
+
+__all__ = ('chalk', 'WebColor')
+
