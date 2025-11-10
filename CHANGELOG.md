@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.8.2 and 0.7.9
+
++ `.color`: fix `chalk` not behaving as expected
+
+## 0.8.1 and 0.7.8
+
++ Fix missing type guard in `unbound_fk()` and `bound_fk()`
+
+## 0.8.0
+
++ Add `username_column()` to `.sqlalchemy`
++ Improve (experimental) `Waiter`
+
+## 0.7.7
+
++ Fix imports in `.sqlalchemy`
+
 ## 0.7.5
 
 + Delay release of `FakeModule` to 0.9.0
