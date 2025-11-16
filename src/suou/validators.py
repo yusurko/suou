@@ -18,6 +18,10 @@ import re
 
 from typing import Any, Iterable, TypeVar
 
+from suou.classtools import MISSING
+
+from .functools import future
+
 _T = TypeVar('_T')
 
 def matches(regex: str | int, /, length: int = 0, *, flags=0):
@@ -55,5 +59,13 @@ def not_less_than(y):
     """
     return lambda x: x >= y
 
-__all__ = ('matches', 'not_greater_than')
+def yesno(x: str) -> bool:
+    """
+    Returns False if x.lower() is in '0', '', 'no', 'n', 'false' or 'off'.
+
+    *New in 0.9.0*
+    """
+    return x not in (None, MISSING) and x.lower() not in ('', '0', 'off', 'n', 'no', 'false', 'f')
+
+__all__ = ('matches', 'must_be', 'not_greater_than', 'not_less_than', 'yesno')
 

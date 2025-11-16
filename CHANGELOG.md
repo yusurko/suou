@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.0
+
++ Fix to make experimental `Waiter` usable
++ Suspend `glue()` release indefinitely
++ Add `yesno()`
++ Document validators
+
 ## 0.8.2 and 0.7.9
 
 + `.color`: fix `chalk` not behaving as expected

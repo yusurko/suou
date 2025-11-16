@@ -32,12 +32,12 @@ from .signing import UserSigner
 from .snowflake import Snowflake, SnowflakeGen
 from .lex import symbol_table, lex, ilex
 from .strtools import PrefixIdentifier
-from .validators import matches
+from .validators import matches, not_less_than, not_greater_than, yesno
 from .redact import redact_url_password
 from .http import WantsContentType
 from .color import chalk, WebColor
 
-__version__ = "0.8.2"
+__version__ = "0.9.0"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
@@ -51,9 +51,10 @@ __all__ = (
     'cb32decode', 'chalk', 'count_ones', 'dei_args', 'deprecated',
     'future', 'ilex', 'join_bits',
     'jsonencode', 'kwargs_prefix', 'lex', 'ltuple', 'makelist', 'mask_shift',
-    'matches', 'mod_ceil', 'mod_floor', 'none_pass', 'not_implemented',
+    'matches', 'mod_ceil', 'mod_floor', 'must_be', 'none_pass', 'not_implemented',
+    'not_less_than', 'not_greater_than',
     'redact_url_password', 'rtuple', 'split_bits', 'ssv_list', 'symbol_table',
     'timed_cache', 'twocolon_list', 'want_bytes', 'want_datetime', 'want_isodate',
-    'want_str', 'want_timestamp', 'want_urlsafe', 'want_urlsafe_bytes',
+    'want_str', 'want_timestamp', 'want_urlsafe', 'want_urlsafe_bytes', 'yesno',
     'z85encode', 'z85decode'
 )

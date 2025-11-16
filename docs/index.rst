@@ -15,4 +15,5 @@ ease programmer's QoL and write shorter and cleaner code that works.
    
    sqlalchemy
    iding
+   validators
    api

@@ -17,7 +17,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 import datetime
 
-from suou.functools import not_implemented
 from suou.luck import lucky
 from suou.validators import not_greater_than
 

@@ -22,7 +22,7 @@ from suou.classtools import MISSING
 from suou.functools import future
 
 
-@future(version="0.9.0")
+@future()
 class FakeModule(ModuleType):
     """
     Fake module used in @glue() in case of import error
@@ -34,12 +34,12 @@ class FakeModule(ModuleType):
         raise AttributeError(f'Module {self.__name__} not found; this feature is not available ({self._exc})') from self._exc
 
 
-@future(version = "0.9.0")
+@future()
 def glue(*modules):
     """
     Helper for "glue" code -- it imports the given modules and passes them as keyword arguments to the wrapped functions.
 
-    NEW 0.9.0
+    EXPERIMENTAL
     """
     module_dict = dict()
     imports_succeeded = True

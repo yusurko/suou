@@ -17,6 +17,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
 
+from typing import Callable
 import warnings
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse, PlainTextResponse, Response
@@ -27,15 +28,22 @@ from suou.functools import future
 
 @future()
 class Waiter():
+    _cached_app: Callable | None = None
+
     def __init__(self):
         self.routes: list[Route] = []
         self.production = False
-
+        
+    async def __call__(self, *args):
+        return await self._build_app()(*args)
+    
     def _build_app(self) -> Starlette:
-        return Starlette(
-            debug = not self.production,
-            routes= self.routes
-        )
+        if not self._cached_app:
+            self._cached_app = Starlette(
+                debug = not self.production,
+                routes= self.routes
+            )
+        return self._cached_app 
 
     def get(self, endpoint: str, *a, **k):
         return self._route('GET', endpoint, *a, **k)

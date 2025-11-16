@@ -28,11 +28,11 @@ Please note that you probably already have those dependencies, if you just use t
 
 ## Features
 
-...
+Read the [documentation](https://suou.readthedocs.io/).
 
 ## Support
 
-Just a heads up: SUOU was made to support Sakuragasaki46 (me)'s own selfish, egoistic needs. Not to provide a service to the public.
+Just a heads up: SUOU was made to support Sakuragasaki46 (me)'s own selfish, egoistic needs. Not certainly to provide a service to the public.
 
 As a consequence, 'add this add that' stuff is best-effort.
 
