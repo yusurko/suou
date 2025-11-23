@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.0
+
++ `peewee`: add `SnowflakeField` class
+
 ## 0.9.0
 
 + Fix to make experimental `Waiter` usable

@@ -18,10 +18,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 from contextvars import ContextVar
 from typing import Iterable
 from playhouse.shortcuts import ReconnectMixin
-from peewee import CharField, Database, MySQLDatabase, _ConnectionState
+from peewee import BigIntegerField, CharField, Database, MySQLDatabase, _ConnectionState
 import re
 
 from suou.iding import Siq
+from suou.snowflake import Snowflake
 
 from .codecs import StringCase
 
@@ -117,6 +118,26 @@ class SiqField(Field):
     def python_value(self, value: bytes) -> Siq:
         return Siq.from_bytes(value)
 
+
+class SnowflakeField(BigIntegerField):
+    '''
+    Field holding a snowflake.
+
+    Stored as bigint.
+
+    XXX UNTESTED!
+    '''
+    field_type = 'bigint'
+
+    def db_value(self, value: int | Snowflake) -> int:
+        if isinstance(value, Snowflake):
+            value = int(value)
+        if not isinstance(value, int):
+            raise TypeError
+        return value
+    def python_value(self, value: int) -> Snowflake:
+        return Snowflake(value)
+
 # Optional dependency: do not import into __init__.py
-__all__ = ('connect_reconnect', 'RegexCharField', 'SiqField')
+__all__ = ('connect_reconnect', 'RegexCharField', 'SiqField', 'Snowflake')
 
