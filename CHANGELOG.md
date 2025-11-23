@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.10.1 and 0.7.10
+
++ `peewee`: fix missing imports
+
+## 0.10.0
+
++ `peewee`: add `SnowflakeField` class
+
+## 0.9.0
+
++ Fix to make experimental `Waiter` usable
++ Suspend `glue()` release indefinitely
++ Add `yesno()`
++ Document validators
+
 ## 0.8.2 and 0.7.9
 
 + `.color`: fix `chalk` not behaving as expected

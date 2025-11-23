@@ -38,7 +38,7 @@ from .http import WantsContentType
 from .color import chalk, WebColor
 
 
-__version__ = "0.7.9"
+__version__ = "0.7.10"
 
 
 __all__ = (

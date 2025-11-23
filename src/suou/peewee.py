@@ -18,7 +18,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 from contextvars import ContextVar
 from typing import Iterable
 from playhouse.shortcuts import ReconnectMixin
-from peewee import CharField, Database, MySQLDatabase, _ConnectionState
+from peewee import CharField, Database, Field, MySQLDatabase, _ConnectionState
 import re
 
 from suou.iding import Siq
