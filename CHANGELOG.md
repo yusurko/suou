@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.1 and 0.7.10
+
++ `peewee`: fix missing imports
+
 ## 0.10.0
 
 + `peewee`: add `SnowflakeField` class
