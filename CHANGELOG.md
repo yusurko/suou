@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.2 and 0.7.11
+
++ fix incorrect types on `cb32decode()`
+
 ## 0.10.1 and 0.7.10
 
 + `peewee`: fix missing imports
