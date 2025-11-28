@@ -1,7 +1,7 @@
 """
 Content serving API over HTTP, based on Starlette.
 
-NEW 0.6.0
+*New in 0.6.0*
 
 ---
 

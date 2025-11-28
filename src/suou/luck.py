@@ -1,7 +1,7 @@
 """
 Fortune, RNG and esoterism.
 
-NEW 0.7.0
+*New in 0.7.0*
 
 ---
 
@@ -33,7 +33,7 @@ def lucky(validators: Iterable[Callable[[_U], bool]] = ()):
 
     UNTESTED 
 
-    NEW 0.7.0
+    *New in 0.7.0*
     """
     def decorator(func: Callable[_T, _U]) -> Callable[_T, _U]:
         @wraps(func)
@@ -61,7 +61,7 @@ class RngCallable(Callable, Generic[_T, _U]):
 
     UNTESTED
 
-    NEW 0.7.0
+    *New in 0.7.0*
     """
     def __init__(self, /, func: Callable[_T, _U] | None = None, weight: int = 1):
         self._callables = []
@@ -97,7 +97,7 @@ def rng_overload(prev_func: RngCallable[..., _U] | int | None, /, *, weight: int
 
     UNTESTED 
 
-    NEW 0.7.0
+    *New in 0.7.0*
     """
     if isinstance(prev_func, int) and weight == 1:
         weight, prev_func = prev_func, None

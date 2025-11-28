@@ -46,5 +46,18 @@ class PrefixIdentifier:
     def __str__(self):
         return f'{self._prefix}'
 
+
+class SpitText:
+    """
+    A formatter for pre-compiled strings.
+
+    *New in 0.11.0*
+    """
+
+    def format(self, templ: str, *attrs: Iterable[str]) -> str:
+        attrs = [getattr(self, attr, f'{{{{ {attr} }}}}') for attr in attrs]
+        return templ.format(*attrs).strip()
+
+
 __all__ = ('PrefixIdentifier',)
 

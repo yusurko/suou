@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.11.0
+
++ **Breaking**: sessions returned by `SQLAlchemy()` are now wrapped by default. Restore original behavior by passing `wrap=False` to the constructor or to `begin()`
++ Slate unused `require_auth()` and derivatives for removal in 0.14.0
++ Add `cb32lencode()`
++ `Snowflake()`: add `.from_cb32()`, `.from_base64()`, `.from_oct()`, `.from_hex()` classmethods
++ Add `SpitText()`
++ Add `Lawyer()` with seven methods
++ Style changes to docstrings
+
 ## 0.10.2 and 0.7.11
 
 + fix incorrect types on `cb32decode()`

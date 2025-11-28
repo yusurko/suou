@@ -1,7 +1,7 @@
 """
 Colors for coding artists
 
-NEW 0.7.0
+*New in 0.7.0*
 
 ---
 
@@ -33,7 +33,7 @@ class Chalk:
 
     UNTESTED
 
-    NEW 0.7.0
+    *New in 0.7.0*
     """
     CSI = '\x1b['
     RED = CSI + "31m"

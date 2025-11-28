@@ -20,6 +20,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 
 from __future__ import annotations
+from binascii import unhexlify
 import os
 from threading import Lock
 import time
@@ -28,7 +29,7 @@ import warnings
 
 from .migrate import SnowflakeSiqMigrator
 from .iding import SiqType
-from .codecs import b32ldecode, b32lencode, b64encode, cb32encode
+from .codecs import b32ldecode, b32lencode, b64encode, b64decode, cb32encode, cb32decode
 from .functools import deprecated
 
 
@@ -121,33 +122,60 @@ class Snowflake(int):
     
     def to_bytes(self, length: int = 14, byteorder = "big", *, signed: bool = False) -> bytes:
         return super().to_bytes(length, byteorder, signed=signed)
-    def to_base64(self, length: int = 9, *, strip: bool = True) -> str:
-        return b64encode(self.to_bytes(length), strip=strip)
-    def to_cb32(self)-> str:
-        return cb32encode(self.to_bytes(8, 'big'))
-    to_crockford = to_cb32
-    def to_hex(self) -> str:
-        return f'{self:x}'
-    def to_oct(self) -> str:
-        return f'{self:o}'
-    def to_b32l(self) -> str:
-        # PSA Snowflake Base32 representations are padded to 10 bytes!
-        if self < 0:
-            return '_' + Snowflake.to_b32l(-self)
-        return b32lencode(self.to_bytes(10, 'big')).lstrip('a')
-
     @classmethod
     def from_bytes(cls, b: bytes, byteorder = 'big', *, signed: bool = False) -> Snowflake:
         if len(b) not in (8, 10):
             warnings.warn('Snowflakes are exactly 8 bytes long', BytesWarning)
         return super().from_bytes(b, byteorder, signed=signed)
+    
+    def to_base64(self, length: int = 9, *, strip: bool = True) -> str:
+        return b64encode(self.to_bytes(length), strip=strip)
+    @classmethod
+    def from_base64(cls, val:str) -> Snowflake:
+        return Snowflake.from_bytes(b64decode(val))
+    
+    def to_cb32(self)-> str:
+        return cb32encode(self.to_bytes(8, 'big'))
+    to_crockford = to_cb32
+    @classmethod
+    def from_cb32(cls, val:str) -> Snowflake:
+        return Snowflake.from_bytes(cb32decode(val))
 
+    def to_hex(self) -> str:
+        return f'{self:x}'
+    @classmethod
+    def from_hex(cls, val:str) -> Snowflake:
+        if val.startswith('_'):
+            return -cls.from_hex(val.lstrip('_'))
+        return Snowflake.from_bytes(unhexlify(val))
+
+    def to_oct(self) -> str:
+        return f'{self:o}'
+    @classmethod
+    def from_oct(cls, val:str) -> Snowflake:
+        if val.startswith('_'):
+            return -cls.from_hex(val.lstrip('_'))
+        return Snowflake(int(val, base=8))
+
+    def to_b32l(self) -> str:
+        # PSA Snowflake Base32 representations are padded to 10 bytes!
+        if self < 0:
+            return '_' + Snowflake.to_b32l(-self)
+        return b32lencode(self.to_bytes(10, 'big')).lstrip('a')
     @classmethod
     def from_b32l(cls, val: str) -> Snowflake:
         if val.startswith('_'):
             ## support for negative Snowflakes
             return -cls.from_b32l(val.lstrip('_'))
         return Snowflake.from_bytes(b32ldecode(val.rjust(16, 'a')))
+
+    def to_siq(self, domain: str, epoch: int, target_type: SiqType, **kwargs):
+        """
+        Convenience method for conversion to SIQ.
+
+        (!) This does not check for existence! Always do the check yourself.
+        """
+        return SnowflakeSiqMigrator(domain, epoch, **kwargs).to_siq(self, target_type)
 
     @override
     def __format__(self, opt: str, /) -> str:
@@ -178,15 +206,6 @@ class Snowflake(int):
 
     def __repr__(self):
         return f'{self.__class__.__name__}({super().__repr__()})'
-
-    def to_siq(self, domain: str, epoch: int, target_type: SiqType, **kwargs):
-        """
-        Convenience method for conversion to SIQ.
-
-        (!) This does not check for existence! Always do the check yourself.
-        """
-        return SnowflakeSiqMigrator(domain, epoch, **kwargs).to_siq(self, target_type)
-
 
 
 __all__ = (

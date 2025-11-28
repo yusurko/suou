@@ -109,9 +109,10 @@ class DictConfigSource(ConfigSource):
 
 class ArgConfigSource(ValueSource):
     """
-    It assumes arguments have already been parsed
+    Config source that assumes arguments have already been parsed.
 
-    NEW 0.6"""
+    *New in 0.6.0*
+    """
     _ns: Namespace
     def __init__(self, ns: Namespace):
         super().__init__()

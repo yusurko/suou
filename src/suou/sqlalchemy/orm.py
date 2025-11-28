@@ -1,7 +1,7 @@
 """
 Utilities for SQLAlchemy; ORM
 
-NEW 0.6.0 (moved)
+*New in 0.6.0 (moved)*
 
 ---
 
@@ -123,7 +123,7 @@ def username_column(
 
     Username must match the given `regex` and be at most `length` characters long.
 
-    NEW 0.8.0
+    *New in 0.8.0*
     """
     if case is StringCase.AS_IS:
         warnings.warn('case sensitive usernames may lead to impersonation and unexpected behavior', UserWarning)
@@ -135,7 +135,7 @@ def bool_column(value: bool = False, nullable: bool = False, **kwargs) -> Column
     """
     Column for a single boolean value.
 
-    NEW in 0.4.0
+    *New in 0.4.0*
     """
     def_val = text('true') if value else text('false')
     return Column(Boolean, server_default=def_val, nullable=nullable, **kwargs)
@@ -197,7 +197,7 @@ def secret_column(length: int = 64, max_length: int | None = None, gen: Callable
     """
     Column filled in by default with random bits (64 by default). Useful for secrets.
 
-    NEW 0.6.0
+    *New in 0.6.0*
     """
     max_length = max_length or length
     return Column(LargeBinary(max_length), default=lambda: gen(length), nullable=nullable, **kwargs)
@@ -215,7 +215,7 @@ def parent_children(keyword: str, /, *, lazy='selectin', **kwargs) -> tuple[Inco
     Additional keyword arguments can be sourced with parent_ and child_ argument prefixes,
     obviously.
 
-    CHANGED 0.5.0: the both relationship()s use lazy='selectin' attribute now by default.
+    *Changed in 0.5.0*: the both relationship()s use lazy='selectin' attribute now by default.
     """
 
     parent_kwargs = kwargs_prefix(kwargs, 'parent_')
@@ -231,7 +231,7 @@ def a_relationship(primary = None, /, j=None, *, lazy='selectin', **kwargs):
     """
     Shorthand for relationship() that sets lazy='selectin' by default.
 
-    NEW 0.6.0
+    *New in 0.6.0*
     """
     if j:
         kwargs['primaryjoin'] = j
@@ -246,7 +246,7 @@ def unbound_fk(target: str | Column | InstrumentedAttribute, typ: _T | None = No
 
     If target is a string, make sure to pass the column type at typ= (default: IdType aka varbinary(16))!
     
-    NEW 0.5.0
+    *New in 0.5.0*
     """
     if isinstance(target, (Column, InstrumentedAttribute)):
         target_name = f'{target.table.name}.{target.name}'
@@ -269,7 +269,7 @@ def bound_fk(target: str | Column | InstrumentedAttribute, typ: _T = None, **kwa
 
     If target is a string, make sure to pass the column type at typ= (default: IdType aka varbinary(16))!
     
-    NEW 0.5.0
+    *New in 0.5.0*
     """
     if isinstance(target, (Column, InstrumentedAttribute)):
         target_name = f'{target.table.name}.{target.name}'
@@ -288,7 +288,7 @@ class _BitComparator(Comparator):
     """
     Comparator object for BitSelector()
 
-    NEW 0.6.0
+    *New in 0.6.0*
     """
     _column: Column
     _flag: int
@@ -314,7 +314,7 @@ class BitSelector:
 
     Mimicks peewee's 'BitField()' behavior, with SQLAlchemy.
 
-    NEW 0.6.0
+    *New in 0.6.0*
     """
     _column: Column
     _flag: int

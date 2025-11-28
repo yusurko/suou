@@ -1,7 +1,7 @@
 """
 "Security through obscurity" helpers for less sensitive logging
 
-NEW 0.5.0
+*New in 0.5.0*
 
 ---
 
@@ -27,7 +27,7 @@ def redact_url_password(u: str) -> str:
     scheme://username:password@hostname/path?query
                       ^------^
 
-    NEW 0.5.0
+    *New in 0.5.0*
     """
     return re.sub(r':[^@:/ ]+@', ':***@', u)
 

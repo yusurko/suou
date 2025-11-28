@@ -87,7 +87,7 @@ def future(message: str | None = None, *, version: str = None):
 
     version= is the intended version release.
 
-    NEW 0.7.0
+    *New in 0.7.0*
     """
     def decorator(func: Callable[_T, _U]) -> Callable[_T, _U]:
         @wraps(func)
@@ -135,7 +135,7 @@ def _make_alru_cache(_CacheInfo):
 
         PSA there is no C speed up. Unlike PSL. Sorry.
 
-        NEW 0.5.0
+        *New in 0.5.0*
         """
 
         # Users should only access the lru_cache through its public API:
@@ -292,7 +292,7 @@ def timed_cache(ttl: int, maxsize: int = 128, typed: bool = False, *, async_: bo
 
     Supports coroutines with async_=True.
     
-    NEW 0.5.0
+    *New in 0.5.0*
     """
     def decorator(func: Callable[_T, _U]) -> Callable[_T, _U]:
         start_time = None
@@ -330,7 +330,7 @@ def none_pass(func: Callable[_T, _U], *args, **kwargs) -> Callable[_T, _U]:
 
     Shorthand for func(x) if x is not None else None
 
-    NEW 0.5.0
+    *New in 0.5.0*
     """
     @wraps(func)
     def wrapper(x):

@@ -2,7 +2,7 @@
 """
 Helpers for asynchronous use of SQLAlchemy.
 
-NEW 0.5.0; moved to current location 0.6.0
+*New in 0.5.0; moved to current location in 0.6.0*
 
 ---
 
@@ -47,21 +47,23 @@ class SQLAlchemy:
             user = (await session.execute(select(User).where(User.id == userid))).scalar()
             # ...
 
-    NEW 0.5.0
+    *New in 0.5.0*
 
-    UPDATED 0.6.0: added wrap=True
+    *Changed in 0.6.0*: added wrap=True
 
-    UPDATED 0.6.1: expire_on_commit is now configurable per-SQLAlchemy();
+    *Changed in 0.6.1*: expire_on_commit is now configurable per-SQLAlchemy();
     now sessions are stored as context variables
+
+    *Changed in 0.11.0*: sessions are now wrapped by default; turn it off by instantiating it with wrap=False
     """
     base: DeclarativeBase
     engine: AsyncEngine
     _session_tok: list[Token[AsyncSession]]
-    _wrapsessions: bool
-    _xocommit: bool
+    _wrapsessions: bool | None
+    _xocommit: bool | None
     NotFound = NotFoundError
 
-    def __init__(self, model_class: DeclarativeBase, *, expire_on_commit = False, wrap = False):
+    def __init__(self, model_class: DeclarativeBase, *, expire_on_commit = False, wrap = True):
         self.base = model_class
         self.engine = None
         self._wrapsessions = wrap
@@ -71,13 +73,13 @@ class SQLAlchemy:
     def _ensure_engine(self):
         if self.engine is None:
             raise RuntimeError('database is not connected')
-    async def begin(self, *, expire_on_commit = None, wrap = False, **kw) -> AsyncSession:
+    async def begin(self, *, expire_on_commit = None, wrap = None, **kw) -> AsyncSession:
         self._ensure_engine()
         ## XXX is it accurate?
         s = AsyncSession(self.engine, 
             expire_on_commit=expire_on_commit if expire_on_commit is not None else self._xocommit,
             **kw)
-        if wrap:
+        if (wrap if wrap is not None else self._wrapsessions):
             s = SessionWrapper(s)
         current_session.set(s)
         return s
@@ -251,6 +253,9 @@ class SessionWrapper:
         Fall back to the wrapped session
         """
         return getattr(self._session, key)
+
+    def __del__(self):
+        self._session.close()
 
 # Optional dependency: do not import into __init__.py
 __all__ = ('SQLAlchemy', 'AsyncSelectPagination', 'async_query', 'SessionWrapper')

@@ -1,7 +1,7 @@
 """
 Helpers for asynchronous use of SQLAlchemy.
 
-NEW 0.5.0; MOVED to sqlalchemy.asyncio in 0.6.0
+*New in 0.5.0; moved to ``sqlalchemy.asyncio`` in 0.6.0*
 
 ---
 

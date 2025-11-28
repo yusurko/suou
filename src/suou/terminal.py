@@ -25,7 +25,7 @@ def terminal_required(func):
     """
     Requires the decorated callable to be fully connected to a terminal.
 
-    NEW 0.7.0
+    *New in 0.7.0*
     """
     @wraps(func)
     def wrapper(*a, **ka):

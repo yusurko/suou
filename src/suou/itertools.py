@@ -22,12 +22,14 @@ from suou.classtools import MISSING
 
 _T = TypeVar('_T')
 
-def makelist(l: Any, *, wrap: bool = True) -> list | Callable[Any, list]:
+def makelist(l: Any, wrap: bool = True) -> list | Callable[Any, list]:
     '''
     Make a list out of an iterable or a single value.
 
-    NEW 0.4.0: Now supports a callable: can be used to decorate generators and turn them into lists.
+    *Changed in 0.4.0* Now supports a callable: can be used to decorate generators and turn them into lists.
     Pass wrap=False to return instead the unwrapped function in a list.
+
+    *Changed in 0.11.0*: ``wrap`` argument is now no more keyword only.
     '''
     if callable(l) and wrap:
         return wraps(l)(lambda *a, **k: makelist(l(*a, **k), wrap=False))

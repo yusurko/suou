@@ -179,6 +179,12 @@ def cb32encode(val: bytes) -> str:
     '''
     return want_str(base64.b32encode(val)).translate(B32_TO_CROCKFORD)
 
+def cb32lencode(val: bytes) -> str:
+    '''
+    Encode bytes in Crockford Base32, lowercased.
+    '''
+    return want_str(base64.b32encode(val)).translate(B32_TO_CROCKFORD).lower()
+
 def cb32decode(val: bytes | str) -> bytes:
     '''
     Decode bytes from Crockford Base32.

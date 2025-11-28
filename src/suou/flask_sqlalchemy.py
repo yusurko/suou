@@ -1,6 +1,8 @@
 """
 Utilities for Flask-SQLAlchemy binding.
 
+This module is deprecated and will be REMOVED in 0.14.0.
+
 ---
 
 Copyright (c) 2025 Sakuragasaki46.
@@ -50,27 +52,7 @@ class FlaskAuthSrc(AuthSrc):
 @deprecated('not intuitive to use')
 def require_auth(cls: type[DeclarativeBase], db: SQLAlchemy) -> Callable[Any, Callable]:
     """
-    Make an auth_required() decorator for Flask views.
-
-    This looks for a token in the Authorization header, validates it, loads the
-    appropriate object, and injects it as the user= parameter.
-
-    NOTE: the actual decorator to be used on routes is **auth_required()**,
-    NOT require_auth() which is the **constructor** for it.
-
-    cls is a SQLAlchemy table.
-    db is a flask_sqlalchemy.SQLAlchemy() binding.
-
-    Usage:
-
-    auth_required = require_auth(User, db)
-
-    @route('/admin')
-    @auth_required(validators=[lambda x: x.is_administrator])
-    def super_secret_stuff(user):
-        pass
-
-    NOTE: require_auth() DOES NOT work with flask_restx.
+    
     """
     def auth_required(**kwargs):
         return require_auth_base(cls=cls, src=FlaskAuthSrc(db), **kwargs)

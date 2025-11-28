@@ -85,7 +85,7 @@ def token_signer(id_attr: Column | str, secret_attr: Column | str) -> Incomplete
 
 ## (in)Utilities for use in web apps below
 
-@deprecated('not part of the public API and not even working')
+@deprecated('not part of the public API and not even working. Will be removed in 0.14.0')
 class AuthSrc(metaclass=ABCMeta):
     '''
     AuthSrc object required for require_auth_base().
@@ -113,7 +113,7 @@ class AuthSrc(metaclass=ABCMeta):
         pass
 
 
-@deprecated('not working and too complex to use. Will be removed in 0.9.0')
+@deprecated('not working and too complex to use. Will be removed in 0.14.0')
 def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, column: str | Column[_T] = 'id', dest: str = 'user',
         required: bool = False, signed: bool = False, sig_dest: str = 'signature', validators: Callable | Iterable[Callable] | None = None):
     '''
