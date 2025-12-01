@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.11.1
+
++ make `yesno()` accept boolean types
+
 ## 0.11.0
 
 + **Breaking**: sessions returned by `SQLAlchemy()` are now wrapped by default. Restore original behavior by passing `wrap=False` to the constructor or to `begin()`

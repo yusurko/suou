@@ -37,7 +37,7 @@ from .redact import redact_url_password
 from .http import WantsContentType
 from .color import chalk, WebColor
 
-__version__ = "0.11.0"
+__version__ = "0.11.1"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
