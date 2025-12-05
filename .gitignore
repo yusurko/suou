@@ -29,6 +29,7 @@ aliases/*/src
 docs/_build
 docs/_static
 docs/templates
+.coverage
 
 # changes during CD/CI
 aliases/*/pyproject.toml

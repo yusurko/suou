@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.11.2
+
++ increase test coverage of `validators`
+
 ## 0.11.1
 
 + make `yesno()` accept boolean types

@@ -1,7 +1,8 @@
 
 
 import unittest
-from suou.validators import yesno
+from suou.calendar import not_greater_than
+from suou.validators import not_less_than, yesno
 
 class TestValidators(unittest.TestCase):
     def setUp(self):
@@ -22,3 +23,16 @@ class TestValidators(unittest.TestCase):
         self.assertTrue(yesno('o'))
         self.assertFalse(yesno('oFF'))
         self.assertFalse(yesno('no'))
+        self.assertFalse(yesno(False))
+        self.assertTrue(yesno(True))
+        self.assertFalse(yesno(''))
+
+    def test_not_greater_than(self):
+        self.assertTrue(not_greater_than(5)(5))
+        self.assertTrue(not_greater_than(5)(3))
+        self.assertFalse(not_greater_than(3)(8))
+
+    def test_not_less_than(self):
+        self.assertTrue(not_less_than(5)(5))
+        self.assertFalse(not_less_than(5)(3))
+        self.assertTrue(not_less_than(3)(8))
