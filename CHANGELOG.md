@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.0
+
+* New module `mat` adds a shallow reimplementation of `Matrix()` in order to implement matrix multiplication
+
 ## 0.11.2
 
 + increase test coverage of `validators`
