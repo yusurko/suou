@@ -2,7 +2,9 @@
 
 ## 0.12.0
 
+* All `AuthSrc()` derivatives, deprecated and never used, have been removed.
 * New module `mat` adds a shallow reimplementation of `Matrix()` in order to implement matrix multiplication
+* Removed obsolete `configparse` implementation that has been around since 0.3 and shelved since 0.4.
 
 ## 0.11.2
 

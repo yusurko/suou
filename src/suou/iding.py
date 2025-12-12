@@ -249,13 +249,20 @@ class Siq(int):
 
     def to_base64(self, length: int = 15, *, strip: bool = True) -> str:
         return b64encode(self.to_bytes(length), strip=strip)
+    
     def to_cb32(self) -> str:
         return cb32encode(self.to_bytes(15, 'big')).lstrip('0')
     to_crockford = to_cb32
+    @classmethod
+    def from_cb32(cls, val: str | bytes):
+        return cls.from_bytes(cb32decode(want_str(val).zfill(24)))
+    
     def to_hex(self) -> str:
         return f'{self:x}'
+
     def to_oct(self) -> str:
         return f'{self:o}'
+    
     def to_b32l(self) -> str:
         """
         This is NOT the URI serializer!
@@ -305,12 +312,10 @@ class Siq(int):
             raise ValueError('checksum mismatch')
         return cls(int.from_bytes(b, 'big'))
 
-    @classmethod
-    def from_cb32(cls, val: str | bytes):
-        return cls.from_bytes(cb32decode(want_str(val).zfill(24)))
 
     def to_mastodon(self, /, domain: str | None = None):
         return f'@{self:u}{"@" if domain else ""}{domain}'
+    
     def to_matrix(self, /, domain: str):
         return f'@{self:u}:{domain}'
 

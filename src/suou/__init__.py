@@ -36,12 +36,14 @@ from .validators import matches, not_less_than, not_greater_than, yesno
 from .redact import redact_url_password
 from .http import WantsContentType
 from .color import chalk, WebColor
+from .mat import Matrix
 
-__version__ = "0.12.0a1"
+__version__ = "0.12.0a2"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
     'DictConfigSource', 'EnvConfigSource', 'I18n', 'Incomplete', 'JsonI18n',
+    'Matrix',
     'MissingConfigError', 'MissingConfigWarning', 'PrefixIdentifier',
     'Siq', 'SiqCache', 'SiqGen', 'SiqType', 'Snowflake', 'SnowflakeGen',
     'StringCase', 'TimedDict', 'TomlI18n', 'UserSigner', 'Wanted', 'WantsContentType',

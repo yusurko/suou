@@ -116,6 +116,7 @@ class Matrix(Collection[_T]):
             [self[j, i] for j in range(sx)] for i in range(sy)
         )
 
-## TODO write tests!
+
+__all__ = ('Matrix', )
 
 
