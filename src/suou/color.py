@@ -93,9 +93,9 @@ chalk = Chalk()
 
 ## Utilities for web colors
 
-class WebColor(namedtuple('_WebColor', 'red green blue')):
+class RGBColor(namedtuple('_WebColor', 'red green blue')):
     """
-    Representation of a color in the TrueColor space (aka rgb).
+    Representation of a color in the RGB TrueColor space.
 
     Useful for theming.
     """
@@ -126,20 +126,48 @@ class WebColor(namedtuple('_WebColor', 'red green blue')):
         """
         return self.darken(factor=factor) + self.lighten(factor=factor)
         
-    def blend_with(self, other: WebColor):
+    def blend_with(self, other: RGBColor):
         """
         Mix two colors, returning the average.
         """
-        return WebColor (
+        return RGBColor (
             (self.red + other.red) // 2,
             (self.green + other.green) // 2,
             (self.blue + other.blue) // 2
         )
 
+    def to_srgb(self):
+        """
+        Convert to sRGB space.
+
+        *New in 0.12.0*
+        """
+        return SRGBColor(*(
+            (i / 12.92 if abs(c) <= 0.04045 else 
+            (-1 if i < 0 else 1) * (((abs(c) + 0.55)) / 1.055) ** 2.4) for i in self
+        ))
+
     __add__ = blend_with
 
     def __str__(self):
         return f"rgb({self.red}, {self.green}, {self.blue})"
+
+
+WebColor = RGBColor
+
+## The following have been adapted from 
+## https://gist.github.com/dkaraush/65d19d61396f5f3cd8ba7d1b4b3c9432
+
+class SRGBColor(namedtuple('_SRGBColor', 'red green blue')):
+    """
+    Represent a color in the sRGB-Linear space.
+
+    *New in 0.12.0*
+    """
+    def to_rgb(self):
+        return RGBColor(*(
+            ((-1 if i < 0 else 1) * (1.055 * (abs(i) ** (1/2.4)) - 0.055)
+            if abs(i) > 0.0031308 else 12.92 * i) for i in self))
 
 
 __all__ = ('chalk', 'WebColor')

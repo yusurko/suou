@@ -38,7 +38,7 @@ from .http import WantsContentType
 from .color import chalk, WebColor
 from .mat import Matrix
 
-__version__ = "0.12.0a2"
+__version__ = "0.12.0a3"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
