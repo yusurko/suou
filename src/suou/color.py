@@ -22,6 +22,8 @@ from __future__ import annotations
 from collections import namedtuple
 from functools import lru_cache
 
+from suou.mat import Matrix
+
 
 class Chalk:
     """
@@ -143,14 +145,25 @@ class RGBColor(namedtuple('_WebColor', 'red green blue')):
         *New in 0.12.0*
         """
         return SRGBColor(*(
-            (i / 12.92 if abs(c) <= 0.04045 else 
-            (-1 if i < 0 else 1) * (((abs(c) + 0.55)) / 1.055) ** 2.4) for i in self
+            (i / 12.92 if abs(i) <= 0.04045 else 
+            (-1 if i < 0 else 1) * (((abs(i) + 0.55)) / 1.055) ** 2.4) for i in self
         ))
+
+    
 
     __add__ = blend_with
 
     def __str__(self):
         return f"rgb({self.red}, {self.green}, {self.blue})"
+
+    RGB_TO_XYZ = Matrix([
+        [0.41239079926595934, 0.357584339383878,   0.1804807884018343],
+        [0.21263900587151027, 0.715168678767756,   0.07219231536073371],
+        [0.01933081871559182, 0.11919477979462598, 0.9505321522496607]
+    ])
+    
+    def to_xyz(self):
+        return XYZColor(*(self.RGB_TO_XYZ @ Matrix.as_column(self)).get_column())
 
 
 WebColor = RGBColor
@@ -160,15 +173,43 @@ WebColor = RGBColor
 
 class SRGBColor(namedtuple('_SRGBColor', 'red green blue')):
     """
-    Represent a color in the sRGB-Linear space.
+    Represent a color in the sRGB space.
 
     *New in 0.12.0*
-    """
+    """ 
+    red: float
+    green: float
+    blue: float
+    
+    def __str__(self):
+        return f"srgb({self.red}, {self.green}, {self.blue})"
+    
     def to_rgb(self):
         return RGBColor(*(
             ((-1 if i < 0 else 1) * (1.055 * (abs(i) ** (1/2.4)) - 0.055)
             if abs(i) > 0.0031308 else 12.92 * i) for i in self))
 
+    def to_xyz(self):
+        return self.to_rgb().to_xyz()
 
-__all__ = ('chalk', 'WebColor')
+    
+    
 
+class XYZColor(namedtuple('_XYZColor', 'x y z')):
+    """
+    Represent a color in the XYZ color space.
+    """
+
+    XYZ_TO_RGB = Matrix([
+        [ 3.2409699419045226,  -1.537383177570094,   -0.4986107602930034],
+        [-0.9692436362808796,   1.8759675015077202,  0.04155505740717559],
+        [ 0.05563007969699366, -0.20397695888897652,  1.0569715142428786]
+    ])
+
+    def to_rgb(self):
+        return RGBColor(*(self.XYZ_TO_RGB @ Matrix.as_column(self)).get_column())
+    
+
+
+
+__all__ = ('chalk', 'WebColor', "RGBColor", 'SRGBColor')

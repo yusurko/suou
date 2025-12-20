@@ -1,4 +1,4 @@
-suou.codecs
+﻿suou.codecs
 ===========
 
 .. automodule:: suou.codecs
@@ -16,6 +16,7 @@ suou.codecs
       b64encode
       cb32decode
       cb32encode
+      cb32lencode
       jsonencode
       quote_css_string
       rb64decode

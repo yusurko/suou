@@ -1,4 +1,4 @@
-suou.color
+﻿suou.color
 ==========
 
 .. automodule:: suou.color
@@ -9,5 +9,7 @@ suou.color
    .. autosummary::
    
       Chalk
+      RGBColor
+      SRGBColor
       WebColor
    

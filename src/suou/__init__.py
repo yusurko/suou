@@ -38,13 +38,14 @@ from .http import WantsContentType
 from .color import chalk, WebColor
 from .mat import Matrix
 
-__version__ = "0.12.0a3"
+__version__ = "0.12.0a4"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
     'DictConfigSource', 'EnvConfigSource', 'I18n', 'Incomplete', 'JsonI18n',
     'Matrix',
     'MissingConfigError', 'MissingConfigWarning', 'PrefixIdentifier',
+    'RGBColor', 'SRGBColor',
     'Siq', 'SiqCache', 'SiqGen', 'SiqType', 'Snowflake', 'SnowflakeGen',
     'StringCase', 'TimedDict', 'TomlI18n', 'UserSigner', 'Wanted', 'WantsContentType',
     'WebColor',

@@ -1,4 +1,4 @@
-suou.strtools
+﻿suou.strtools
 =============
 
 .. automodule:: suou.strtools
@@ -9,4 +9,5 @@ suou.strtools
    .. autosummary::
    
       PrefixIdentifier
+      SpitText
    

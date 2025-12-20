@@ -116,6 +116,25 @@ class Matrix(Collection[_T]):
             [self[j, i] for j in range(sx)] for i in range(sy)
         )
 
+    @classmethod
+    def as_row(cls, iterable: Iterable):
+        return cls([[*iterable]])
+
+    @classmethod
+    def as_column(cls, iterable: Iterable):
+        return cls([[x] for x in iterable])
+
+    def get_column(self, idx = 0):
+        sx, _ = self.shape()
+        return [
+            self[j, idx] for j in range(sx)
+        ]
+
+    def get_row(self, idx = 0):
+        _, sy = self.shape()
+        return [
+            self[idx, j] for j in range(sy)
+        ]
 
 __all__ = ('Matrix', )
 

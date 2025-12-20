@@ -1,4 +1,4 @@
-suou.validators
+﻿suou.validators
 ===============
 
 .. automodule:: suou.validators
@@ -12,4 +12,5 @@ suou.validators
       must_be
       not_greater_than
       not_less_than
+      yesno
    
