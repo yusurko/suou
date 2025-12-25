@@ -24,7 +24,9 @@ _T = TypeVar('_T')
 
 class Matrix(Collection[_T]):
     """
-    Shallow reimplementation of numpy's matrices in pure Python.
+    Minimalist reimplementation of matrices in pure Python.
+    
+    This to avoid adding numpy as a dependency.
 
     *New in 0.12.0*
     """

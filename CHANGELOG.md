@@ -1,11 +1,11 @@
 # Changelog
 
-## 0.12.0
+## 0.12.0 "The Color Update"
 
 * All `AuthSrc()` derivatives, deprecated and never used, have been removed.
 * New module `mat` adds a shallow reimplementation of `Matrix()` in order to implement matrix multiplication
 * Removed obsolete `configparse` implementation that has been around since 0.3 and shelved since 0.4.
-* `color`: added support for conversion from RGB to sRGB, XYZ
+* `color`: added support for conversion from RGB to sRGB, XYZ, OKLab and OKLCH.
 
 ## 0.11.2
 
