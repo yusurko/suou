@@ -99,11 +99,9 @@ chalk = Chalk()
 
 class RGBColor(namedtuple('_WebColor', 'red green blue')):
     """
-    Representation of a color in the RGB TrueColor space.
+    Representation of a color in the sRGB / TrueColor (0 to 255) space.
 
     Useful for theming.
-
-    XXX CURRENTLY THE OKLCH CONVERSION DOES NOT WORK
 
     *Changed in 0.12.0*: name is now RGBColor, with WebColor being an alias.
     Added conversions to and from OKLCH, OKLab, sRGB, and XYZ.
@@ -145,48 +143,40 @@ class RGBColor(namedtuple('_WebColor', 'red green blue')):
             (self.blue + other.blue) // 2
         )
 
-    def to_srgb(self):
+    def to_linear_rgb(self):
         """
-        Convert to sRGB space.
+        Convert to linear RGB space.
 
         *New in 0.12.0*
         """
-        return SRGBColor(*(
-            (i / 12.92 if abs(i) <= 0.04045 else 
-            (-1 if i < 0 else 1) * (((abs(i) + 0.55)) / 1.055) ** 2.4) for i in self
+        return LinearRGBColor(*(
+            (i / 12.92 if abs(i / 255) <= 0.04045 else 
+            (-1 if i < 0 else 1) * (((abs(i / 255) + 0.55)) / 1.055) ** 2.4) for i in self
         ))
 
     def to_oklab(self):
-        return self.to_xyz().to_oklab()
+        return self.to_linear_rgb().to_oklab()
 
     __add__ = blend_with
 
     def __str__(self):
         return f"rgb({self.red}, {self.green}, {self.blue})"
 
-    RGB_TO_XYZ = Matrix([
-        [0.41239079926595934, 0.357584339383878,   0.1804807884018343],
-        [0.21263900587151027, 0.715168678767756,   0.07219231536073371],
-        [0.01933081871559182, 0.11919477979462598, 0.9505321522496607]
-    ])
-    
     def to_xyz(self):
-        return XYZColor(*(self.RGB_TO_XYZ @ Matrix.as_column([x / 255 for x in self])).get_column())
+        return self.to_linear_rgb().to_xyz()
 
     def to_oklch(self):
-        return self.to_xyz().to_oklch()
+        return self.to_linear_rgb().to_oklch()
 
-    def to_oklab(self):
-        return self.to_xyz().to_oklab()
-
+    
 WebColor = RGBColor
 
 ## The following have been adapted from 
 ## https://gist.github.com/dkaraush/65d19d61396f5f3cd8ba7d1b4b3c9432
 
-class SRGBColor(namedtuple('_SRGBColor', 'red green blue')):
+class LinearRGBColor(namedtuple('_LRGBColor', 'red green blue')):
     """
-    Represent a color in the sRGB space.
+    Represent a color in the linear RGB space.
 
     *New in 0.12.0*
     """ 
@@ -197,18 +187,27 @@ class SRGBColor(namedtuple('_SRGBColor', 'red green blue')):
     def __str__(self):
         r, g, b = round(self.red, 4), round(self.green, 4), round(self.blue, 4)
 
-        return f"srgb({r}, {g}, {b})"
+        return f"linear-rgb({r}, {g}, {b})"
     
     def to_rgb(self):
         return RGBColor(*(
-            ((-1 if i < 0 else 1) * (1.055 * (abs(i) ** (1/2.4)) - 0.055)
-            if abs(i) > 0.0031308 else 12.92 * i) for i in self))
+            ((-1 if i < 0 else 1) * int(255 * (1.055 * (abs(i) ** (1/2.4)) - 0.055))
+            if abs(i) > 0.0031308 else int(255 * (12.92 * i))) for i in self))
 
+    LRGB_TO_XYZ = Matrix([
+        [0.41239079926595934, 0.357584339383878,   0.1804807884018343],
+        [0.21263900587151027, 0.715168678767756,   0.07219231536073371],
+        [0.01933081871559182, 0.11919477979462598, 0.9505321522496607]
+    ])
+    
     def to_xyz(self):
-        return self.to_rgb().to_xyz()
+        return XYZColor(*(self.LRGB_TO_XYZ @ Matrix.as_column([x for x in self])).get_column())
 
     def to_oklab(self):
-        return self.to_rgb().to_oklab()
+        return self.to_xyz().to_oklab()
+
+    def to_oklch(self):
+         return self.to_xyz().to_oklch()
     
 
 class XYZColor(namedtuple('_XYZColor', 'x y z')):
@@ -218,7 +217,7 @@ class XYZColor(namedtuple('_XYZColor', 'x y z')):
     *New in 0.12.0*
     """
 
-    XYZ_TO_RGB = Matrix([
+    XYZ_TO_LRGB = Matrix([
         [ 3.2409699419045226,  -1.537383177570094,   -0.4986107602930034],
         [-0.9692436362808796,   1.8759675015077202,  0.04155505740717559],
         [ 0.05563007969699366, -0.20397695888897652,  1.0569715142428786]
@@ -236,9 +235,12 @@ class XYZColor(namedtuple('_XYZColor', 'x y z')):
         [0.0259040424655478,  0.7827717124575296, -0.8086757549230774]
     ])
 
-    def to_rgb(self):
-        return RGBColor(*[int(x * 255) for x in (self.XYZ_TO_RGB @ Matrix.as_column(self)).get_column()])
+    def to_linear_rgb(self):
+        return LinearRGBColor(*[x for x in (self.XYZ_TO_LRGB @ Matrix.as_column(self)).get_column()])
 
+    def to_rgb(self):
+        return self.to_linear_rgb().to_rgb()
+    
     def to_oklab(self):
         lms = (self.XYZ_TO_LMS @ Matrix.as_column(self)).get_column()
         lmsg = [math.cbrt(i) for i in lms]
@@ -291,6 +293,9 @@ class OKLabColor(namedtuple('_OKLabColor', 'l a b')):
 
         return f'oklab({l} {c} {h})'
 
+    def to_linear_rgb(self):
+        return self.to_xyz().to_linear_rgb()
+
     def to_rgb(self):
         return self.to_xyz().to_rgb()
 
@@ -315,7 +320,11 @@ class OKLCHColor(namedtuple('_OKLCHColor', 'l c h')):
             self.c * math.sin(self.h * math.pi / 180)
         )
 
+    def to_xyz(self):
+        return self.to_oklab().to_xyz()
+
     def to_rgb(self):
         return self.to_oklab().to_rgb()
 
-__all__ = ('chalk', 'WebColor', "RGBColor", 'SRGBColor', 'XYZColor', 'OKLabColor', 'OKLCHColor')
+
+__all__ = ('chalk', 'WebColor', "RGBColor", 'LinearRGBColor', 'XYZColor', 'OKLabColor', 'OKLCHColor')

@@ -35,16 +35,17 @@ from .strtools import PrefixIdentifier
 from .validators import matches, not_less_than, not_greater_than, yesno
 from .redact import redact_url_password
 from .http import WantsContentType
-from .color import OKLabColor, chalk, WebColor, RGBColor, SRGBColor, XYZColor, OKLabColor
+from .color import OKLabColor, chalk, WebColor, RGBColor, LinearRGBColor, XYZColor, OKLabColor
 from .mat import Matrix
 
-__version__ = "0.12.0a7"
+__version__ = "0.12.0a8"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
     'DictConfigSource', 'EnvConfigSource', 'I18n', 'Incomplete', 'JsonI18n',
+    'LinearRGBColor',
     'Matrix', 'MissingConfigError', 'MissingConfigWarning', 'OKLabColor', 
-    'PrefixIdentifier', 'RGBColor', 'SRGBColor',
+    'PrefixIdentifier', 'RGBColor',
     'Siq', 'SiqCache', 'SiqGen', 'SiqType', 'Snowflake', 'SnowflakeGen',
     'StringCase', 'TimedDict', 'TomlI18n', 'UserSigner', 'Wanted', 'WantsContentType',
     'WebColor', 'XYZColor',

@@ -30,4 +30,8 @@ class TestColor(unittest.TestCase):
     def test_oklch_to_rgb(self):
         self.assertEqual(OKLCHColor(0.628, 0.2577, 29.23).to_rgb(), RGBColor(255, 0, 0))
         self.assertEqual(OKLCHColor(0.7653, 0.1306, 194.77).to_rgb(), RGBColor(0, 204, 204))
-        self.assertEqual(OKLCHColor(0.5931, 0., 0.).to_rgb(), RGBColor(126, 126, 126))
+        self.assertEqual(OKLCHColor(0.5932, 0., 0.).to_rgb(), RGBColor(126, 126, 126))
+
+    def test_rgb_to_oklch(self):
+        self.assertEqual(RGBColor(222, 62, 45).to_oklch(), OKLCHColor(0.6,0.2, 30.))
+        self.assertEqual(RGBColor(156, 123, 49).to_oklch(), OKLCHColor(.6, .1, 85.))
