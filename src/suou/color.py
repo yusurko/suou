@@ -23,6 +23,7 @@ from collections import namedtuple
 from functools import lru_cache
 import math
 
+from suou.functools import deprecated
 from suou.mat import Matrix
 
 
@@ -102,6 +103,8 @@ class RGBColor(namedtuple('_WebColor', 'red green blue')):
 
     Useful for theming.
 
+    XXX CURRENTLY THE OKLCH CONVERSION DOES NOT WORK
+
     *Changed in 0.12.0*: name is now RGBColor, with WebColor being an alias.
     Added conversions to and from OKLCH, OKLab, sRGB, and XYZ.
     """
@@ -168,7 +171,7 @@ class RGBColor(namedtuple('_WebColor', 'red green blue')):
     ])
     
     def to_xyz(self):
-        return XYZColor(*(self.RGB_TO_XYZ @ Matrix.as_column(self)).get_column())
+        return XYZColor(*(self.RGB_TO_XYZ @ Matrix.as_column([x / 255 for x in self])).get_column())
 
     def to_oklch(self):
         return self.to_xyz().to_oklch()
@@ -192,7 +195,9 @@ class SRGBColor(namedtuple('_SRGBColor', 'red green blue')):
     blue: float
     
     def __str__(self):
-        return f"srgb({self.red}, {self.green}, {self.blue})"
+        r, g, b = round(self.red, 4), round(self.green, 4), round(self.blue, 4)
+
+        return f"srgb({r}, {g}, {b})"
     
     def to_rgb(self):
         return RGBColor(*(
@@ -232,8 +237,8 @@ class XYZColor(namedtuple('_XYZColor', 'x y z')):
     ])
 
     def to_rgb(self):
-        return RGBColor(*(self.XYZ_TO_RGB @ Matrix.as_column(self)).get_column())
-    
+        return RGBColor(*[int(x * 255) for x in (self.XYZ_TO_RGB @ Matrix.as_column(self)).get_column()])
+
     def to_oklab(self):
         lms = (self.XYZ_TO_LMS @ Matrix.as_column(self)).get_column()
         lmsg = [math.cbrt(i) for i in lms]
@@ -242,6 +247,11 @@ class XYZColor(namedtuple('_XYZColor', 'x y z')):
 
     def to_oklch(self):
         return self.to_oklab().to_oklch()
+
+    def __str__(self):
+        x, y, z = round(self.x, 4), round(self.y, 4), round(self.z, 4)
+
+        return f'xyz({x} {y} {z})'
 
 
 class OKLabColor(namedtuple('_OKLabColor', 'l a b')):
@@ -276,6 +286,11 @@ class OKLabColor(namedtuple('_OKLabColor', 'l a b')):
             0 if abs(self.a) < .0002 and abs(self.b) < .0002 else (((math.atan2(self.b, self.a) * 180) / math.pi % 360) + 360) % 360
         )
 
+    def __str__(self):
+        l, c, h = round(self.l, 4), round(self.a, 4), round(self.b, 4)
+
+        return f'oklab({l} {c} {h})'
+
     def to_rgb(self):
         return self.to_xyz().to_rgb()
 
@@ -289,19 +304,18 @@ class OKLCHColor(namedtuple('_OKLCHColor', 'l c h')):
     """
 
     def __str__(self):
-        l, c, h = round(self.l, 4), round(self.c, 4), round(self.h, 4)
+        l, c, h = round(self.l, 4), round(self.c, 4), round(self.h, 2)
 
-        return f'oklch({l}, {c}, {h})'
-
+        return f'oklch({l} {c} {h})'
 
     def to_oklab(self):
         return OKLabColor(
             self.l,
             self.c * math.cos(self.h * math.pi / 180),
-            self.h * math.cos(self.h * math.pi / 180)
+            self.c * math.sin(self.h * math.pi / 180)
         )
 
     def to_rgb(self):
         return self.to_oklab().to_rgb()
 
-__all__ = ('chalk', 'WebColor', "RGBColor", 'SRGBColor', 'XYZColor', 'OKLabColor')
+__all__ = ('chalk', 'WebColor', "RGBColor", 'SRGBColor', 'XYZColor', 'OKLabColor', 'OKLCHColor')

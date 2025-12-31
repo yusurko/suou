@@ -2,7 +2,8 @@
 
 
 import unittest
-from suou import chalk
+from suou import RGBColor, chalk
+from suou.color import OKLCHColor
 
 class TestColor(unittest.TestCase):
     def setUp(self) -> None:
@@ -25,3 +26,8 @@ class TestColor(unittest.TestCase):
         self.assertEqual(f'\x1b[1m{strg}\x1b[22m', chalk.bold(strg))
         self.assertEqual(f'\x1b[2m{strg}\x1b[22m', chalk.faint(strg))
         self.assertEqual(f'\x1b[1m\x1b[33m{strg}\x1b[39m\x1b[22m', chalk.bold.yellow(strg))
+
+    def test_oklch_to_rgb(self):
+        self.assertEqual(OKLCHColor(0.628, 0.2577, 29.23).to_rgb(), RGBColor(255, 0, 0))
+        self.assertEqual(OKLCHColor(0.7653, 0.1306, 194.77).to_rgb(), RGBColor(0, 204, 204))
+        self.assertEqual(OKLCHColor(0.5931, 0., 0.).to_rgb(), RGBColor(126, 126, 126))
