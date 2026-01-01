@@ -38,7 +38,7 @@ from .http import WantsContentType
 from .color import OKLabColor, chalk, WebColor, RGBColor, LinearRGBColor, XYZColor, OKLabColor
 from .mat import Matrix
 
-__version__ = "0.12.0a8"
+__version__ = "0.12.0a9"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',

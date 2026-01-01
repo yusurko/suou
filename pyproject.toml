@@ -39,7 +39,6 @@ Documentation = "https://suou.readthedocs.io"
 # the below are all dev dependencies (and probably already installed)
 sqlalchemy = [
     "SQLAlchemy[asyncio]>=2.0.0",
-    "flask-sqlalchemy"  # glue code
 ]
 flask = [
     "Flask>=2.0.0",
@@ -62,8 +61,13 @@ quart = [
     "starlette>=0.47.2"
 ]
 quart_auth = [
-    "Quart-Auth",
-    "suou[sqlalchemy]"  # glue code
+    "suou[quart_sqlalchemy]",  # glue code
+    "Quart-Auth" 
+]
+quart_sqlalchemy = [
+    "suou[quart]",
+    "suou[sqlalchemy]",
+    "flask-sqlalchemy"
 ]
 sass = [
     ## HEADS UP!! libsass carries a C extension + uses setup.py
@@ -71,10 +75,8 @@ sass = [
 ]
 
 full = [
-    "suou[sqlalchemy]",
     "suou[flask]",
-    "suou[quart]",
-    "suou[quart_auth]",
+    "suou[quart_auth]", # includes quart, sqlalchemy and quart_sqlalchemy
     "suou[peewee]",
     "suou[markdown]",
     "suou[sass]"

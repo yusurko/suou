@@ -2,10 +2,11 @@
 
 ## 0.12.0 "The Color Update"
 
+* Moved `AsyncSelectPagination` to submodule `sqlalchemy.quart`. If you need to use it, specify `suou[quart_sqlalchemy]` in requirements.
 * All `AuthSrc()` derivatives, deprecated and never used, have been removed.
 * New module `mat` adds a shallow reimplementation of `Matrix()` in order to implement matrix multiplication
 * Removed obsolete `configparse` implementation that has been around since 0.3 and shelved since 0.4.
-* `color`: added support for conversion from RGB to sRGB, XYZ, OKLab and OKLCH.
+* `color`: added support for conversion from RGB to linear RGB, XYZ, OKLab and OKLCH.
 * Added `user-loader` for Quart-Auth and SQLAlchemy
 
 ## 0.11.2
