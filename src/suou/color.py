@@ -150,8 +150,8 @@ class RGBColor(namedtuple('_WebColor', 'red green blue')):
         *New in 0.12.0*
         """
         return LinearRGBColor(*(
-            (i / 12.92 if abs(i / 255) <= 0.04045 else 
-            (-1 if i < 0 else 1) * (((abs(i / 255) + 0.55)) / 1.055) ** 2.4) for i in self
+            ((i / 255) / 12.92 if abs(i / 255) <= 0.04045 else 
+            (-1 if i < 0 else 1) * (((abs(i / 255) + 0.055)) / 1.055) ** 2.4) for i in self
         ))
 
     def to_oklab(self):
