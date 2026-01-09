@@ -5,7 +5,7 @@ See README.md for a description.
 
 ---
 
-Copyright (c) 2025 Sakuragasaki46.
+Copyright (c) 2025-2026 Sakuragasaki46.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,16 +35,16 @@ from .strtools import PrefixIdentifier
 from .validators import matches, not_less_than, not_greater_than, yesno
 from .redact import redact_url_password
 from .http import WantsContentType
-from .color import OKLabColor, chalk, WebColor, RGBColor, LinearRGBColor, XYZColor, OKLabColor
+from .color import OKLabColor, chalk, WebColor, RGBColor, LinearRGBColor, XYZColor, OKLCHColor
 from .mat import Matrix
 
-__version__ = "0.12.0a10"
+__version__ = "0.12.0"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
     'DictConfigSource', 'EnvConfigSource', 'I18n', 'Incomplete', 'JsonI18n',
     'LinearRGBColor',
-    'Matrix', 'MissingConfigError', 'MissingConfigWarning', 'OKLabColor', 
+    'Matrix', 'MissingConfigError', 'MissingConfigWarning', 'OKLabColor', 'OKLCHColor',
     'PrefixIdentifier', 'RGBColor',
     'Siq', 'SiqCache', 'SiqGen', 'SiqType', 'Snowflake', 'SnowflakeGen',
     'StringCase', 'TimedDict', 'TomlI18n', 'UserSigner', 'Wanted', 'WantsContentType',

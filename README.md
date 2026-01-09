@@ -32,6 +32,8 @@ Read the [documentation](https://suou.readthedocs.io/).
 
 ## Support
 
+### Disclaimer
+
 Just a heads up: SUOU was made to support Sakuragasaki46 (me)'s own selfish, egoistic needs. Not certainly to provide a service to the public.
 
 As a consequence, 'add this add that' stuff is best-effort.
@@ -41,6 +43,10 @@ Expect breaking changes, disruptive renames in bugfix releases, sudden deprecati
 Don't want to depend on my codebase for moral reasons (albeit unrelated)? It's fine. I did not ask you.
 
 **DO NOT ASK TO MAKE SUOU SAFE FOR CHILDREN**. Enjoy having your fingers cut.
+
+### "LTS"
+
+The following versions are supported: the latest, the second-to-latest, 0.12.x and 0.7.x.
 
 ## License
 

@@ -7,7 +7,7 @@
 * New module `mat` adds a shallow reimplementation of `Matrix()` in order to implement matrix multiplication
 * Removed obsolete `configparse` implementation that has been around since 0.3 and shelved since 0.4.
 * `color`: added support for conversion from RGB to linear RGB, XYZ, OKLab and OKLCH.
-* Added `user-loader` for Quart-Auth and SQLAlchemy
+* Added `user-loader` for Quart-Auth + SQLAlchemy
 
 ## 0.11.2
 

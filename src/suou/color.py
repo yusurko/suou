@@ -5,7 +5,7 @@ Colors for coding artists
 
 ---
 
-Copyright (c) 2025 Sakuragasaki46.
+Copyright (c) 2025-2026 Sakuragasaki46.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -244,7 +244,7 @@ class XYZColor(namedtuple('_XYZColor', 'x y z')):
     def to_oklab(self):
         lms = (self.XYZ_TO_LMS @ Matrix.as_column(self)).get_column()
         lmsg = [math.cbrt(i) for i in lms]
-        oklab = (self.LMSG_TO_OKLAB @ Matrix.as_column(self)).get_column()
+        oklab = (self.LMSG_TO_OKLAB @ Matrix.as_column(lmsg)).get_column()
         return OKLabColor(*oklab)
 
     def to_oklch(self):
@@ -325,6 +325,10 @@ class OKLCHColor(namedtuple('_OKLCHColor', 'l c h')):
 
     def to_rgb(self):
         return self.to_oklab().to_rgb()
+
+    def __sub__(self, other: OKLCHColor):
+        """For testing only!"""
+        return sum(abs(i - j) / k for i, j, k in zip(self, other, (1, 1, 36)))
 
 
 __all__ = ('chalk', 'WebColor', "RGBColor", 'LinearRGBColor', 'XYZColor', 'OKLabColor', 'OKLCHColor')

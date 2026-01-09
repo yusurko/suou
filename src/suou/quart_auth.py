@@ -1,9 +1,11 @@
 """
 Utilities for Quart-Auth
 
+(Require Quart and SQLAlchemy)
+
 ---
 
-Copyright (c) 2025 Sakuragasaki46.
+Copyright (c) 2025-2026 Sakuragasaki46.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

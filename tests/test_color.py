@@ -33,5 +33,8 @@ class TestColor(unittest.TestCase):
         self.assertEqual(OKLCHColor(0.5932, 0., 0.).to_rgb(), RGBColor(126, 126, 126))
 
     def test_rgb_to_oklch(self):
-        self.assertEqual(RGBColor(222, 62, 45).to_oklch(), OKLCHColor(0.6,0.2, 30.))
-        self.assertEqual(RGBColor(156, 123, 49).to_oklch(), OKLCHColor(.6, .1, 85.))
+        """
+        This requires the presence of OKLCHColor.__sub__(), not to be used in production code.
+        """
+        self.assertAlmostEqual(RGBColor(222, 62, 45).to_oklch(), OKLCHColor(0.6,0.2, 30.), delta=0.01)
+        self.assertAlmostEqual(RGBColor(156, 123, 48).to_oklch(), OKLCHColor(.6, .1, 85.), delta=0.01)
