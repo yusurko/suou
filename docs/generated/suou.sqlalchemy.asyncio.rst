@@ -1,4 +1,4 @@
-suou.sqlalchemy.asyncio
+﻿suou.sqlalchemy.asyncio
 =======================
 
 .. automodule:: suou.sqlalchemy.asyncio
@@ -14,7 +14,6 @@ suou.sqlalchemy.asyncio
 
    .. autosummary::
    
-      AsyncSelectPagination
       SQLAlchemy
       SessionWrapper
    

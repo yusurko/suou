@@ -29,6 +29,7 @@ API
    suou.lex
    suou.luck
    suou.markdown
+   suou.mat
    suou.migrate
    suou.peewee
    suou.quart 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.1 
+
++ Fix import failure for `AsyncSelectPagination` (module `sqlalchemy`)
+
 ## 0.12.0 "The Color Update"
 
 * Moved `AsyncSelectPagination` to submodule `sqlalchemy.quart`. If you need to use it, specify `suou[quart_sqlalchemy]` in requirements.

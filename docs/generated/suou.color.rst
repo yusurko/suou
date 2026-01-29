@@ -9,7 +9,10 @@
    .. autosummary::
    
       Chalk
+      LinearRGBColor
+      OKLCHColor
+      OKLabColor
       RGBColor
-      SRGBColor
       WebColor
+      XYZColor
    

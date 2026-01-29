@@ -19,15 +19,28 @@ Web colors
 ----------
 
 .. autoclass:: RGBColor
+
+   .. automethods::
    
 
 .. autoclass:: WebColor
 
 
-.. auto
+.. autoclass:: LinearRGBColor
+
+   .. automethods::
 
 
 .. autoclass:: XYZColor
 
+   .. automethods::
+
 
 .. autoclass:: OKLabColor
+
+   .. automethods::
+
+
+.. autoclass:: OKLCHColor
+   
+   .. automethods::

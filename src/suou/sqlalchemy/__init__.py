@@ -23,6 +23,7 @@ import warnings
 from sqlalchemy import BigInteger, Boolean, CheckConstraint, Date, Dialect, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, create_engine, select, text
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, Relationship, Session, declarative_base as _declarative_base, relationship
 from sqlalchemy.types import TypeEngine
+from suou.glue import FakeModule
 
 from ..snowflake import SnowflakeGen
 from ..itertools import kwargs_prefix, makelist
@@ -158,11 +159,17 @@ def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, column: str |
     return decorator
 
 
-from .asyncio import SQLAlchemy, AsyncSelectPagination, async_query
+from .asyncio import SQLAlchemy, async_query
 from .orm import (
     id_column, snowflake_column, match_column, match_constraint, bool_column, declarative_base, parent_children,
     author_pair, age_pair, bound_fk, unbound_fk, want_column, a_relationship, BitSelector, secret_column, username_column
 )
+
+try:
+    from .quart import AsyncSelectPagination
+    AsyncSelectPagination = deprecated('import AsyncSelectPagination from suou.sqlalchemy.quart instead')(AsyncSelectPagination)
+except ImportError:
+    pass
 
 # Optional dependency: do not import into __init__.py
 __all__ = (
