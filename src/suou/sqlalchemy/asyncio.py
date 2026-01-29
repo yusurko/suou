@@ -26,6 +26,10 @@ from sqlalchemy import Select, Table, func, select
 from sqlalchemy.orm import DeclarativeBase, lazyload
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 
+try:
+    from .quart import AsyncSelectPagination
+except ImportError:
+    AsyncSelectPagination = None
 
 from suou.exceptions import NotFoundError
 from suou.glue import glue
@@ -103,13 +107,16 @@ class SQLAlchemy:
         Return a pagination. Analogous to flask_sqlalchemy.SQLAlchemy.paginate().
         """
         async with self as session:
-            return AsyncSelectPagination(
-                select = select,
-                session = session,
-                page = page,
-                per_page=per_page, max_per_page=max_per_page,
-                error_out=self.NotFound if error_out else None, count=count
-            )
+            try:
+                return AsyncSelectPagination(
+                    select = select,
+                    session = session,
+                    page = page,
+                    per_page=per_page, max_per_page=max_per_page,
+                    error_out=self.NotFound if error_out else None, count=count
+                )
+            except Exception:
+                raise RuntimeError('Cannot paginate; required dependencies are not installed')
     async def create_all(self, *, checkfirst = True):
         """
         Initialize database

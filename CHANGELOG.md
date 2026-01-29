@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.2
+
++ Fix imports in module `sqlalchemy.quart`
+
 ## 0.12.1 
 
 + Fix import failure for `AsyncSelectPagination` (module `sqlalchemy`)

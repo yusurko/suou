@@ -18,19 +18,14 @@ from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
 from functools import wraps
-from typing import Any, Callable, Iterable, Never, TypeVar
-import warnings
-from sqlalchemy import BigInteger, Boolean, CheckConstraint, Date, Dialect, ForeignKey, LargeBinary, Column, MetaData, SmallInteger, String, create_engine, select, text
-from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, Relationship, Session, declarative_base as _declarative_base, relationship
+from typing import Callable, Iterable, Never, TypeVar
+from sqlalchemy import LargeBinary, Column, create_engine, select
+from sqlalchemy.orm import DeclarativeBase, Session
 from sqlalchemy.types import TypeEngine
-from suou.glue import FakeModule
 
-from ..snowflake import SnowflakeGen
-from ..itertools import kwargs_prefix, makelist
+from ..itertools import makelist
 from ..signing import HasSigner, UserSigner
-from ..codecs import StringCase
-from ..functools import deprecated, not_implemented
-from ..iding import Siq, SiqGen, SiqType, SiqCache
+from ..functools import deprecated
 from ..classtools import Incomplete, Wanted
 
 
