@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.3
+
++ Replace `resource_filename()` (from deprecated pkg_resources) with API from `importlib.resources`
+
 ## 0.12.2
 
 + Fix imports in module `sqlalchemy.quart`
