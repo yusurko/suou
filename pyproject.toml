@@ -13,7 +13,6 @@ dependencies = [
     "itsdangerous",
     "toml",
     "pydantic",
-    "setuptools>=78.0.0",
     "uvloop; os_name=='posix'"
 ]
 # - further devdependencies below - #

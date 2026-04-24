@@ -3,7 +3,7 @@
 Good morning, my brother! Welcome **SUOU** (**S**IS **U**nified **O**bject **U**nderarmor), the Python library which speeds up and makes it pleasing to develop API, database schemas and stuff in Python.
 
 It provides utilities such as:
-* SIQ ([specification](https://yusur.moe/protocols/siq.html) - [copy](https://suou.readthedocs.io/en/latest/iding.html))
+* SIQ ([specification](https://yusur.moe/protocols/siq.html) \[LINK BROKEN - WON'T FIX\] - [copy](https://suou.readthedocs.io/en/latest/iding.html)) 
 * signing and generation of access tokens, on top of [ItsDangerous](https://github.com/pallets/itsdangerous) *not tested and not working*
 * helpers for use in Flask, [SQLAlchemy](https://suou.readthedocs.io/en/latest/sqlalchemy.html), and other popular frameworks
 * i forgor 💀

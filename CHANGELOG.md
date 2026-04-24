@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.5
+
++ Optimized dependencies: `setuptools` now no more a dependency
+
 ## 0.12.4
 
 + Fix wrong imports in `sqlalchemy.quart` submodule
