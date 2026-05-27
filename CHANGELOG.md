@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.6
+
++ Added unittests to `dei_args()`
+
 ## 0.12.5
 
 + Optimized dependencies: `setuptools` now no more a dependency

@@ -19,7 +19,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from __future__ import annotations
 from functools import wraps
-from typing import Callable, TypeVar
+from typing import Callable, Collection, TypeVar, Any
 
 _T = TypeVar('_T')
 _U = TypeVar('_U')
@@ -115,7 +115,7 @@ class Pronoun(int):
 
 
 
-def dei_args(**renames):
+def dei_args(**renames: dict[str, str]):
     """
     Allow for aliases in the keyword argument names, in form alias='real_name'.
 
@@ -125,7 +125,7 @@ def dei_args(**renames):
     Dear conservatives, this does not influence the ability to call the wrapped function
     with the original parameter names.
     """
-    def decorator(func: Callable[_T, _U]) -> Callable[_T, _U]:
+    def decorator(func: Callable[..., _U]) -> Callable[..., _U]:
         @wraps(func)
         def wrapper(*args, **kwargs):
             for alias_name, actual_name in renames.items():

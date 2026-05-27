@@ -1,6 +1,4 @@
 
-
-
 import unittest
 
 from suou.strtools import PrefixIdentifier
@@ -27,14 +25,11 @@ class TestStrtools(unittest.TestCase):
 
     def test_PrefixIdentifier_get_nostr(self):
         with self.assertRaises(TypeError):
-            pi = PrefixIdentifier(1)
-            pi.hello
+            PrefixIdentifier(1)
 
         with self.assertRaises(TypeError):
             PrefixIdentifier([99182])
         
         with self.assertRaises(TypeError):
             PrefixIdentifier(b'alpha_')
-    
-
-        
+     
