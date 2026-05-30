@@ -154,7 +154,7 @@ def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, column: str |
     return decorator
 
 
-from .asyncio import SQLAlchemy, async_query
+from .asyncio import SQLAlchemy, async_query, SessionWrapper, AsyncSelectPagination
 from .orm import (
     id_column, snowflake_column, match_column, match_constraint, bool_column, declarative_base, parent_children,
     author_pair, age_pair, bound_fk, unbound_fk, want_column, a_relationship, BitSelector, secret_column, username_column
@@ -168,7 +168,7 @@ except ImportError:
 
 # Optional dependency: do not import into __init__.py
 __all__ = (
-    'IdType', 'id_column', 'snowflake_column', 'entity_base', 'declarative_base', 'token_signer',
+    'IdType', 'id_column', 'snowflake_column', 'declarative_base', 'token_signer',
     'match_column', 'match_constraint', 'bool_column', 'parent_children',
     'author_pair', 'age_pair', 'bound_fk', 'unbound_fk', 'want_column',
     'a_relationship', 'BitSelector', 'secret_column', 'username_column',

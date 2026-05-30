@@ -146,6 +146,8 @@ def declarative_base(domain_name: str, master_secret: bytes, metadata: dict | No
     """
     Drop-in replacement for sqlalchemy.orm.declarative_base()
     taking in account requirements for SIQ generation (i.e. domain name).
+
+    Also supports snowflake generation parameters such as epoch.
     """
     if not isinstance(metadata, dict):
         metadata = dict()
@@ -160,7 +162,6 @@ def declarative_base(domain_name: str, master_secret: bytes, metadata: dict | No
     )
     Base = _declarative_base(metadata=MetaData(**metadata), **kwargs)
     return Base
-entity_base = warnings.deprecated('use declarative_base() instead')(declarative_base)
 
 
 

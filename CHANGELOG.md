@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.13.0
+
++ Added module `argparse` with class `LetterSubparsers()`
++ module `sqlalchemy`: 
+    * removed deprecated alias `entity_base()`. use `declarative_base()` instead.
+    * fix imports.
+
 ## 0.12.6
 
 + Added unittests to `dei_args()`

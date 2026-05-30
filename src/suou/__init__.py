@@ -37,13 +37,14 @@ from .redact import redact_url_password
 from .http import WantsContentType
 from .color import OKLabColor, chalk, WebColor, RGBColor, LinearRGBColor, XYZColor, OKLCHColor
 from .mat import Matrix
+from .argparse import LetterSubparsers
 
-__version__ = "0.12.6"
+__version__ = "0.13.0a1"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
     'DictConfigSource', 'EnvConfigSource', 'I18n', 'Incomplete', 'JsonI18n',
-    'LinearRGBColor',
+    'LetterSubparsers', 'LinearRGBColor',
     'Matrix', 'MissingConfigError', 'MissingConfigWarning', 'OKLabColor', 'OKLCHColor',
     'PrefixIdentifier', 'RGBColor',
     'Siq', 'SiqCache', 'SiqGen', 'SiqType', 'Snowflake', 'SnowflakeGen',
@@ -52,8 +53,8 @@ __all__ = (
     'addattr', 'additem', 'age_and_days', 'alru_cache', 'b2048decode', 'b2048encode',
     'b32ldecode', 'b32lencode', 'b64encode', 'b64decode', 'cb32encode',
     'cb32decode', 'chalk', 'count_ones', 'dei_args', 'deprecated',
-    'future', 'ilex', 'join_bits',
-    'jsonencode', 'kwargs_prefix', 'lex', 'ltuple', 'makelist', 'mask_shift',
+    'future', 'ilex', 'join_bits', 'jsonencode', 'kwargs_prefix', 
+    'lex', 'ltuple', 'makelist', 'mask_shift',
     'matches', 'mod_ceil', 'mod_floor', 'must_be', 'none_pass', 'not_implemented',
     'not_less_than', 'not_greater_than',
     'redact_url_password', 'rtuple', 'split_bits', 'ssv_list', 'symbol_table',
