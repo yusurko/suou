@@ -35,13 +35,15 @@ from .strtools import PrefixIdentifier
 from .validators import matches, not_less_than, not_greater_than, yesno
 from .redact import redact_url_password
 from .http import WantsContentType
-from .color import OKLabColor, chalk, WebColor, RGBColor, LinearRGBColor, XYZColor, OKLCHColor
+from .color import OKLabColor, chalk, WebColor, RGBColor, LinearRGBColor, \
+        XYZColor, OKLCHColor, ColorFormatter
 from .mat import Matrix
 from .argparse import LetterSubparsers
 
-__version__ = "0.13.0a2"
+__version__ = "0.13.0a3"
 
 __all__ = (
+    'ColorFormatter',
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',
     'DictConfigSource', 'EnvConfigSource', 'I18n', 'Incomplete', 'JsonI18n',
     'LetterSubparsers', 'LinearRGBColor',

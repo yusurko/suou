@@ -21,6 +21,7 @@ from __future__ import annotations
 
 from collections import namedtuple
 from functools import lru_cache
+import logging
 import math
 
 from suou.functools import deprecated
@@ -331,4 +332,48 @@ class OKLCHColor(namedtuple('_OKLCHColor', 'l c h')):
         return sum(abs(i - j) / k for i, j, k in zip(self, other, (1, 1, 36)))
 
 
-__all__ = ('chalk', 'WebColor', "RGBColor", 'LinearRGBColor', 'XYZColor', 'OKLabColor', 'OKLCHColor')
+class ColorFormatter(logging.Formatter):
+    """
+    Colored logging formatter.
+
+    Opinionated.
+
+    Taken from https://stackoverflow.com/questions/384076/how-can-i-color-python-logging-output
+    """
+
+    def _get_base_format(color):
+        return f"[%(asctime)s] {color('%(levelname)s')}{chalk.grey(': ')}{color('%(name)s')}{chalk.grey(': ')}%(message)s"
+
+    FORMATS = {
+        logging.DEBUG: _get_base_format(chalk.cyan),
+        logging.INFO: _get_base_format(chalk.green),
+        logging.WARNING: _get_base_format(chalk.yellow),
+        logging.ERROR: _get_base_format(chalk.red),
+        logging.CRITICAL: _get_base_format(chalk.bold.red)
+    }
+
+    del _get_base_format
+
+    def format(self, record: logging.LogRecord) -> str:
+        log_fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
+
+    @classmethod
+    def apply_handler(cls, logger: logging.Logger, level = logging.INFO):
+        """
+        Apply the colored formatter to a logger.
+
+        Use this with logging.root, instead of logging.basicConfig().
+        
+        Should not be called more than once.
+        """
+        logger.setLevel(level)
+        ch = logging.StreamHandler()
+        ch.setLevel(level)
+        ch.setFormatter(cls())
+        logger.addHandler(ch)
+
+
+__all__ = ('chalk', 'WebColor', "RGBColor", 'LinearRGBColor', 'XYZColor',
+     'OKLabColor', 'OKLCHColor', 'ColorFormatter')

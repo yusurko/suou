@@ -19,7 +19,7 @@ from __future__ import annotations
 
 import argparse
 import sys
-from typing import Callable, Mapping
+from typing import Callable
 
 class LetterSubparsers(object):
     """
