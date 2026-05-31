@@ -56,7 +56,9 @@ markdown = [
 ]
 quart = [
     "Quart",
-    "Quart-Schema",
+    "Quart-Schema"
+]
+waiter = [
     "starlette>=0.47.2"
 ]
 quart_auth = [
@@ -78,7 +80,8 @@ full = [
     "suou[quart_auth]", # includes quart, sqlalchemy and quart_sqlalchemy
     "suou[peewee]",
     "suou[markdown]",
-    "suou[sass]"
+    "suou[sass]",
+    "suou[waiter]"
 ]
 
 docs = [

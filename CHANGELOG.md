@@ -6,8 +6,9 @@
 + Module `sqlalchemy`: 
     * removed deprecated alias `entity_base()`. use `declarative_base()` instead.
     * fix imports.
-+ Module `functools`: add `cooldown()`
++ Module `functools`: add `cooldown()`, `do_not_flood()`
 + Module `color`: add `ColorFormatter()`
++ Separated `suou[waiter]` dependency from `suou[quart]`
 
 ## 0.12.6
 

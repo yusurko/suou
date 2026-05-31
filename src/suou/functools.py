@@ -382,6 +382,32 @@ def cooldown(unit: int, /, exception: Exception | None = None):
         return wrapper
     return decorator
 
+def do_not_flood(unit = .25):
+    """
+    Implement a calling cooldown for a function or procedure.
+
+    If the decorated function is called during the cooldown, the function
+    blocks before being called again.
+
+    This is blocking and uses time.sleep().
+    """
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            now = time.time()
+            if wrapper.timeout_until is not None and wrapper.timeout_until > now:
+                wrapper.timeout_delay += unit
+                time.sleep(wrapper.timeout_until - now)
+                wrapper.timeout_until = now + wrapper.timeout_delay
+            else:
+                wrapper.timeout_delay = unit
+                wrapper.timeout_until = time.time() + unit
+            return func(*args, **kwargs)
+        wrapper.timeout_until = None
+        wrapper.timeout_delay = unit
+        return wrapper
+    return decorator
+
 __all__ = (
-    'deprecated', 'not_implemented', 'timed_cache', 'none_pass', 'alru_cache', 'cooldown'
+    'deprecated', 'not_implemented', 'timed_cache', 'none_pass', 'alru_cache', 'cooldown', 'do_not_flood'
 )

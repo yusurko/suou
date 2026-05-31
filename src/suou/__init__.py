@@ -18,13 +18,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from .iding import Siq, SiqCache, SiqType, SiqGen
 from .codecs import (StringCase, cb32encode, cb32decode, b32lencode, b32ldecode, b64encode, b64decode, b2048encode, b2048decode,
-    jsonencode, twocolon_list, want_bytes, want_str, ssv_list, want_urlsafe, want_urlsafe_bytes)
+    jsonencode, twocolon_list, want_bytes, want_str, ssv_list, want_urlsafe, want_urlsafe_bytes,
+    z85encode, z85decode)
 from .bits import count_ones, mask_shift, split_bits, join_bits, mod_ceil, mod_floor
 from .calendar import want_datetime, want_isodate, want_timestamp, age_and_days
 from .configparse import MissingConfigError, MissingConfigWarning, ConfigOptions, ConfigParserConfigSource, ConfigSource, DictConfigSource, ConfigValue, EnvConfigSource
 from .collections import TimedDict
 from .dei import dei_args
-from .functools import deprecated, not_implemented, timed_cache, none_pass, alru_cache, future
+from .functools import deprecated, not_implemented, timed_cache, none_pass, alru_cache, future, cooldown, do_not_flood
 from .classtools import Wanted, Incomplete
 from .itertools import makelist, kwargs_prefix, ltuple, rtuple, additem, addattr
 from .i18n import I18n, JsonI18n, TomlI18n
@@ -32,7 +33,7 @@ from .signing import UserSigner
 from .snowflake import Snowflake, SnowflakeGen
 from .lex import symbol_table, lex, ilex
 from .strtools import PrefixIdentifier
-from .validators import matches, not_less_than, not_greater_than, yesno
+from .validators import matches, not_less_than, not_greater_than, yesno, must_be
 from .redact import redact_url_password
 from .http import WantsContentType
 from .color import OKLabColor, chalk, WebColor, RGBColor, LinearRGBColor, \
@@ -40,7 +41,7 @@ from .color import OKLabColor, chalk, WebColor, RGBColor, LinearRGBColor, \
 from .mat import Matrix
 from .argparse import LetterSubparsers
 
-__version__ = "0.13.0a3"
+__version__ = "0.13.0a4"
 
 __all__ = (
     'ColorFormatter',
@@ -54,7 +55,7 @@ __all__ = (
     'WebColor', 'XYZColor',
     'addattr', 'additem', 'age_and_days', 'alru_cache', 'b2048decode', 'b2048encode',
     'b32ldecode', 'b32lencode', 'b64encode', 'b64decode', 'cb32encode',
-    'cb32decode', 'chalk', 'count_ones', 'dei_args', 'deprecated',
+    'cb32decode', 'chalk', 'cooldown', 'count_ones', 'dei_args', 'deprecated', 'do_not_flood',
     'future', 'ilex', 'join_bits', 'jsonencode', 'kwargs_prefix', 
     'lex', 'ltuple', 'makelist', 'mask_shift',
     'matches', 'mod_ceil', 'mod_floor', 'must_be', 'none_pass', 'not_implemented',
