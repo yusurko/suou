@@ -39,7 +39,7 @@ from .color import OKLabColor, chalk, WebColor, RGBColor, LinearRGBColor, XYZCol
 from .mat import Matrix
 from .argparse import LetterSubparsers
 
-__version__ = "0.13.0a1"
+__version__ = "0.13.0a2"
 
 __all__ = (
     'ConfigOptions', 'ConfigParserConfigSource', 'ConfigSource', 'ConfigValue',

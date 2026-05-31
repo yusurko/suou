@@ -339,6 +339,49 @@ def none_pass(func: Callable[_T, _U], *args, **kwargs) -> Callable[_T, _U]:
         return func(x, *args, **kwargs)
     return wrapper
 
+def cooldown(unit: int, /, exception: Exception | None = None):
+    '''
+    Implement a calling cooldown for a function of procedure.
+    If the decorated function is called during the cooldown,
+    the last result is returned (or occasionally an exception).
+
+    If an exception is passed explicitly as a decorator, it is
+    raised upon calling during cooldown.
+
+    Otherwise, the last result is returned (or the last
+    exception is raised.)
+
+    *New in 0.13.0*
+    '''
+    def decorator(func: Callable[..., _U]):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            now = time.time()
+            if wrapper.timeout_until is not None and wrapper.timeout_until > now:
+                if exception is not None:
+                    raise exception
+                elif wrapper.last_exc is not None:
+                    raise wrapper.last_exc
+                else:
+                    return wrapper.last_result
+            else:
+                wrapper.timeout_until = now + unit
+                try:
+                    wrapper.last_result = func(*args, **kwargs)
+                except Exception as e:
+                    wrapper.last_exc = e
+                    raise
+                else:
+                    wrapper.last_exc = None
+                    return wrapper.last_result
+        
+        wrapper.last_result: _U | None = None
+        wrapper.last_exc: Exception | None = None
+        wrapper.timeout_until: float | None = None
+
+        return wrapper
+    return decorator
+
 __all__ = (
-    'deprecated', 'not_implemented', 'timed_cache', 'none_pass', 'alru_cache'
+    'deprecated', 'not_implemented', 'timed_cache', 'none_pass', 'alru_cache', 'cooldown'
 )
