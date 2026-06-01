@@ -33,11 +33,21 @@ class LetterSubparsers(object):
     _parser: argparse.ArgumentParser
     _letters: dict[str, str]
     _subparsers: argparse._SubParsersAction[argparse.ArgumentParser]
+    _has_verbose: bool = False
 
     def __init__(self, parser : argparse.ArgumentParser, *, dest: str = 'action', **kwargs):
         self._parser = parser
         self._letters = {}
         self._subparsers = parser.add_subparsers(dest = dest, **kwargs)
+
+    def add_verbose(self, *, help: str = "show more logs (e.g. debug)"):
+        """
+        Add a "-v" / "--verbose" argument to the main parser.
+
+        This allows the argument to be everywhere in the argv.
+        """
+        self._parser.add_argument('-v', '--verbose', action='count', help=help)
+        self._has_verbose = True
 
     def action(self, /, letter: str, name: str | None = None, **kwargs):
         """
@@ -65,11 +75,11 @@ class LetterSubparsers(object):
             return func
         return decorator
 
-    def parse_args(self, argv = None, system_exit: bool = True):
+    def parse_args(self, argv: list[str] = None, system_exit: bool = True):
         """
         Variation of ArgumentParser.parse_args() that takes shortcut letters into account.
 
-        Best used together with letter_action().
+        Best used together with .action().
         """
         
         if argv is None:
@@ -77,15 +87,21 @@ class LetterSubparsers(object):
         else:
             argv = list(argv)
 
+        opt_start = 0
+
+        # preprocess the letters
         if len(argv) > 0:
             first_arg = argv.pop(0)
-
+            
             if first_arg.startswith('-') and len(first_arg) >= 2:
-                letter, rest = first_arg[1], first_arg[2:]
-                if letter in self._letters:
-                    argv.insert(0, self._letters[letter])
-                    if rest:
-                        argv.insert(1, "-" + rest)
+                for idx, letter in enumerate(first_arg):
+                    rest = first_arg[1:idx] + first_arg[idx+1:]
+                    if letter in self._letters:
+                        argv.insert(0, self._letters[letter])
+                        if rest:
+                            argv.insert(1, "-" + rest)
+                        opt_start = 1
+                        break
                 else:
                     # put it back
                     argv.insert(0, first_arg)
@@ -93,12 +109,31 @@ class LetterSubparsers(object):
                 # put it back
                 argv.insert(0, first_arg)
 
+        # preprocess the verbose
+        if self._has_verbose and len(argv) > opt_start:
+            nargv = argv[:opt_start]
+            vc = 0
+            for arg in argv[opt_start:]:
+                if arg.startswith('-') and not arg.startswith('--'):
+                    arg_vc = sum(1 for l in arg[1:] if l == 'v')
+                    arg_vless = arg.replace('v', '')
+                    if arg_vless != '-':
+                        nargv.append(arg_vless)
+                    vc += arg_vc
+                elif arg == '--verbose':
+                    vc += 1
+                else:
+                    nargv.append(arg)
+            argv = ["--verbose"] * vc + nargv
+        
         try:
-            return self._parser.parse_args(argv)
+            args = self._parser.parse_args(argv)
         except SystemExit:
             # prevent SystemExit at parse fail
             if system_exit:
                 raise
+        else:
+            return args
 
 
 __all__ = ('LetterSubparsers',)

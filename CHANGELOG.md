@@ -2,7 +2,8 @@
 
 ## 0.13.0
 
-+ Added module `argparse` with class `LetterSubparsers()`
++ Added module `argparse` with class `LetterSubparsers()`, which allows pacman-style args by preprocessing them
+  before feeding them to parse_args
 + Module `sqlalchemy`: 
     * removed deprecated alias `entity_base()`. use `declarative_base()` instead.
     * fix imports.
