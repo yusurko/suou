@@ -46,7 +46,7 @@ class LetterSubparsers(object):
 
         This allows the argument to be everywhere in the argv.
         """
-        self._parser.add_argument('-v', '--verbose', action='count', help=help)
+        self._parser.add_argument('-v', '--verbose', action='count', default = 0, help=help)
         self._has_verbose = True
 
     def action(self, /, letter: str, name: str | None = None, **kwargs):
