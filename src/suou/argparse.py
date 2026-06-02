@@ -38,7 +38,7 @@ class LetterSubparsers(object):
     def __init__(self, parser : argparse.ArgumentParser, *, dest: str = 'action', **kwargs):
         self._parser = parser
         self._letters = {}
-        self._subparsers = parser.add_subparsers(dest = dest, **kwargs)
+        self._subparsers = parser.add_subparsers(dest = dest, required = True, **kwargs)
 
     def add_verbose(self, *, help: str = "show more logs (e.g. debug)"):
         """
