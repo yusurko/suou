@@ -28,7 +28,7 @@ from suou.functools import future
 
 @future()
 class Waiter():
-    _cached_app: Callable | None = None
+    _cached_app: Starlette | None = None
 
     def __init__(self):
         self.routes: list[Route] = []
@@ -60,7 +60,7 @@ class Waiter():
     def patch(self, endpoint: str, *a, **k):
         return self._route('PATCH', endpoint, *a, **k)
 
-    def _route(self, methods: list[str], endpoint: str, **kwargs):
+    def _route(self, methods: str | list[str], endpoint: str, **kwargs):
         def decorator(func):
             self.routes.append(Route(endpoint, func, methods=makelist(methods, False), **kwargs))
             return func

@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.13.1 and 0.12.7
+
++ Typing fixes
+
+## 0.13.0 "Laconic Letters"
+
++ Added module `argparse` with class `LetterSubparsers()`, which allows pacman-style args by preprocessing them
+  before feeding them to parse_args
++ Module `sqlalchemy`: 
+    * removed deprecated alias `entity_base()`. use `declarative_base()` instead.
+    * fix imports.
++ Module `functools`: add `cooldown()`, `do_not_flood()`
++ Module `color`: add `ColorFormatter()`
++ Separated `suou[waiter]` dependency from `suou[quart]`
+
 ## 0.12.6
 
 + Added unittests to `dei_args()`
