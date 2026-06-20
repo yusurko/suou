@@ -62,8 +62,6 @@ def symbol_table(*args: Iterable[tuple | TokenSym], whitespace: str | None = Non
         yield TokenSym('[' + re.escape(whitespace) + ']+', '', discard=True)
 
 
-symbol_table: Callable[..., list]
-
 def ilex(text: str, table: Iterable[TokenSym], *, whitespace = False):
     """
     Return a text as a list of tokens, given a token table (iterable of TokenSym).

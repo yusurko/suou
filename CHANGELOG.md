@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.13.1 
+
++ Typing fixes
+
 ## 0.13.0 "Laconic Letters"
 
 + Added module `argparse` with class `LetterSubparsers()`, which allows pacman-style args by preprocessing them

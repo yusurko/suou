@@ -22,17 +22,13 @@ from suou.classtools import MISSING
 
 _T = TypeVar('_T')
 
-def makelist(l: Any, wrap: bool = True) -> list | Callable[Any, list]:
-    '''
-    Make a list out of an iterable or a single value.
+def _makelist_callable(l: Callable) -> Callable[..., list]:
+    @wraps(l)
+    def wrapper(*a, **k): 
+        return _makelist_nowrap(l(*a, **k))
+    return wrapper
 
-    *Changed in 0.4.0* Now supports a callable: can be used to decorate generators and turn them into lists.
-    Pass wrap=False to return instead the unwrapped function in a list.
-
-    *Changed in 0.11.0*: ``wrap`` argument is now no more keyword only.
-    '''
-    if callable(l) and wrap:
-        return wraps(l)(lambda *a, **k: makelist(l(*a, **k), wrap=False))
+def _makelist_nowrap(l: Any) -> list:
     if isinstance(l, (str, bytes, bytearray)):
         return [l]
     elif isinstance(l, Iterable):
@@ -42,7 +38,21 @@ def makelist(l: Any, wrap: bool = True) -> list | Callable[Any, list]:
     else:
         return [l]
 
-def ltuple(seq: Iterable[_T], size: int, /, pad = None) -> tuple:
+def makelist(l: Any, wrap: bool = True) -> list | Callable[..., list]:
+    '''
+    Make a list out of an iterable or a single value.
+
+    *Changed in 0.4.0* Now supports a callable: can be used to decorate generators and turn them into lists.
+    Pass wrap=False to return instead the unwrapped function in a list.
+
+    *Changed in 0.11.0*: ``wrap`` argument is now no more keyword only.
+    '''
+    if callable(l) and wrap:
+        return _makelist_callable(l)
+    else:
+        return _makelist_nowrap(l)
+
+def ltuple(seq: Iterable[_T], size: int, /, pad = None) -> tuple[_T, ...]:
     """
     Truncate an iterable into a fixed size tuple, if necessary padding it.
     """
@@ -51,7 +61,7 @@ def ltuple(seq: Iterable[_T], size: int, /, pad = None) -> tuple:
         seq = seq + (pad,) * (size - len(seq))
     return seq
 
-def rtuple(seq: Iterable[_T], size: int, /, pad = None) -> tuple:
+def rtuple(seq: Iterable[_T], size: int, /, pad = None) -> tuple[_T, ...]:
     """
     Same as rtuple() but the padding and truncation is made right to left.
     """
@@ -81,7 +91,7 @@ def kwargs_prefix(it: dict[str, Any], prefix: str, *, remove = True, keep_prefix
             it.pop(k)
     return ka
 
-def additem(obj: MutableMapping, /, name: str = None):
+def additem(obj: MutableMapping, /, name: str | None = None):
     """
     Syntax sugar for adding a function to a mapping, immediately.
     """
@@ -93,7 +103,7 @@ def additem(obj: MutableMapping, /, name: str = None):
         return func
     return decorator
 
-def addattr(obj: Any, /, name: str = None):
+def addattr(obj: Any, /, name: str | None = None):
     """
     Same as additem() but setting as attribute instead.
     """

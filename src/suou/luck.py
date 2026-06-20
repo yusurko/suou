@@ -35,7 +35,7 @@ def lucky(validators: Iterable[Callable[[_U], bool]] = ()):
 
     *New in 0.7.0*
     """
-    def decorator(func: Callable[_T, _U]) -> Callable[_T, _U]:
+    def decorator(func: Callable[..., _U]) -> Callable[..., _U]:
         @wraps(func)
         def wrapper(*args, **kwargs) -> _U:
             try:

@@ -86,4 +86,5 @@ class PingExtension(markdown.extensions.Extension):
             md.inlinePatterns.register(MentionPattern(re.escape(at) + r'(' + self.CHARACTERS + ')', url_prefix), 'ping_mention', 14)
 
 
+# Optional dependency: do not import into __init__.py
 __all__ = ('PingExtension', 'SpoilerExtension', 'StrikethroughExtension')
