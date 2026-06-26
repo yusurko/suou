@@ -22,8 +22,8 @@ from functools import wraps
 
 from contextvars import ContextVar, Token
 from typing import Callable, TypeVar
-from sqlalchemy import Select, Table, func, select
-from sqlalchemy.orm import DeclarativeBase, lazyload
+from sqlalchemy import Select, Table, select
+from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 
 try:
@@ -31,8 +31,7 @@ try:
 except ImportError:
     AsyncSelectPagination = None
 
-from suou.exceptions import NotFoundError
-from suou.glue import glue
+from ..exceptions import NotFoundError
 
 _T = TypeVar('_T')
 _U = TypeVar('_U')
@@ -126,9 +125,11 @@ class SQLAlchemy:
             self.engine, checkfirst=checkfirst
         )
 
-# XXX NOT public API! DO NOT USE
-current_session: ContextVar[AsyncSession] = ContextVar('current_session')
 
+current_session: ContextVar[AsyncSession] = ContextVar('current_session')
+"""
+XXX NOT public API! DO NOT USE
+"""
 
 def async_query(db: SQLAlchemy, multi: False):
     """

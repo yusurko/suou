@@ -30,6 +30,7 @@ docs/_build
 docs/_static
 docs/templates
 .coverage
+.pytest_cache/
 
 # changes during CD/CI
 aliases/*/pyproject.toml

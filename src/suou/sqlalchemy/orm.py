@@ -18,7 +18,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 
 
-from binascii import Incomplete
 import os
 import re
 from typing import Any, Callable, TypeVar
@@ -27,10 +26,8 @@ from sqlalchemy import BigInteger, Boolean, CheckConstraint, Column, Date, Forei
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, Relationship, declarative_base as _declarative_base, relationship
 from sqlalchemy.types import TypeEngine
 from sqlalchemy.ext.hybrid import Comparator
-from suou.functools import future
 from suou.classtools import Wanted, Incomplete
 from suou.codecs import StringCase
-from suou.dei import dei_args
 from suou.iding import Siq, SiqCache, SiqGen, SiqType
 from suou.itertools import kwargs_prefix
 from suou.snowflake import SnowflakeGen
@@ -131,6 +128,23 @@ def username_column(
     return match_column(length, regex, case=case, nullable=nullable, unique=True, *args, **kwargs)
 
 
+EMAIL_RE_USERNAME = r"[a-z0-9-]+(\.[a-z0-9-]+)*"
+EMAIL_RE_DOMAIN = r"([a-z0-9-]+\.)+[a-z0-9-]{2,15}"
+EMAIL_RE_YESALIASES = EMAIL_RE_USERNAME + r"(\+" + EMAIL_RE_USERNAME + ")?@" + EMAIL_RE_DOMAIN
+EMAIL_RE_NOALIASES = EMAIL_RE_USERNAME + r"@" + EMAIL_RE_DOMAIN
+
+def email_column(
+    length: int = 256, *args, allow_aliases: bool = True, nullable: bool = False, unique: bool = True, **kwargs
+):
+    """
+    Construct a column containing a email address.
+
+    *New in 0.14.0*
+    """
+    return match_column(length, EMAIL_RE_YESALIASES if allow_aliases else EMAIL_RE_NOALIASES, case = StringCase.FORCE_LOWER,
+        unique = unique, nullable = nullable, *args, **kwargs)
+
+
 def bool_column(value: bool = False, nullable: bool = False, **kwargs) -> Column[bool]:
     """
     Column for a single boolean value.
@@ -141,7 +155,6 @@ def bool_column(value: bool = False, nullable: bool = False, **kwargs) -> Column
     return Column(Boolean, server_default=def_val, nullable=nullable, **kwargs)
 
 
-@dei_args(primary_secret='master_secret')
 def declarative_base(domain_name: str, master_secret: bytes, metadata: dict | None = None, **kwargs) -> type[DeclarativeBase]:
     """
     Drop-in replacement for sqlalchemy.orm.declarative_base()

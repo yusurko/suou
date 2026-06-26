@@ -74,7 +74,7 @@ def yesno(x: str | int | bool | None) -> bool:
     if isinstance(x, str):
         return x.lower() not in ('', '0', 'off', 'n', 'no', 'false', 'f')
     return True
-    
+
 
 __all__ = ('matches', 'must_be', 'not_greater_than', 'not_less_than', 'yesno')
 

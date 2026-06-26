@@ -21,6 +21,8 @@ from __future__ import annotations
 from functools import wraps
 from typing import Callable, Collection, TypeVar, Any
 
+from . import deprecated
+
 _T = TypeVar('_T')
 _U = TypeVar('_U')
 
@@ -115,6 +117,7 @@ class Pronoun(int):
 
 
 
+@deprecated('breaks the typing system somewhat; won\'t be removed tho')
 def dei_args(**renames: dict[str, str]):
     """
     Allow for aliases in the keyword argument names, in form alias='real_name'.

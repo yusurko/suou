@@ -1,6 +1,12 @@
 # Changelog
 
-## 0.13.1 
+## 0.14.0
+
+* Added `ast` module
+* Deprecate `dei_args()` for problems with the typing system. The function is not going away tho
+* Module `sqlalchemy`: added `email_column()`
+
+## 0.13.1 and 0.12.7
 
 + Typing fixes
 
