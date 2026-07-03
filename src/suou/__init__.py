@@ -16,6 +16,7 @@ This software is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 """
 
+from .functools import deprecated, not_implemented, timed_cache, none_pass, alru_cache, future, cooldown, do_not_flood
 from .iding import Siq, SiqCache, SiqType, SiqGen
 from .codecs import (StringCase, cb32encode, cb32decode, b32lencode, b32ldecode, b64encode, b64decode, b2048encode, b2048decode,
     jsonencode, twocolon_list, want_bytes, want_str, ssv_list, want_urlsafe, want_urlsafe_bytes,
@@ -25,12 +26,11 @@ from .calendar import want_datetime, want_isodate, want_timestamp, age_and_days
 from .configparse import MissingConfigError, MissingConfigWarning, ConfigOptions, ConfigParserConfigSource, ConfigSource, DictConfigSource, ConfigValue, EnvConfigSource
 from .collections import TimedDict
 from .dei import dei_args
-from .functools import deprecated, not_implemented, timed_cache, none_pass, alru_cache, future, cooldown, do_not_flood
 from .classtools import Wanted, Incomplete
 from .itertools import makelist, kwargs_prefix, ltuple, rtuple, additem, addattr
 from .i18n import I18n, JsonI18n, TomlI18n
 from .signing import UserSigner
-from .snowflake import Snowflake, SnowflakeGen
+from .snowflake import Snowflake, SnowflakeEpoch, SnowflakeGen
 from .lex import symbol_table, lex, ilex
 from .strtools import PrefixIdentifier
 from .validators import matches, not_less_than, not_greater_than, yesno, must_be
@@ -41,7 +41,7 @@ from .color import OKLabColor, chalk, WebColor, RGBColor, LinearRGBColor, \
 from .mat import Matrix
 from .argparse import LetterSubparsers
 
-__version__ = "0.14.0a1"
+__version__ = "0.14.0a2"
 
 __all__ = (
     'ColorFormatter',
@@ -50,7 +50,7 @@ __all__ = (
     'LetterSubparsers', 'LinearRGBColor',
     'Matrix', 'MissingConfigError', 'MissingConfigWarning', 'OKLabColor', 'OKLCHColor',
     'PrefixIdentifier', 'RGBColor',
-    'Siq', 'SiqCache', 'SiqGen', 'SiqType', 'Snowflake', 'SnowflakeGen',
+    'Siq', 'SiqCache', 'SiqGen', 'SiqType', 'Snowflake', 'SnowflakeEpoch', 'SnowflakeGen',
     'StringCase', 'TimedDict', 'TomlI18n', 'UserSigner', 'Wanted', 'WantsContentType',
     'WebColor', 'XYZColor',
     'addattr', 'additem', 'age_and_days', 'alru_cache', 'b2048decode', 'b2048encode',

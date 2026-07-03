@@ -21,6 +21,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from __future__ import annotations
 from binascii import unhexlify
+import enum
 import os
 from threading import Lock
 import time
@@ -207,7 +208,15 @@ class Snowflake(int):
     def __repr__(self):
         return f'{self.__class__.__name__}({super().__repr__()})'
 
+    
+# Common epoch values.
+
+class SnowflakeEpoch(int, enum.Enum):
+    """Common epoch values."""
+    JAN_1_2025 = 1735686000
+    JAN_1_2020 = 1577833200
+    JAN_1_2015 = 1420066800
 
 __all__ = (
-    'Snowflake', 'SnowflakeGen'
+    'Snowflake', 'SnowflakeGen', 'SnowflakeEpoch'
 )

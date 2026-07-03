@@ -5,6 +5,7 @@
 * Added `ast` module
 * Deprecate `dei_args()` for problems with the typing system. The function is not going away tho
 * Module `sqlalchemy`: added `email_column()`
+* Added common values for snowflake epoch in `SnowflakeEpoch` enum
 
 ## 0.13.1 and 0.12.7
 

@@ -19,7 +19,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from __future__ import annotations
 from functools import wraps
-from typing import Callable, Collection, TypeVar, Any
+from typing import Callable, TypeVar
 
 from . import deprecated
 
