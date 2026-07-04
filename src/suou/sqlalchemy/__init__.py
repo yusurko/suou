@@ -157,7 +157,8 @@ def require_auth_base(cls: type[DeclarativeBase], *, src: AuthSrc, column: str |
 from .asyncio import SQLAlchemy, async_query, SessionWrapper, AsyncSelectPagination
 from .orm import (
     id_column, snowflake_column, match_column, match_constraint, bool_column, declarative_base, parent_children,
-    author_pair, age_pair, bound_fk, unbound_fk, want_column, a_relationship, BitSelector, secret_column, username_column
+    author_pair, age_pair, bound_fk, unbound_fk, want_column, a_relationship, BitSelector, secret_column, username_column,
+    ascii_column
 )
 
 try:
@@ -172,6 +173,7 @@ __all__ = (
     'match_column', 'match_constraint', 'bool_column', 'parent_children',
     'author_pair', 'age_pair', 'bound_fk', 'unbound_fk', 'want_column',
     'a_relationship', 'BitSelector', 'secret_column', 'username_column',
+    'ascii_column',
     # .asyncio
     'SQLAlchemy', 'AsyncSelectPagination', 'async_query', 'SessionWrapper'
 )
