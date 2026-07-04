@@ -20,9 +20,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 import os
 import re
-from typing import Any, Callable, TypeVar
+from typing import Any, Callable, TypeAlias, TypeVar
 import warnings
-from sqlalchemy import BigInteger, Boolean, CheckConstraint, Column, Date, ForeignKey, LargeBinary, MetaData, SmallInteger, String, text
+from sqlalchemy import VARCHAR, BigInteger, Boolean, CheckConstraint, Column, Date, ForeignKey, LargeBinary, MetaData, SmallInteger, String, TypeDecorator, text
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, Relationship, declarative_base as _declarative_base, relationship
 from sqlalchemy.types import TypeEngine
 from sqlalchemy.ext.hybrid import Comparator
@@ -71,8 +71,6 @@ def id_column(typ: SiqType, *, primary_key: bool = True, **kwargs):
 def snowflake_column(*, primary_key: bool = True, **kwargs):
     """
     Same as id_column() but with snowflakes.
-
-    XXX this is meant ONLY as means of transition; for new stuff, use id_column() and SIQ.
     """
     def new_id_factory(owner: DeclarativeBase) -> Callable:
         epoch = owner.metadata.info['snowflake_epoch']
@@ -100,7 +98,39 @@ match_constraint.TEXT_DIALECTS = {
     'mariadb': ':n RLIKE :re'
 }
 
-def match_column(length: int, regex: str | re.Pattern, /, case: StringCase = StringCase.AS_IS, *args, constraint_name: str | None = None, **kwargs) -> Incomplete[Column[str]]:
+## Type decorators for match_column and ascii_column follow
+
+class MatchString(TypeDecorator):
+    impl: TypeAlias = String
+
+    def __init__(self, length: int, regex: str | re.Pattern, case: StringCase = StringCase.AS_IS, *args, **kwargs):
+        TypeDecorator.__init__(self, length=length, *args, **kwargs)
+        self.regex = regex
+        self.case = case
+    
+    def process_bind_param(self, value, dialect):
+        value = self.case.transform(value)
+        if not re.fullmatch(self.regex, value):
+            raise ValueError('value does not match regex')
+        return value
+
+
+class AsciiString(TypeDecorator):
+    impl: TypeAlias = String
+
+    def process_bind_param(self, value: str, dialect) :
+        try:
+            value.encode('ascii')
+        except Exception:
+            raise ValueError('only ASCII strings are allowed')
+        return value
+
+## END type decorators
+
+
+def match_column(
+        length: int, regex: str | re.Pattern, /, case: StringCase = StringCase.AS_IS,
+        *args, constraint_name: str | None = None, **kwargs) -> Incomplete[Column[str]]:
     """
     Syntactic sugar to create a String() column with a check constraint matching the given regular expression.
 
@@ -108,8 +138,18 @@ def match_column(length: int, regex: str | re.Pattern, /, case: StringCase = Str
     """
     if case != StringCase.AS_IS: # TODO
         warnings.warn('case arg is currently not working', FutureWarning)
-    return Incomplete(Column, String(length), Wanted(lambda x, n: match_constraint(n, regex, #dialect=x.metadata.engine.dialect.name,
+    return Incomplete(Column, MatchString(length, regex, case), Wanted(lambda x, n: match_constraint(n, regex, #dialect=x.metadata.engine.dialect.name,
             constraint_name=constraint_name or f'{x.__tablename__}_{n}_valid')), *args, **kwargs)
+
+
+def ascii_column(length: int, /, *args, **kwargs):
+    """
+    String() column that admits only ASCII characters.
+
+    *New in 0.14.0*
+    """
+
+    return Column(AsciiString(length), *args, **kwargs)
 
 
 def username_column(

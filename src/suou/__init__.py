@@ -41,7 +41,7 @@ from .color import OKLabColor, chalk, WebColor, RGBColor, LinearRGBColor, \
 from .mat import Matrix
 from .argparse import LetterSubparsers
 
-__version__ = "0.14.0a2"
+__version__ = "0.14.0a3"
 
 __all__ = (
     'ColorFormatter',
