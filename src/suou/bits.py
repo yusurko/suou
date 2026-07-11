@@ -15,6 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '''
 
 import math
+import re
 
 def mask_shift(n: int, mask: int) -> int:
     '''
@@ -108,4 +109,29 @@ def mod_ceil(x: int, y: int) -> int:
     return x + (y - x % y) % y
 
 
-__all__ = ('count_ones', 'mask_shift', 'split_bits', 'join_bits', 'mod_floor', 'mod_ceil')
+def i4_to_int(value):
+    if not (mo := re.fullmatch(r"([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})", value)):
+        raise ValueError
+    parts = [int(m) for m in mo.groups()]
+    for p in parts:
+        if p > 255 or p < 0:
+            raise ValueError
+    return (
+        (parts[0] << 24) |
+        (parts[1] << 16) |
+        (parts[2] << 8) |
+        parts[3]
+    )
+
+
+def int_to_i4(value):
+    parts = (
+        (value >> 24) % 256,
+        (value >> 16) % 256,
+        (value >> 8) % 256,
+        value % 256
+    )
+    return '.'.join(f'{x}' for x in parts)
+
+
+__all__ = ('count_ones', 'mask_shift', 'split_bits', 'join_bits', 'mod_floor', 'mod_ceil', 'i4_to_int', 'int_to_i4')

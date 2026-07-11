@@ -22,10 +22,11 @@ import os
 import re
 from typing import Any, Callable, TypeAlias, TypeVar
 import warnings
-from sqlalchemy import VARCHAR, BigInteger, Boolean, CheckConstraint, Column, Date, ForeignKey, LargeBinary, MetaData, SmallInteger, String, TypeDecorator, text
+from sqlalchemy import BigInteger, Boolean, CheckConstraint, Column, Date, ForeignKey, Integer, LargeBinary, MetaData, SmallInteger, String, TypeDecorator, text
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, Relationship, declarative_base as _declarative_base, relationship
 from sqlalchemy.types import TypeEngine
 from sqlalchemy.ext.hybrid import Comparator
+from suou.bits import i4_to_int, int_to_i4
 from suou.classtools import Wanted, Incomplete
 from suou.codecs import StringCase
 from suou.iding import Siq, SiqCache, SiqGen, SiqType
@@ -125,6 +126,15 @@ class AsciiString(TypeDecorator):
             raise ValueError('only ASCII strings are allowed')
         return value
 
+class I4Addr(TypeDecorator):
+    impl: TypeAlias = Integer
+
+    def process_bind_param(self, value, dialect):
+        return i4_to_int(value)
+
+    def process_result_value(self, value, dialect):
+        return int_to_i4(value)
+
 ## END type decorators
 
 
@@ -183,6 +193,13 @@ def email_column(
     """
     return match_column(length, EMAIL_RE_YESALIASES if allow_aliases else EMAIL_RE_NOALIASES, case = StringCase.FORCE_LOWER,
         unique = unique, nullable = nullable, *args, **kwargs)
+
+
+def i4_column(*args, nullable : bool = False, **kwargs):
+    """
+    *New in 0.14.0*
+    """
+    return Column(I4Addr, nullable=nullable, *args, **kwargs)
 
 
 def bool_column(value: bool = False, nullable: bool = False, **kwargs) -> Column[bool]:

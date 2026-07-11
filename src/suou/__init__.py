@@ -21,7 +21,7 @@ from .iding import Siq, SiqCache, SiqType, SiqGen
 from .codecs import (StringCase, cb32encode, cb32decode, b32lencode, b32ldecode, b64encode, b64decode, b2048encode, b2048decode,
     jsonencode, twocolon_list, want_bytes, want_str, ssv_list, want_urlsafe, want_urlsafe_bytes,
     z85encode, z85decode)
-from .bits import count_ones, mask_shift, split_bits, join_bits, mod_ceil, mod_floor
+from .bits import count_ones, i4_to_int, int_to_i4, mask_shift, split_bits, join_bits, mod_ceil, mod_floor
 from .calendar import want_datetime, want_isodate, want_timestamp, age_and_days
 from .configparse import MissingConfigError, MissingConfigWarning, ConfigOptions, ConfigParserConfigSource, ConfigSource, DictConfigSource, ConfigValue, EnvConfigSource
 from .collections import TimedDict
@@ -41,7 +41,7 @@ from .color import OKLabColor, chalk, WebColor, RGBColor, LinearRGBColor, \
 from .mat import Matrix
 from .argparse import LetterSubparsers
 
-__version__ = "0.14.0a4"
+__version__ = "0.14.0a5"
 
 __all__ = (
     'ColorFormatter',
@@ -56,7 +56,7 @@ __all__ = (
     'addattr', 'additem', 'age_and_days', 'alru_cache', 'b2048decode', 'b2048encode',
     'b32ldecode', 'b32lencode', 'b64encode', 'b64decode', 'cb32encode',
     'cb32decode', 'chalk', 'cooldown', 'count_ones', 'dei_args', 'deprecated', 'do_not_flood',
-    'future', 'ilex', 'join_bits', 'jsonencode', 'kwargs_prefix', 
+    'future', 'i4_to_int', 'int_to_i4', 'ilex', 'join_bits', 'jsonencode', 'kwargs_prefix', 
     'lex', 'ltuple', 'makelist', 'mask_shift',
     'matches', 'mod_ceil', 'mod_floor', 'must_be', 'none_pass', 'not_implemented',
     'not_less_than', 'not_greater_than',
