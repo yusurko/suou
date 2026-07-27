@@ -1,14 +1,14 @@
 # Changelog
 
-## 0.14.0
+## 0.14.0 "Claims & Columns"
 
 * Added `ast` module
 * Deprecate `dei_args()` for problems with the typing system. The function is not going away tho
 * Module `sqlalchemy`:
-    * added `email_column()`, `ascii_column()`, `i4_column()`
+    * added `email_column()`, `ascii_column()`, `i4_column()`, `now_column()`
     * added application level checks for `match_column()`
 * Added common values for snowflake epoch in `SnowflakeEpoch` enum
-* Module `bitś`: added `i4_to_int()`, `int_to_i4()`
+* Module `bits`: added `i4_to_int()`, `int_to_i4()`
 
 ## 0.13.1 and 0.12.7
 

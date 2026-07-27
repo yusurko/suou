@@ -22,7 +22,7 @@ import os
 import re
 from typing import Any, Callable, TypeAlias, TypeVar
 import warnings
-from sqlalchemy import BigInteger, Boolean, CheckConstraint, Column, Date, ForeignKey, Integer, LargeBinary, MetaData, SmallInteger, String, TypeDecorator, text
+from sqlalchemy import BigInteger, Boolean, CheckConstraint, Column, Date, DateTime, ForeignKey, Integer, LargeBinary, MetaData, SmallInteger, String, TypeDecorator, func, text
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, Relationship, declarative_base as _declarative_base, relationship
 from sqlalchemy.types import TypeEngine
 from sqlalchemy.ext.hybrid import Comparator
@@ -210,6 +210,15 @@ def bool_column(value: bool = False, nullable: bool = False, **kwargs) -> Column
     """
     def_val = text('true') if value else text('false')
     return Column(Boolean, server_default=def_val, nullable=nullable, **kwargs)
+    
+
+def now_column(*, nullable: bool = False, **kwargs):
+    """
+    Column with default value set as CURRENT_TIMESTAMP.
+
+    *New in 0.14.0*
+    """
+    return Column(DateTime, nullable=nullable, server_default=func.current_timestamp(), **kwargs)
 
 
 def declarative_base(domain_name: str, master_secret: bytes, metadata: dict | None = None, **kwargs) -> type[DeclarativeBase]:
