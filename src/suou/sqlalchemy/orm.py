@@ -102,6 +102,12 @@ match_constraint.TEXT_DIALECTS = {
 ## Type decorators for match_column and ascii_column follow
 
 class MatchString(TypeDecorator):
+    """
+    XXX if you see this type in an alembic migration this is an error. Please go to the migration file and fix the migration manually,
+    by replacing suou.sqlalchemy.orm.MatchString with sa.String.
+
+    In normal circumstances, this should be a VARCHAR with a CHECK constraint.
+    """
     impl: TypeAlias = String
 
     def __init__(self, length: int, regex: str | re.Pattern, case: StringCase = StringCase.AS_IS, *args, **kwargs):

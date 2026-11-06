@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.14.1
+
+* Fixed some imports in `sqlalchemy` module
+
 ## 0.14.0 "Claims & Columns"
 
 * Added `ast` module
