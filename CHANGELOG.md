@@ -3,6 +3,7 @@
 ## 0.14.1
 
 * Fixed some imports in `sqlalchemy` module
+* Support for Python 3.15
 
 ## 0.14.0 "Claims & Columns"
 
