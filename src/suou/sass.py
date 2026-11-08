@@ -23,6 +23,7 @@ from sass import CompileError
 from sassutils.builder import Manifest
 from importlib.metadata import version as _get_version
 
+from .functools import deprecated
 from .codecs import quote_css_string, want_bytes, want_bytes
 from .validators import must_be
 from .asgi import _MiddlewareFactory, ASGIApp, ASGIReceive, ASGIScope, ASGISend
@@ -35,6 +36,7 @@ logger = logging.getLogger(__name__)
 ## NOTE Python/PSF recommends use of importlib.metadata for version checks.
 _libsass_version = _get_version('libsass')
 
+@deprecated('libsass reached end of life in 2025. No valid replacement is available yet.')
 class SassAsyncMiddleware(_MiddlewareFactory):
     """
     ASGI middleware for development purpose.

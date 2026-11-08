@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.14.2
+
++ Deprecate `AsyncSassMiddleware` as libsass-python has reached EOL and no valid and stable replacement is yet available.
+
 ## 0.14.1
 
 * Fixed some imports in `sqlalchemy` module
